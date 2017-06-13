@@ -2,6 +2,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const reserved = require('reserved-words');
 const shared = require('./shared');
+const glob = require('glob');
 
 const preload = (content, resourcePath) => {
   if (!resourcePath.match(/app-extras\.module\.ts$/)) {
@@ -9,16 +10,25 @@ const preload = (content, resourcePath) => {
   }
 
   const root = shared.resolveAssetsPath('data');
-  const files = fs.readdirSync(root);
+  const files = glob.sync(path.join(root, '*.json'));
 
   if (!files.length) {
     return content;
   }
 
-  const modulePath = shared.getModulePath(resourcePath);
-
   const dataObject = files.reduce((acc, file) => {
     const filePath = path.join(root, file);
+    const propertyName = convertFileNameToObjectPropertyName(file);
+
+    if (!isPropertyNameValid(propertyName)) {
+      console.error(
+        new shared.StachePluginError(
+          `A valid Object property could not be determined from file ${filePath}! Please choose another file name.`
+        )
+      );
+      return acc;
+    }
+
     let contents;
 
     try {
@@ -27,19 +37,12 @@ const preload = (content, resourcePath) => {
       throw new shared.StachePluginError(error.message);
     }
 
-    const propertyName = convertFileNameToObjectPropertyName(file);
-
-    if (!isPropertyNameValid(propertyName)) {
-      console.error(
-        `[SKY UX Plugin Error: stache-json-data] A valid Object property could not be determined from file ${filePath}!`
-      );
-      return acc;
-    }
-
     acc[propertyName] = JSON.parse(contents);
 
     return acc;
   }, { });
+
+  const modulePath = shared.getModulePath(resourcePath);
 
   content = `
 import {

@@ -1,20 +1,24 @@
 const glob = require('glob');
-const shared = require('./shared');
 const path = require('path');
-
-const pluginPaths = glob.sync(
-  '*.js',
-  {
-    ignore: [
-      '*.spec.js',
-      'entry.js',
-      'shared.js'
-    ],
-    cwd: __dirname
-  }
-);
+const shared = require('./shared');
 
 const preload = (content, resourcePath, skyPagesConfig) => {
+  const pluginPaths = glob.sync(
+    '*.js',
+    {
+      ignore: [
+        '*.spec.js',
+        'entry.js',
+        'shared.js'
+      ],
+      cwd: __dirname
+    }
+  );
+
+  if (!pluginPaths.length) {
+    return content;
+  }
+
   pluginPaths.forEach(pluginPath => {
     try {
       const plugin = require(path.resolve(__dirname, pluginPath));
@@ -29,7 +33,7 @@ const preload = (content, resourcePath, skyPagesConfig) => {
         content = altered;
       }
     } catch (error) {
-      console.error(new shared.StachePluginError(error.message));
+      throw new shared.StachePluginError(error.message);
     }
   });
 

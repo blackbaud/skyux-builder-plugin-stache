@@ -8,14 +8,12 @@ const preload = (content, resourcePath, skyPagesConfig) => {
     return content;
   }
 
-  if (!skyPagesConfig.runtime.routes) {
+  if (!skyPagesConfig.runtime.routes || skyPagesConfig.runtime.routes.length === 0) {
     return content;
   }
 
   const routes = [];
   const htmlPaths = glob.sync('./src/app/**/*.html');
-
-  console.log('htmlPaths?', htmlPaths);
 
   if (!htmlPaths.length) {
     return content;
@@ -27,7 +25,7 @@ const preload = (content, resourcePath, skyPagesConfig) => {
     try {
       contents = fs.readFileSync(htmlPath);
     } catch (error) {
-      console.error(new shared.StachePluginError(error.message));
+      throw new shared.StachePluginError(error.message);
     }
 
     const $ = cheerio.load(contents, shared.cheerioConfig);
@@ -56,6 +54,10 @@ const preload = (content, resourcePath, skyPagesConfig) => {
       });
     });
   });
+
+  if (!routes.length) {
+    return content;
+  }
 
   const modulePath = shared.getModulePath(resourcePath);
 

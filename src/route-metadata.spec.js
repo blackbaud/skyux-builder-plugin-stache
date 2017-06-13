@@ -1,142 +1,97 @@
-// describe('Route Metadata Plugin > Collector', () => {
-//   let plugin;
-//   let config;
+const glob = require('glob');
+const fs = require('fs-extra');
+const shared = require('./shared');
 
-//   beforeEach(() => {
-//     plugin = require('./collector');
+describe('Route Metadata Plugin', () => {
+  let plugin;
+  let config;
 
-//     config = {
-//       runtime: {
-//         routes: [
-//           {
-//             routePath: 'learn'
-//           },
-//           {
-//             routePath: 'learn/getting-started'
-//           }
-//         ]
-//       }
-//     };
-//   });
+  beforeEach(() => {
+    plugin = require('./route-metadata');
+    config = {
+      runtime: {
+        routes: [
+          { routePath: 'learn' },
+          { routePath: 'learn/getting-started' }
+        ]
+      }
+    };
+  });
 
-//   afterEach(() => {
-//     plugin.routes = [];
-//     delete require.cache[require.resolve('./collector')]
-//   });
+  it('should contain a preload hook', () => {
+    expect(plugin.preload).toBeDefined();
+  });
 
-//   it('should contain a preload hook', () => {
-//     expect(plugin.preload).toBeDefined();
-//   });
+  it('should add providers to the app-extras.module.ts file', () => {
+    spyOn(glob, 'sync').and.returnValue(['src/app/learn/index.html']);
+    spyOn(fs, 'readFileSync').and.returnValue(
+      `<stache pageTitle="FAQ"></stache>`
+    );
+    const result = plugin.preload('', 'app-extras.module.ts', config);
+    expect(result).toContain('STACHE_ROUTE_METADATA_PROVIDERS');
+  });
 
-//   it('should never affect the file\'s content', () => {
-//     const content = '<stache pageTitle="My Page"></stache>';
-//     const path = '/src/app/learn/index.html';
-//     let result = plugin.preload(content, path, config);
-//     expect(result).toBe(content);
-//   });
+  it('should not change the content of other files', () => {
+    let result = plugin.preload('', 'foo.html', config);
+    expect(result).toBe('');
 
-//   it('should ignore non-HTML files', () => {
-//     const content = '{}';
-//     const path = '/src/app/foo.json';
-//     plugin.preload(content, path, config);
-//     expect(plugin.routes.length).toBe(0);
-//   });
+    result = plugin.preload('', 'foo.js', config);
+    expect(result).toBe('');
 
-//   it('should ignore HTML files that do not have `<stache>` tags', () => {
-//     const content = '<h1></h1>';
-//     const path = '/src/app/learn/index.html';
-//     plugin.preload(content, path, config);
-//     expect(plugin.routes.length).toBe(0);
-//   });
+    result = plugin.preload('', 'foo.scss', config);
+    expect(result).toBe('');
+  });
 
-//   it('should save a route\'s preferred name if `pageTitle` is set', () => {
-//     const content = '<stache pageTitle="My Page"></stache>';
-//     const path = '/src/app/learn/index.html';
-//     plugin.preload(content, path, config);
-//     expect(plugin.routes[0].name).toBe('My Page');
-//   });
+  it('should abort if no routes exist in the config', () => {
+    let result = plugin.preload('', 'app-extras.module.ts', {
+      runtime: { routes: [] }
+    });
+    expect(result).toBe('');
 
-//   it('should save a route\'s preferred name if `navTitle` is set', () => {
-//     const content = '<stache pageTitle="My Long Page Title" navTitle="Short Title"></stache>';
-//     const path = '/src/app/learn/index.html';
-//     plugin.preload(content, path, config);
-//     expect(plugin.routes[0].name).toBe('Short Title');
-//   });
+    result = plugin.preload('', 'app-extras.module.ts', {
+      runtime: { }
+    });
+    expect(result).toBe('');
+  });
 
-//   it('should ignore files that do not set `pageTitle`', () => {
-//     const content = '<stache></stache>';
-//     const path = '/src/app/learn/index.html';
-//     plugin.preload(content, path, config);
-//     expect(plugin.routes.length).toBe(0);
-//   });
+  it('should abort if no html files found', () => {
+    spyOn(glob, 'sync').and.returnValue([]);
+    const result = plugin.preload('', 'app-extras.module.ts', config);
+    expect(result).toBe('');
+  });
 
-//   it('should not affect files if routes are not defined', () => {
-//     const content = '<stache pageTitle="My Page"></stache>';
-//     const path = '/src/app/learn/index.html';
-//     let result = plugin.preload(content, path, { runtime: { } });
-//     expect(result).toBe(content);
-//   });
-// });
+  it('should abort if the html file does not include <stache> tags', () => {
+    spyOn(glob, 'sync').and.returnValue(['src/app/learn/index.html']);
+    spyOn(fs, 'readFileSync').and.returnValue(`<p></p>`);
+    const result = plugin.preload('', 'app-extras.module.ts', config);
+    expect(result).toBe('');
+  });
 
-// const mock = require('mock-require');
+  it('should ignore html files that do not include `navTitle` or `pageTitle` on the <stache> tag', () => {
+    spyOn(glob, 'sync').and.returnValue(['src/app/learn/index.html']);
+    spyOn(fs, 'readFileSync').and.returnValue(`<stache></stache>`);
+    const result = plugin.preload('', 'app-extras.module.ts', config);
+    expect(result).toBe('');
+  });
 
-// describe('Route Metadata Plugin > Generator', () => {
-//   let plugin;
+  it('should prefer `navTitle` to `pageTitle`', () => {
+    spyOn(glob, 'sync').and.returnValue(['src/app/learn/index.html']);
+    spyOn(fs, 'readFileSync').and.returnValue(
+      `<stache pageTitle="FAQ" navTitle="Preferred"></stache>`
+    );
+    const result = plugin.preload('', 'app-extras.module.ts', config);
+    expect(result).toContain('"name":"Preferred"');
+  });
 
-//   beforeEach(() => {
-//     mock('./collector', {
-//       preload: () => {},
-//       routes: [
-//         {
-//           name: 'Sample',
-//           path: '/'
-//         }
-//       ]
-//     });
+  it('should handle invalid file paths', () => {
+    spyOn(glob, 'sync').and.returnValue(['invalid.html']);
+    spyOn(fs, 'readFileSync').and.throwError('Invalid file.');
 
-//     plugin = require('./generator');
-//   });
-
-//   afterEach(() => {
-//     mock.stop('./collector');
-//   });
-
-//   it('should contain a preload hook', () => {
-//     expect(plugin.preload).toBeDefined();
-//   });
-
-//   it('should only change the content of the route-metadata.service.ts file', () => {
-//     const content = '<p></p>';
-//     const path = 'sample.service.ts';
-//     const result = plugin.preload(content, path);
-//     expect(result).toBe(content);
-//   });
-
-//   it('should generate the contents of the route-metadata.service.ts file', () => {
-//     const content = '';
-//     const path = 'src/app/public/src/modules/shared/route-metadata.service.ts';
-//     const result = plugin.preload(content, path);
-//     expect(result).toContain('export class StacheRouteMetadataService {');
-//   });
-
-//   it('should add the routes from Collector to the route-metadata.service.ts file', () => {
-//     const content = '';
-//     const path = 'src/app/public/src/modules/shared/route-metadata.service.ts';
-//     const result = plugin.preload(content, path);
-//     expect(result).toContain('public routes: any[] = [{"name":"Sample","path":"/"}];');
-//   });
-
-//   it('should handle an invalid routes array', () => {
-//     mock('./collector', {
-//       preload: () => {},
-//       routes: undefined
-//     });
-
-//     plugin = mock.reRequire('./generator');
-
-//     const content = '';
-//     const path = 'src/app/public/src/modules/shared/route-metadata.service.ts';
-//     const result = plugin.preload(content, path);
-//     expect(result).toContain('public routes: any[] = [];');
-//   });
-// });
+    try {
+      plugin.preload('', 'app-extras.module.ts', config);
+    } catch (error) {
+      expect(fs.readFileSync).toThrowError('Invalid file.');
+      expect(plugin.preload).toThrowError(shared.StachePluginError);
+    }
+  });
+});

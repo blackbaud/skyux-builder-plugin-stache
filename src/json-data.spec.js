@@ -1,99 +1,91 @@
-// const plugin = require('./json-data');
-// const mock = require('mock-fs');
+const plugin = require('./json-data');
+const glob = require('glob');
+const fs = require('fs-extra');
+const shared = require('./shared');
 
-// describe('JSON Data Plugin', () => {
-//   beforeAll(() => {
-//     mock({
-//       'src/stache/data': {
-//         'config.json': '{ "productNameLong": "Stache 2" }',
-//         'test file.json': '{ "test":"test" }'
-//       },
-//       'shared/json-data.service.ts': `private jsonData: any = 'noop';`
-//     });
-//   });
+describe('JSON Data Plugin', () => {
 
-//   afterAll(() => {
-//     mock.restore();
-//   });
+  it('should contain a preload hook', () => {
+    expect(plugin.preload).toBeDefined();
+  });
 
-//   it('should contain a preload hook', () => {
-//     expect(plugin.preload).toBeDefined();
-//   });
+  it('should add providers to the app-extras.module.ts file', () => {
+    spyOn(glob, 'sync').and.returnValue(['foo.json']);
+    spyOn(fs, 'readFileSync').and.returnValue('{}');
+    const result = plugin.preload('', 'app-extras.module.ts');
+    expect(result).toContain('STACHE_JSON_DATA_PROVIDERS');
+  });
 
-//   it('should not alter the content if the resourcePath is not the json-data service file.', () => {
-//     const content = 'let foo = "bar";';
-//     const path = 'foo.js';
-//     let result = plugin.preload(content, path);
-//     expect(result).toBe(content);
-//   });
+  it('should not change the content of other files', () => {
+    let result = plugin.preload('', 'foo.html');
+    expect(result).toBe('');
 
-//   it('should replace the noop string in the json-data service file with the json data.', () => {
-//     const content = `private jsonData: any = 'noop';`;
-//     const contentParsed = `private jsonData: any = {"config":{"productNameLong":"Stache 2"},"test-file":{"test":"test"}};`;
-//     const path = 'shared/json-data.service.ts';
-//     let result = plugin.preload(content, path);
-//     expect(result).toContain(contentParsed);
-//   });
+    result = plugin.preload('', 'foo.js');
+    expect(result).toBe('');
 
-//   it('should create a valid object key given a file name.', () => {
-//     const content = `'noop'`;
-//     mock({
-//       'src/stache/data': {
-//         'config.json': '{ }',
-//         'file with spaces.json': '{ }',
-//         'Tes*$^^@*(@$tfile.json': '{ }',
-//         'file with UPPERCASE LETTERS.json': '{ }',
-//         'file w1th n0mb3rs.json': '{ }',
-//         'file-with-dashes.json': '{ }',
-//         'file_with_underscores_____.json': '{ }',
-//         '__proto__.json': '{ }'
-//       },
-//       'shared/json-data.service.ts': content
-//     });
-//     const path = 'src/shared/json-data.service.ts';
-//     let result = plugin.preload(content, path);
+    result = plugin.preload('', 'foo.scss');
+    expect(result).toBe('');
+  });
 
-//     expect(result).toContain('"config"');
-//     expect(result).toContain('"file-with-spaces"');
-//     expect(result).toContain('"testfile"');
-//     expect(result).toContain('"file-with-uppercase-letters"');
-//     expect(result).toContain('"file-w1th-n0mb3rs"');
-//     expect(result).toContain('"file-with-dashes"');
-//     expect(result).toContain('"file-with-underscores"');
-//     expect(result).toContain('"proto"');
-//   });
+  it('should abort if json files are nonexistant', () => {
+    spyOn(glob, 'sync').and.returnValue([]);
+    const result = plugin.preload('', 'app-extras.module.ts');
+    expect(result).toBe('');
+  });
 
-//   it('should handle invalid file names.', () => {
-//     spyOn(console, 'error');
+  it('should handle invalid file paths', () => {
+    spyOn(glob, 'sync').and.returnValue(['invalid.json']);
+    spyOn(fs, 'readFileSync').and.throwError('Invalid file.');
 
-//     const content = `'noop'`;
-//     const path = 'src/shared/json-data.service.ts';
-//     const invalidFiles = {
-//       '.json': '{ }',
-//       '*****.json': '{ }',
-//       'constructor': '{ }',
-//       'prototype': '{ }',
-//       'テナンス中です': '{ }'
-//     };
+    try {
+      plugin.preload('', 'app-extras.module.ts');
+    } catch (error) {
+      expect(fs.readFileSync).toThrowError('Invalid file.');
+      expect(plugin.preload).toThrowError(shared.StachePluginError);
+    }
+  });
 
-//     mock({
-//       'src/stache/data': invalidFiles
-//     });
+  it('should log errors for invalid file names', () => {
+    const invalidFiles = [
+      '.json',
+      '*****.json',
+      'constructor.json',
+      'prototype.json',
+      'テナンス中です.json'
+    ];
 
-//     plugin.preload(content, path);
-//     expect(console.error.calls.count()).toBe(Object.keys(invalidFiles).length);
-//   });
+    spyOn(glob, 'sync').and.returnValue(invalidFiles);
+    spyOn(console, 'error').and.returnValue('');
 
-//   it('should return the data service file unchanged if no json files exist.', () => {
-//     const content = `'noop'`;
-//     mock({
-//       'src/stache/data': { },
-//       'shared/json-data.service.ts': content
-//     });
-//     const path = 'src/shared/json-data.service.ts';
-//     let result = plugin.preload(content, path);
-//     expect(result).toBe(content);
-//   });
-//
-//   it('should not fail if data directory doesn\'t exist');
-// });
+    plugin.preload('', 'app-extras.module.ts');
+
+    expect(console.error.calls.count()).toBe(invalidFiles.length);
+  });
+
+  it('should create a valid object key given a file name.', () => {
+    const fileNames = [
+      'config.json',
+      'file with spaces.json',
+      'Tes*$^^@*(@$tfile.json',
+      'file with UPPERCASE LETTERS.json',
+      'file w1th n0mb3rs.json',
+      'file-with-dashes.json',
+      'file_with_underscores_____.json',
+      '__proto__.json'
+    ];
+
+    spyOn(glob, 'sync').and.returnValue(fileNames);
+    spyOn(fs, 'readFileSync').and.returnValue('{}');
+
+    const result = plugin.preload('', 'app-extras.module.ts');
+
+    expect(result).toContain('"config":{');
+    expect(result).toContain('"file-with-spaces":{');
+    expect(result).toContain('"testfile":{');
+    expect(result).toContain('"file-with-uppercase-letters":{');
+    expect(result).toContain('"file-w1th-n0mb3rs":{');
+    expect(result).toContain('"file-with-dashes":{');
+    expect(result).toContain('"file-with-underscores":{');
+    expect(result).toContain('"proto":{');
+  });
+});
