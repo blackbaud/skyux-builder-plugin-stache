@@ -1,7 +1,7 @@
 {
   "name": "@blackbaud/skyux-builder-plugin-stache",
-  "version": "1.0.2",
-  "description": "A SKY UX Builder plugin for Stache route metadata",
+  "version": "0.1.0",
+  "description": "A SKY UX Builder plugin to enhance the Stache 2 component library.",
   "main": "index.js",
   "scripts": {
     "build": "node ./scripts/prepare-package.js",
@@ -16,12 +16,13 @@
   "author": "Blackbaud, Inc.",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/blackbaud/skyux-builder-plugin-stache/issues"
+    "url": "https://github.com/blackbaud/stache2/issues"
   },
   "homepage": "https://github.com/blackbaud/skyux-builder-plugin-stache#readme",
   "dependencies": {
     "cheerio": "0.22.0",
     "fs-extra": "3.0.1",
+    "glob": "7.1.2",
     "reserved-words": "0.1.1"
   },
   "devDependencies": {
@@ -30,7 +31,9 @@
     "istanbul": "0.4.5",
     "jasmine": "2.6.0",
     "jasmine-spec-reporter": "4.1.0",
+    "mkdirp": "0.5.1",
     "mock-fs": "4.4.1",
-    "mock-require": "2.0.2"
+    "mock-require": "2.0.2",
+    "rimraf": "2.6.1"
   }
 }
