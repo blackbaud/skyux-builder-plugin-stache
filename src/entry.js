@@ -3,8 +3,8 @@ const path = require('path');
 const shared = require('./shared');
 
 function StacheEntryPlugin() {
-  this.pluginPaths = glob.sync(
-    '*.js',
+  let _pluginPaths = glob.sync(
+    './*.js',
     {
       ignore: [
         '*.spec.js',
@@ -14,32 +14,34 @@ function StacheEntryPlugin() {
       cwd: __dirname
     }
   );
-}
 
-StacheEntryPlugin.prototype.preload = function (content, resourcePath, skyPagesConfig) {
-  if (!this.pluginPaths.length) {
-    return content;
-  }
-
-  this.pluginPaths.forEach(pluginPath => {
-    try {
-      const plugin = require(path.resolve(__dirname, pluginPath));
-
-      if (!plugin.preload) {
-        return;
-      }
-
-      const altered = plugin.preload(content, resourcePath, skyPagesConfig);
-
-      if (content !== altered) {
-        content = altered;
-      }
-    } catch (error) {
-      throw new shared.StachePluginError(error.message);
+  const preload = (content, resourcePath, skyPagesConfig) => {
+    if (!_pluginPaths.length) {
+      return content;
     }
-  });
 
-  return content;
-};
+    _pluginPaths.forEach(pluginPath => {
+      try {
+        const plugin = require(pluginPath);
+
+        if (!plugin.preload) {
+          return;
+        }
+
+        const altered = plugin.preload(content, resourcePath, skyPagesConfig);
+
+        if (content !== altered) {
+          content = altered;
+        }
+      } catch (error) {
+        throw new shared.StachePluginError(error.message);
+      }
+    });
+
+    return content;
+  };
+
+  return Object.freeze({ preload });
+}
 
 module.exports = StacheEntryPlugin;

@@ -10,20 +10,20 @@ const preload = (content, resourcePath) => {
   }
 
   const root = shared.resolveAssetsPath('data');
-  const files = glob.sync(path.join(root, '*.json'));
+  const filePaths = glob.sync(path.join(root, '*.json'));
 
-  if (!files.length) {
+  if (!filePaths.length) {
     return content;
   }
 
-  const dataObject = files.reduce((acc, file) => {
-    const filePath = path.join(root, file);
-    const propertyName = convertFileNameToObjectPropertyName(file);
+  const dataObject = filePaths.reduce((acc, filePath) => {
+    const fileName = path.basename(filePath);
+    const propertyName = convertFileNameToObjectPropertyName(fileName);
 
     if (!isPropertyNameValid(propertyName)) {
       console.error(
         new shared.StachePluginError(
-          `A valid Object property could not be determined from file ${filePath}! Please choose another file name.`
+          `A valid Object property could not be determined from file ${fileName}! The property key '${propertyName}' cannot be used. Please choose another file name.`
         )
       );
       return acc;
