@@ -1,6 +1,7 @@
-// const cheerio = require('cheerio');
+const cheerio = require('cheerio');
+const fs = require('fs-extra');
 const glob = require('glob');
-// const shared = require('./shared');
+const shared = require('./shared');
 
 const preload = (content, resourcePath, skyPagesConfig) => {
   if (!resourcePath.match(/app-extras\.module\.ts$/)) {
@@ -11,13 +12,66 @@ const preload = (content, resourcePath, skyPagesConfig) => {
     return content;
   }
 
-  const htmlPaths = glob.sync('**/*.html');
+  const routes = [];
+  const htmlPaths = glob.sync('./src/app/**/*.html');
 
-  console.log(htmlPaths);
+  console.log('htmlPaths?', htmlPaths);
 
-  // const $ = cheerio.load(content, shared.cheerioConfig);
+  if (!htmlPaths.length) {
+    return content;
+  }
 
-  // const stacheTags = $('stache');
+  htmlPaths.forEach(htmlPath => {
+    let contents;
+
+    try {
+      contents = fs.readFileSync(htmlPath);
+    } catch (error) {
+      console.error(new shared.StachePluginError(error.message));
+    }
+
+    const $ = cheerio.load(contents, shared.cheerioConfig);
+    const stacheTags = $('stache');
+
+    if (!stacheTags.length) {
+      return;
+    }
+
+    stacheTags.each((i, elem) => {
+      const $wrapper = $(elem);
+      const preferredName = $wrapper.attr('navTitle') || $wrapper.attr('pageTitle');
+
+      if (!preferredName) {
+        return;
+      }
+
+      skyPagesConfig.runtime.routes.forEach(route => {
+        const match = ['src/app', route.routePath, 'index.html'].join('/');
+        if (htmlPath.endsWith(match)) {
+          routes.push({
+            path: route.routePath,
+            name: preferredName
+          });
+        }
+      });
+    });
+  });
+
+  const modulePath = shared.getModulePath(resourcePath);
+
+  content = `
+import {
+  StacheRouteMetadataService,
+  STACHE_ROUTE_METADATA_SERVICE_CONFIG
+} from '${modulePath}';
+
+export const STACHE_ROUTE_METADATA_PROVIDERS: any[] = [
+  { provide: STACHE_ROUTE_METADATA_SERVICE_CONFIG, useValue: ${JSON.stringify(routes)} },
+  { provide: StacheRouteMetadataService, useClass: StacheRouteMetadataService }
+];
+${content}`;
+
+  return shared.addToProviders(content, 'STACHE_ROUTE_METADATA_PROVIDERS');
 };
 
 module.exports = {

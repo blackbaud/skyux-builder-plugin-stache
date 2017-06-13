@@ -1,4 +1,4 @@
-const fs = require('fs');
+const fs = require('fs-extra');
 const path = require('path');
 const reserved = require('reserved-words');
 const shared = require('./shared');
@@ -8,13 +8,13 @@ const preload = (content, resourcePath) => {
     return content;
   }
 
+  const root = shared.resolveAssetsPath('data');
   const files = fs.readdirSync(root);
 
   if (!files.length) {
     return content;
   }
 
-  const root = shared.resolveAssetsPath('data');
   const modulePath = shared.getModulePath(resourcePath);
 
   const dataObject = files.reduce((acc, file) => {

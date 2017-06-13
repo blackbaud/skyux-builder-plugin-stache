@@ -94,4 +94,6 @@
 //     let result = plugin.preload(content, path);
 //     expect(result).toBe(content);
 //   });
+//
+//   it('should not fail if data directory doesn\'t exist');
 // });
