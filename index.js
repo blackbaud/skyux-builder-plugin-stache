@@ -1,1 +1,2 @@
-module.exports = require('./src/entry');
+const StacheEntryPlugin = require('./src/entry');
+module.exports = new StacheEntryPlugin();

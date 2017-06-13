@@ -2,25 +2,23 @@ const glob = require('glob');
 const mock = require('mock-require');
 const path = require('path');
 const shared = require('./shared');
+const StacheEntryPlugin = require('./entry');
 
 describe('Entry Plugin', () => {
-  const pluginPath = './entry';
-
   afterEach(() => {
     mock.stopAll();
   });
 
   it('should contain a preload hook', () => {
-    const plugin = require(pluginPath);
+    const plugin = new StacheEntryPlugin();
     expect(plugin.preload).toBeDefined();
   });
 
   it('should abort if no plugins exist', () => {
     spyOn(glob, 'sync').and.returnValue([]);
-    const plugin = require(pluginPath);
+    const plugin = new StacheEntryPlugin();
     const result = plugin.preload('', '', {});
     expect(result).toBe('');
-    mock.stop('glob');
   });
 
   it('should pass its arguments into the other plugins', () => {
@@ -38,7 +36,7 @@ describe('Entry Plugin', () => {
       }
     });
 
-    const plugin = require(pluginPath);
+    const plugin = new StacheEntryPlugin();
     plugin.preload('<p></p>', 'foo.html', {});
 
     expect(_content).toBe('<p></p>');
@@ -53,7 +51,7 @@ describe('Entry Plugin', () => {
       postload: () => { }
     });
 
-    const plugin = require(pluginPath);
+    const plugin = new StacheEntryPlugin();
     const result = plugin.preload('', '', {});
 
     expect(result).toEqual('');
@@ -68,7 +66,7 @@ describe('Entry Plugin', () => {
       }
     });
 
-    const plugin = require(pluginPath);
+    const plugin = new StacheEntryPlugin();
     const result = plugin.preload('', '', {});
 
     expect(result).toEqual('');
@@ -77,7 +75,7 @@ describe('Entry Plugin', () => {
   it('should throw an error if the plugin is not found', () => {
     spyOn(glob, 'sync').and.returnValue(['invalid.js']);
     spyOn(path, 'resolve').and.returnValue('invalid.js');
-    const plugin = require(pluginPath);
+    const plugin = new StacheEntryPlugin();
 
     try {
       plugin.preload('', '', {});

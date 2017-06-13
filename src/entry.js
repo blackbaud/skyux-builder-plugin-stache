@@ -2,8 +2,8 @@ const glob = require('glob');
 const path = require('path');
 const shared = require('./shared');
 
-const preload = (content, resourcePath, skyPagesConfig) => {
-  const pluginPaths = glob.sync(
+function StacheEntryPlugin() {
+  this.pluginPaths = glob.sync(
     '*.js',
     {
       ignore: [
@@ -14,12 +14,14 @@ const preload = (content, resourcePath, skyPagesConfig) => {
       cwd: __dirname
     }
   );
+}
 
-  if (!pluginPaths.length) {
+StacheEntryPlugin.prototype.preload = function (content, resourcePath, skyPagesConfig) {
+  if (!this.pluginPaths.length) {
     return content;
   }
 
-  pluginPaths.forEach(pluginPath => {
+  this.pluginPaths.forEach(pluginPath => {
     try {
       const plugin = require(path.resolve(__dirname, pluginPath));
 
@@ -40,6 +42,4 @@ const preload = (content, resourcePath, skyPagesConfig) => {
   return content;
 };
 
-module.exports = {
-  preload
-};
+module.exports = StacheEntryPlugin;
