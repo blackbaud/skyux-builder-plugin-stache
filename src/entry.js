@@ -7,7 +7,7 @@ function StacheEntryPlugin() {
     './*.js',
     {
       ignore: [
-        '*.spec.js',
+        './*.spec.js',
         'entry.js',
         'shared.js'
       ],
