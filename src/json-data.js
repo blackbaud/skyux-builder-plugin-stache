@@ -50,6 +50,7 @@ import {
   STACHE_JSON_DATA_SERVICE_CONFIG
 } from '${modulePath}';
 
+/* tslint:disable:quotemark whitespace max-line-length */
 export const STACHE_JSON_DATA_PROVIDERS: any[] = [
   {
     provide: STACHE_JSON_DATA_SERVICE_CONFIG,
@@ -60,6 +61,7 @@ export const STACHE_JSON_DATA_PROVIDERS: any[] = [
     useClass: StacheJsonDataService
   }
 ];
+/* tslint:enable:quotemark whitespace max-line-length */
 ${content}`;
 
   return shared.addToProviders(content, 'STACHE_JSON_DATA_PROVIDERS');
