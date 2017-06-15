@@ -67,10 +67,18 @@ import {
   STACHE_ROUTE_METADATA_SERVICE_CONFIG
 } from '${modulePath}';
 
+/* tslint:disable:quotemark whitespace max-line-length */
 export const STACHE_ROUTE_METADATA_PROVIDERS: any[] = [
-  { provide: STACHE_ROUTE_METADATA_SERVICE_CONFIG, useValue: ${JSON.stringify(routes)} },
-  { provide: StacheRouteMetadataService, useClass: StacheRouteMetadataService }
+  {
+    provide: STACHE_ROUTE_METADATA_SERVICE_CONFIG,
+    useValue: ${JSON.stringify(routes)}
+  },
+  {
+    provide: StacheRouteMetadataService,
+    useClass: StacheRouteMetadataService
+  }
 ];
+/* tslint:enable:quotemark whitespace max-line-length */
 ${content}`;
 
   return shared.addToProviders(content, 'STACHE_ROUTE_METADATA_PROVIDERS');
