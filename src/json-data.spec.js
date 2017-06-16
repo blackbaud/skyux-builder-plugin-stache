@@ -73,7 +73,11 @@ describe('JSON Data Plugin', () => {
       'file w1th n0mb3rs.json',
       'file-with-dashes.json',
       'file_with_underscores_____.json',
-      '__proto__.json'
+      '__proto__.json',
+      '---TEST----.json',
+      'SampleTest.json',
+      'sampleFile.json',
+      'sample-_-file.json'
     ];
 
     spyOn(glob, 'sync').and.returnValue(fileNames);
@@ -89,5 +93,9 @@ describe('JSON Data Plugin', () => {
     expect(result).toContain('"file_with_dashes":{');
     expect(result).toContain('"file_with_underscores":{');
     expect(result).toContain('"proto":{');
+    expect(result).toContain('"TEST:{');
+    expect(result).toContain('"SampleFile:{');
+    expect(result).toContain('"sampleFile:{');
+    expect(result).toContain('"sample___file":{');
   });
 });
