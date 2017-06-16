@@ -6,18 +6,21 @@ describe('Config Plugin', () => {
   });
 
   it('should add providers to the app-extras.module.ts file', () => {
-    const result = plugin.preload('', 'app-extras.module.ts');
-    expect(result).toContain('STACHE_CONFIG_PROVIDERS');
+    const content = new Buffer('');
+    const result = plugin.preload(content, 'app-extras.module.ts');
+    expect(result.toString()).toContain('STACHE_CONFIG_PROVIDERS');
   });
 
   it('should not change the content of other files', () => {
-    let result = plugin.preload('', 'foo.html');
-    expect(result).toBe('');
+    const content = new Buffer('');
 
-    result = plugin.preload('', 'foo.js');
-    expect(result).toBe('');
+    let result = plugin.preload(content, 'foo.html');
+    expect(result.toString()).toEqual(content.toString());
 
-    result = plugin.preload('', 'foo.scss');
-    expect(result).toBe('');
+    result = plugin.preload(content, 'foo.js');
+    expect(result.toString()).toEqual(content.toString());
+
+    result = plugin.preload(content, 'foo.scss');
+    expect(result.toString()).toEqual(content.toString());
   });
 });

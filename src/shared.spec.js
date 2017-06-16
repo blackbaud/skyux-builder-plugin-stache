@@ -26,7 +26,8 @@ describe('Shared methods and properties', () => {
   });
 
   it('should add a provider string to the providers array in file\'s contents', () => {
-    const result = shared.addToProviders('providers: []', 'SOME_PROVIDERS');
+    const content = new Buffer('providers: []');
+    const result = shared.addToProviders(content, 'SOME_PROVIDERS');
     expect(result).toContain('SOME_PROVIDERS');
   });
 

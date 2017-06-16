@@ -27,51 +27,58 @@ describe('Route Metadata Plugin', () => {
     spyOn(fs, 'readFileSync').and.returnValue(
       `<stache pageTitle="FAQ"></stache>`
     );
-    const result = plugin.preload('', 'app-extras.module.ts', config);
-    expect(result).toContain('STACHE_ROUTE_METADATA_PROVIDERS');
+    const content = new Buffer('');
+    const result = plugin.preload(content, 'app-extras.module.ts', config);
+    expect(result.toString()).toContain('STACHE_ROUTE_METADATA_PROVIDERS');
   });
 
   it('should not change the content of other files', () => {
-    let result = plugin.preload('', 'foo.html', config);
-    expect(result).toBe('');
+    const content = new Buffer('');
 
-    result = plugin.preload('', 'foo.js', config);
-    expect(result).toBe('');
+    let result = plugin.preload(content, 'foo.html', config);
+    expect(result.toString()).toEqual(content.toString());
 
-    result = plugin.preload('', 'foo.scss', config);
-    expect(result).toBe('');
+    result = plugin.preload(content, 'foo.js', config);
+    expect(result.toString()).toEqual(content.toString());
+
+    result = plugin.preload(content, 'foo.scss', config);
+    expect(result.toString()).toEqual(content.toString());
   });
 
   it('should abort if no routes exist in the config', () => {
-    let result = plugin.preload('', 'app-extras.module.ts', {
+    const content = new Buffer('');
+    let result = plugin.preload(content, 'app-extras.module.ts', {
       runtime: { routes: [] }
     });
-    expect(result).toBe('');
+    expect(result.toString()).toEqual(content.toString());
 
-    result = plugin.preload('', 'app-extras.module.ts', {
+    result = plugin.preload(content, 'app-extras.module.ts', {
       runtime: { }
     });
-    expect(result).toBe('');
+    expect(result.toString()).toEqual(content.toString());
   });
 
   it('should abort if no html files found', () => {
     spyOn(glob, 'sync').and.returnValue([]);
-    const result = plugin.preload('', 'app-extras.module.ts', config);
-    expect(result).toBe('');
+    const content = new Buffer('');
+    const result = plugin.preload(content, 'app-extras.module.ts', config);
+    expect(result.toString()).toEqual(content.toString());
   });
 
   it('should abort if the html file does not include <stache> tags', () => {
     spyOn(glob, 'sync').and.returnValue(['src/app/learn/index.html']);
     spyOn(fs, 'readFileSync').and.returnValue(`<p></p>`);
-    const result = plugin.preload('', 'app-extras.module.ts', config);
-    expect(result).toBe('');
+    const content = new Buffer('');
+    const result = plugin.preload(content, 'app-extras.module.ts', config);
+    expect(result.toString()).toEqual(content.toString());
   });
 
   it('should ignore html files that do not include `navTitle` or `pageTitle` on the <stache> tag', () => {
     spyOn(glob, 'sync').and.returnValue(['src/app/learn/index.html']);
     spyOn(fs, 'readFileSync').and.returnValue(`<stache></stache>`);
-    const result = plugin.preload('', 'app-extras.module.ts', config);
-    expect(result).toBe('');
+    const content = new Buffer('');
+    const result = plugin.preload(content, 'app-extras.module.ts', config);
+    expect(result.toString()).toEqual(content.toString());
   });
 
   it('should prefer `navTitle` to `pageTitle`', () => {
@@ -79,16 +86,19 @@ describe('Route Metadata Plugin', () => {
     spyOn(fs, 'readFileSync').and.returnValue(
       `<stache pageTitle="FAQ" navTitle="Preferred"></stache>`
     );
-    const result = plugin.preload('', 'app-extras.module.ts', config);
-    expect(result).toContain('"name":"Preferred"');
+    const content = new Buffer('');
+    const result = plugin.preload(content, 'app-extras.module.ts', config);
+    expect(result.toString()).toContain('"name":"Preferred"');
   });
 
   it('should handle invalid file paths', () => {
     spyOn(glob, 'sync').and.returnValue(['invalid.html']);
     spyOn(fs, 'readFileSync').and.throwError('Invalid file.');
 
+    const content = new Buffer('');
+
     try {
-      plugin.preload('', 'app-extras.module.ts', config);
+      plugin.preload(content, 'app-extras.module.ts', config);
     } catch (error) {
       expect(fs.readFileSync).toThrowError('Invalid file.');
       expect(plugin.preload).toThrowError(shared.StachePluginError);
