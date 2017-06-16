@@ -91,11 +91,11 @@ describe('JSON Data Plugin', () => {
     expect(result).toContain('"file_with_UPPERCASE_LETTERS":{');
     expect(result).toContain('"file_w1th_n0mb3rs":{');
     expect(result).toContain('"file_with_dashes":{');
-    expect(result).toContain('"file_with_underscores":{');
-    expect(result).toContain('"proto":{');
-    expect(result).toContain('"___TEST____:{');
-    expect(result).toContain('"SampleTest:{');
-    expect(result).toContain('"sampleFile:{');
+    expect(result).toContain('"file_with_underscores_____":{');
+    expect(result).toContain('"__proto__":{');
+    expect(result).toContain('"___TEST____":{');
+    expect(result).toContain('"SampleTest":{');
+    expect(result).toContain('"sampleFile":{');
     expect(result).toContain('"sample___file":{');
   });
 });
