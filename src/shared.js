@@ -10,7 +10,10 @@ const addToProviders = (content, provider) => {
   return content.replace(
     'providers: [',
     `providers: [
-    ${provider},`);
+      /* tslint:disable:trailing-comma */
+      ${provider},
+      /* tslint:enable:trailing-comma */
+`);
 };
 
 const cheerioConfig = {
