@@ -93,7 +93,7 @@ describe('JSON Data Plugin', () => {
     expect(result).toContain('"file_with_dashes":{');
     expect(result).toContain('"file_with_underscores":{');
     expect(result).toContain('"proto":{');
-    expect(result).toContain('"TEST:{');
+    expect(result).toContain('"___TEST____:{');
     expect(result).toContain('"SampleFile:{');
     expect(result).toContain('"sampleFile:{');
     expect(result).toContain('"sample___file":{');
