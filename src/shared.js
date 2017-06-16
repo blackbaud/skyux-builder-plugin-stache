@@ -7,7 +7,7 @@ function StachePluginError(message) {
 StachePluginError.prototype = Error.prototype;
 
 const addToProviders = (content, provider) => {
-  return content.replace(
+  return content.toString().replace(
     'providers: [',
     `providers: [
       /* tslint:disable:trailing-comma */

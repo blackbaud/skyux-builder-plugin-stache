@@ -17,8 +17,9 @@ describe('Entry Plugin', () => {
   it('should abort if no plugins exist', () => {
     spyOn(glob, 'sync').and.returnValue([]);
     const plugin = new StacheEntryPlugin();
-    const result = plugin.preload('', '', {});
-    expect(result).toBe('');
+    const content = new Buffer('');
+    const result = plugin.preload(content, '', {});
+    expect(result.toString()).toEqual(content.toString());
   });
 
   it('should pass its arguments into the other plugins', () => {
@@ -37,10 +38,11 @@ describe('Entry Plugin', () => {
     });
 
     const plugin = new StacheEntryPlugin();
-    plugin.preload('<p></p>', 'foo.html', {});
+    const content = new Buffer('<p></p>');
+    plugin.preload(content, 'foo.html', {});
 
-    expect(_content).toBe('<p></p>');
-    expect(_resourcePath).toBe('foo.html');
+    expect(_content.toString()).toEqual(content.toString());
+    expect(_resourcePath).toEqual('foo.html');
     expect(_skyAppConfig).toEqual(jasmine.any(Object));
   });
 
@@ -52,9 +54,10 @@ describe('Entry Plugin', () => {
     });
 
     const plugin = new StacheEntryPlugin();
-    const result = plugin.preload('', '', {});
+    const content = new Buffer('');
+    const result = plugin.preload(content, '', {});
 
-    expect(result).toEqual('');
+    expect(result.toString()).toEqual(content.toString());
   });
 
   it('should abort if the plugin does not change the file\'s content', () => {
@@ -67,18 +70,20 @@ describe('Entry Plugin', () => {
     });
 
     const plugin = new StacheEntryPlugin();
-    const result = plugin.preload('', '', {});
+    const content = new Buffer('');
+    const result = plugin.preload(content, '', {});
 
-    expect(result).toEqual('');
+    expect(result.toString()).toEqual(content.toString());
   });
 
   it('should throw an error if the plugin is not found', () => {
     spyOn(glob, 'sync').and.returnValue(['invalid.js']);
     spyOn(path, 'resolve').and.returnValue('invalid.js');
     const plugin = new StacheEntryPlugin();
+    const content = new Buffer('');
 
     try {
-      plugin.preload('', '', {});
+      plugin.preload(content, '', {});
     } catch (error) {
       expect(error).toEqual(jasmine.any(shared.StachePluginError));
     }

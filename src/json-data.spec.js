@@ -12,35 +12,42 @@ describe('JSON Data Plugin', () => {
   it('should add providers to the app-extras.module.ts file', () => {
     spyOn(glob, 'sync').and.returnValue(['foo.json']);
     spyOn(fs, 'readFileSync').and.returnValue('{}');
-    const result = plugin.preload('', 'app-extras.module.ts');
-    expect(result).toContain('STACHE_JSON_DATA_PROVIDERS');
+    const content = new Buffer('');
+    const result = plugin.preload(content, 'app-extras.module.ts');
+    expect(result.toString()).toContain('STACHE_JSON_DATA_PROVIDERS');
   });
 
   it('should add elvis operators to html files', () => {
-    const result = plugin.preload('{{stache.jsonData.global}}', 'foo.html');
-    expect(result).toEqual('{{stache.jsonData?.global}}');
+    const content = new Buffer('{{stache.jsonData.global}}');
+    const result = plugin.preload(content, 'foo.html');
+    expect(result.toString()).toEqual('{{stache.jsonData?.global}}');
   });
 
   it('should not change the content of other files', () => {
-    let result = plugin.preload('', 'foo.js');
-    expect(result).toBe('');
+    const content = new Buffer('');
 
-    result = plugin.preload('', 'foo.scss');
-    expect(result).toBe('');
+    let result = plugin.preload(content, 'foo.js');
+    expect(result.toString()).toEqual(content.toString());
+
+    result = plugin.preload(content, 'foo.scss');
+    expect(result.toString()).toEqual(content.toString());
   });
 
   it('should abort if json files are nonexistant', () => {
     spyOn(glob, 'sync').and.returnValue([]);
-    const result = plugin.preload('', 'app-extras.module.ts');
-    expect(result).toBe('');
+    const content = new Buffer('');
+    const result = plugin.preload(content, 'app-extras.module.ts');
+    expect(result.toString()).toEqual(content.toString());
   });
 
   it('should handle invalid file paths', () => {
     spyOn(glob, 'sync').and.returnValue(['invalid.json']);
     spyOn(fs, 'readFileSync').and.throwError('Invalid file.');
 
+    const content = new Buffer('');
+
     try {
-      plugin.preload('', 'app-extras.module.ts');
+      plugin.preload(content, 'app-extras.module.ts');
     } catch (error) {
       expect(fs.readFileSync).toThrowError('Invalid file.');
       expect(plugin.preload).toThrowError(shared.StachePluginError);
@@ -59,7 +66,8 @@ describe('JSON Data Plugin', () => {
     spyOn(glob, 'sync').and.returnValue(invalidFiles);
     spyOn(console, 'error').and.returnValue('');
 
-    plugin.preload('', 'app-extras.module.ts');
+    const content = new Buffer('');
+    plugin.preload(content, 'app-extras.module.ts');
 
     expect(console.error.calls.count()).toBe(invalidFiles.length);
   });
@@ -82,7 +90,8 @@ describe('JSON Data Plugin', () => {
     spyOn(glob, 'sync').and.returnValue(fileNames);
     spyOn(fs, 'readFileSync').and.returnValue('{}');
 
-    const result = plugin.preload('', 'app-extras.module.ts');
+    const content = new Buffer('');
+    const result = plugin.preload(content, 'app-extras.module.ts');
 
     expect(result).toContain('"config":{');
     expect(result).toContain('"file_with_spaces":{');
