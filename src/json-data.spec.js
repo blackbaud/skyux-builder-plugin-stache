@@ -73,7 +73,6 @@ describe('JSON Data Plugin', () => {
       'file w1th n0mb3rs.json',
       'file-with-dashes.json',
       'file_with_underscores_____.json',
-      '__proto__.json',
       '---TEST----.json',
       'SampleTest.json',
       'sampleFile.json',
@@ -92,7 +91,6 @@ describe('JSON Data Plugin', () => {
     expect(result).toContain('"file_w1th_n0mb3rs":{');
     expect(result).toContain('"file_with_dashes":{');
     expect(result).toContain('"file_with_underscores_____":{');
-    expect(result).toContain('"__proto__":{');
     expect(result).toContain('"___TEST____":{');
     expect(result).toContain('"SampleTest":{');
     expect(result).toContain('"sampleFile":{');
