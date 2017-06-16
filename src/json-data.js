@@ -5,6 +5,10 @@ const shared = require('./shared');
 const glob = require('glob');
 
 const preload = (content, resourcePath) => {
+  if (resourcePath.match(/\.html$/)) {
+    return content.replace(/stache\.jsonData\./g, 'stache.jsonData?.');
+  }
+
   if (!resourcePath.match(/app-extras\.module\.ts$/)) {
     return content;
   }

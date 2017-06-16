@@ -16,11 +16,13 @@ describe('JSON Data Plugin', () => {
     expect(result).toContain('STACHE_JSON_DATA_PROVIDERS');
   });
 
-  it('should not change the content of other files', () => {
-    let result = plugin.preload('', 'foo.html');
-    expect(result).toBe('');
+  it('should add elvis operators to html files', () => {
+    const result = plugin.preload('{{stache.jsonData.global}}', 'foo.html');
+    expect(result).toEqual('{{stache.jsonData?.global}}');
+  });
 
-    result = plugin.preload('', 'foo.js');
+  it('should not change the content of other files', () => {
+    let result = plugin.preload('', 'foo.js');
     expect(result).toBe('');
 
     result = plugin.preload('', 'foo.scss');
