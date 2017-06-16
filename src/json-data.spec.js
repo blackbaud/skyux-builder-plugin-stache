@@ -73,7 +73,10 @@ describe('JSON Data Plugin', () => {
       'file w1th n0mb3rs.json',
       'file-with-dashes.json',
       'file_with_underscores_____.json',
-      '__proto__.json'
+      '---TEST----.json',
+      'SampleTest.json',
+      'sampleFile.json',
+      'sample-_-file.json'
     ];
 
     spyOn(glob, 'sync').and.returnValue(fileNames);
@@ -82,12 +85,15 @@ describe('JSON Data Plugin', () => {
     const result = plugin.preload('', 'app-extras.module.ts');
 
     expect(result).toContain('"config":{');
-    expect(result).toContain('"file-with-spaces":{');
-    expect(result).toContain('"testfile":{');
-    expect(result).toContain('"file-with-uppercase-letters":{');
-    expect(result).toContain('"file-w1th-n0mb3rs":{');
-    expect(result).toContain('"file-with-dashes":{');
-    expect(result).toContain('"file-with-underscores":{');
-    expect(result).toContain('"proto":{');
+    expect(result).toContain('"file_with_spaces":{');
+    expect(result).toContain('"Testfile":{');
+    expect(result).toContain('"file_with_UPPERCASE_LETTERS":{');
+    expect(result).toContain('"file_w1th_n0mb3rs":{');
+    expect(result).toContain('"file_with_dashes":{');
+    expect(result).toContain('"file_with_underscores_____":{');
+    expect(result).toContain('"___TEST____":{');
+    expect(result).toContain('"SampleTest":{');
+    expect(result).toContain('"sampleFile":{');
+    expect(result).toContain('"sample___file":{');
   });
 });
