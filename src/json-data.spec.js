@@ -82,12 +82,12 @@ describe('JSON Data Plugin', () => {
     const result = plugin.preload('', 'app-extras.module.ts');
 
     expect(result).toContain('"config":{');
-    expect(result).toContain('"file-with-spaces":{');
+    expect(result).toContain('"file_with_spaces":{');
     expect(result).toContain('"testfile":{');
-    expect(result).toContain('"file-with-uppercase-letters":{');
-    expect(result).toContain('"file-w1th-n0mb3rs":{');
-    expect(result).toContain('"file-with-dashes":{');
-    expect(result).toContain('"file-with-underscores":{');
+    expect(result).toContain('"file_with_UPPERCASE_LETTERS":{');
+    expect(result).toContain('"file_w1th_n0mb3rs":{');
+    expect(result).toContain('"file_with_dashes":{');
+    expect(result).toContain('"file_with_underscores":{');
     expect(result).toContain('"proto":{');
   });
 });
