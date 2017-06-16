@@ -73,7 +73,6 @@ ${content}`;
 
 const convertFileNameToObjectPropertyName = (fileName) => {
   return fileName.split('.')[0]
-    .toLowerCase()
     .replace(/\s+/g, '_')     // Replace spaces with underscores
     .replace(/[^\w-]+/g, '')  // Remove all non-word chars
     .replace(/-/g, '_')       // Replace all dashes with underscores
