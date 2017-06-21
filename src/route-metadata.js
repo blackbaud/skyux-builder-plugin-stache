@@ -40,17 +40,17 @@ const preload = (content, resourcePath, skyPagesConfig) => {
       const preferredName = $wrapper.attr('navTitle') || $wrapper.attr('pageTitle');
       const preferredOrder = $wrapper.attr('navOrder');
 
+      if(!preferredName && !preferredOrder) {
+        return;
+      }
+
       skyPagesConfig.runtime.routes.forEach(route => {
         const match = ['src/app', route.routePath, 'index.html'].join('/');
         if (htmlPath.endsWith(match)) {
 
           let route = {
             path: route.routePath,
-            name: route.name
-          }
-
-          if (preferredName) {
-            route.name = preferredName;
+            name: preferredName || ''
           }
 
           if ( preferredOrder !== undefined) {
@@ -67,13 +67,6 @@ const preload = (content, resourcePath, skyPagesConfig) => {
     return content;
   }
 
-  let orderedRoutes = routes.filter(route => route.hasOwnProperty('order'))
-    .sort(sortByName)
-    .sort(sortByOrder);
-  let unOrderedRoutes = routes.filter(route => !route.hasOwnProperty('order'))
-    .sort(sortByName);
-  let sortedRoutes = orderedRoutes.concat(unOrderedRoutes);
-
   const modulePath = shared.getModulePath(resourcePath);
 
   content = `
@@ -86,7 +79,7 @@ import {
 export const STACHE_ROUTE_METADATA_PROVIDERS: any[] = [
   {
     provide: STACHE_ROUTE_METADATA_SERVICE_CONFIG,
-    useValue: ${JSON.stringify(sortedRoutes)}
+    useValue: ${JSON.stringify(routes)}
   },
   {
     provide: StacheRouteMetadataService,
@@ -98,26 +91,6 @@ ${content}`;
 
   return shared.addToProviders(content, 'STACHE_ROUTE_METADATA_PROVIDERS');
 };
-
-function sortByName(a , b) {
-  if(a.name < b.name) {
-    return -1;
-  }
-  if(a.name > b.name) {
-    return 1;
-  }
-  return 0;
-}
-
-function sortByOrder(a, b) {
-  if (a.order < b.order) {
-    return -1;
-  }
-  if(a.order > b.order) {
-    return 1;
-  }
-  return 0;
-}
 
 module.exports = {
   preload
