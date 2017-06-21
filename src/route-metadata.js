@@ -38,18 +38,26 @@ const preload = (content, resourcePath, skyPagesConfig) => {
     stacheTags.each((i, elem) => {
       const $wrapper = $(elem);
       const preferredName = $wrapper.attr('navTitle') || $wrapper.attr('pageTitle');
-
-      if (!preferredName) {
-        return;
-      }
+      const preferredOrder = $wrapper.attr('navOrder');
 
       skyPagesConfig.runtime.routes.forEach(route => {
         const match = ['src/app', route.routePath, 'index.html'].join('/');
         if (htmlPath.endsWith(match)) {
-          routes.push({
+
+          let route = {
             path: route.routePath,
-            name: preferredName
-          });
+            name: route.name
+          }
+
+          if (preferredName) {
+            route.name = preferredName;
+          }
+
+          if ( preferredOrder !== undefined) {
+            route.order = preferredOrder;
+          }
+
+          routes.push(route);
         }
       });
     });
@@ -58,6 +66,13 @@ const preload = (content, resourcePath, skyPagesConfig) => {
   if (!routes.length) {
     return content;
   }
+
+  let orderedRoutes = routes.filter(route => route.hasOwnProperty('order'))
+    .sort(sortByName)
+    .sort(sortByOrder);
+  let unOrderedRoutes = routes.filter(route => !route.hasOwnProperty('order'))
+    .sort(sortByName);
+  let sortedRoutes = orderedRoutes.concat(unOrderedRoutes);
 
   const modulePath = shared.getModulePath(resourcePath);
 
@@ -71,7 +86,7 @@ import {
 export const STACHE_ROUTE_METADATA_PROVIDERS: any[] = [
   {
     provide: STACHE_ROUTE_METADATA_SERVICE_CONFIG,
-    useValue: ${JSON.stringify(routes)}
+    useValue: ${JSON.stringify(sortedRoutes)}
   },
   {
     provide: StacheRouteMetadataService,
@@ -83,6 +98,26 @@ ${content}`;
 
   return shared.addToProviders(content, 'STACHE_ROUTE_METADATA_PROVIDERS');
 };
+
+function sortByName(a , b) {
+  if(a.name < b.name) {
+    return -1;
+  }
+  if(a.name > b.name) {
+    return 1;
+  }
+  return 0;
+}
+
+function sortByOrder(a, b) {
+  if (a.order < b.order) {
+    return -1;
+  }
+  if(a.order > b.order) {
+    return 1;
+  }
+  return 0;
+}
 
 module.exports = {
   preload
