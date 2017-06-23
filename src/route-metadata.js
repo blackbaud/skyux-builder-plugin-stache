@@ -40,7 +40,7 @@ const preload = (content, resourcePath, skyPagesConfig) => {
       const preferredName = $wrapper.attr('navTitle') || $wrapper.attr('pageTitle');
       const preferredOrder = $wrapper.attr('navOrder');
 
-      if(!preferredName && !preferredOrder) {
+      if (!preferredName && !preferredOrder) {
         return;
       }
 
@@ -53,7 +53,7 @@ const preload = (content, resourcePath, skyPagesConfig) => {
             name: preferredName || ''
           }
 
-          if ( preferredOrder !== undefined) {
+          if (preferredOrder !== undefined) {
             routeMetaData.order = preferredOrder;
           }
 
