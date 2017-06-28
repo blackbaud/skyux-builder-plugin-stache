@@ -94,7 +94,7 @@ describe('Route Metadata Plugin', () => {
   it('should only add name if `navTitle` or `pageTitle` exist', () => {
     spyOn(glob, 'sync').and.returnValue(['src/app/learn/index.html']);
     spyOn(fs, 'readFileSync').and.returnValue(
-      `<stache navOrde="8675309"></stache>`
+      `<stache navOrder="8675309"></stache>`
     );
     const content = new Buffer('');
     const result = plugin.preload(content, 'app-extras.module.ts', config);
