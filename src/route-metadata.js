@@ -48,16 +48,19 @@ const preload = (content, resourcePath, skyPagesConfig) => {
         const match = ['src/app', route.routePath, 'index.html'].join('/');
         if (htmlPath.endsWith(match)) {
 
-          let routeMetaData = {
+          let routeMetadata = {
             path: route.routePath,
-            name: preferredName || ''
+          }
+
+          if (preferredName !== undefined) {
+            routeMetadata.name = preferredName;
           }
 
           if (preferredOrder !== undefined) {
-            routeMetaData.order = preferredOrder;
+            routeMetadata.order = preferredOrder;
           }
 
-          routes.push(routeMetaData);
+          routes.push(routeMetadata);
         }
       });
     });
