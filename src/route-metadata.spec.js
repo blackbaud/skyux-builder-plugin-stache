@@ -73,7 +73,7 @@ describe('Route Metadata Plugin', () => {
     expect(result.toString()).toEqual(content.toString());
   });
 
-  it('should ignore html files that do not include `navTitle` or `pageTitle` and `navOrder` on the <stache> tag', () => {
+  it('should ignore html files that do not include `navTitle`,`pageTitle`, or `navOrder` on the <stache> tag', () => {
     spyOn(glob, 'sync').and.returnValue(['src/app/learn/index.html']);
     spyOn(fs, 'readFileSync').and.returnValue(`<stache></stache>`);
     const content = new Buffer('');
@@ -88,7 +88,18 @@ describe('Route Metadata Plugin', () => {
     );
     const content = new Buffer('');
     const result = plugin.preload(content, 'app-extras.module.ts', config);
-    expect(result.toString()).toContain('"name":"Preferred"');
+    expect(result.toString()).toContain('"name"');
+  });
+
+  it('should only add name if `navTitle` or `pageTitle` exist', () => {
+    spyOn(glob, 'sync').and.returnValue(['src/app/learn/index.html']);
+    spyOn(fs, 'readFileSync').and.returnValue(
+      `<stache navOrde="8675309"></stache>`
+    );
+    const content = new Buffer('');
+    const result = plugin.preload(content, 'app-extras.module.ts', config);
+    expect(result.toString()).not.toContain('"name":"Preferred"');
+    expect(result.toString()).toContain('"order":"8675309"');
   });
 
   it('should add navOrder to the route if `navOrder` is provided', () => {
