@@ -35,22 +35,34 @@ const preload = (content, resourcePath, skyPagesConfig) => {
       return;
     }
 
+    const foundRoutes = skyPagesConfig.runtime.routes.filter(route => {
+      const match = ['src/app', route.routePath, 'index.html'].join('/');
+      return (htmlPath.endsWith(match));
+    });
+
     stacheTags.each((i, elem) => {
       const $wrapper = $(elem);
       const preferredName = $wrapper.attr('navTitle') || $wrapper.attr('pageTitle');
+      const preferredOrder = $wrapper.attr('navOrder');
 
-      if (!preferredName) {
+      if (!preferredName && !preferredOrder) {
         return;
       }
 
-      skyPagesConfig.runtime.routes.forEach(route => {
-        const match = ['src/app', route.routePath, 'index.html'].join('/');
-        if (htmlPath.endsWith(match)) {
-          routes.push({
-            path: route.routePath,
-            name: preferredName
-          });
+      foundRoutes.forEach(route => {
+        let routeMetadata = {
+          path: route.routePath
+        };
+
+        if (preferredName !== undefined) {
+          routeMetadata.name = preferredName;
         }
+
+        if (preferredOrder !== undefined) {
+          routeMetadata.order = preferredOrder;
+        }
+
+        routes.push(routeMetadata);
       });
     });
   });
