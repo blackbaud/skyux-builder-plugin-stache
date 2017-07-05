@@ -51,7 +51,7 @@ const preload = (content, resourcePath, skyPagesConfig) => {
 
       foundRoutes.forEach(route => {
         let routeMetadata = {
-          path: `/${route.routePath}`
+          path: route.routePath
         };
 
         if (preferredName !== undefined) {
