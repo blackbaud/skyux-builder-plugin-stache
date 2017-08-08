@@ -4,8 +4,6 @@ const reserved = require('reserved-words');
 const shared = require('./shared');
 const glob = require('glob');
 
-const pluginOrder = 4;
-
 const preload = (content, resourcePath) => {
   if (resourcePath.match(/\.html$/)) {
     return content.toString().replace(/stache\.jsonData\./g, 'stache.jsonData?.');
@@ -96,4 +94,4 @@ const isPropertyNameValid = (propertyName) => {
   return !reserved.check(propertyName, 'es6', true);
 };
 
-module.exports = { preload, pluginOrder };
+module.exports = { preload };

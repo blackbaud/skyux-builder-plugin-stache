@@ -1,8 +1,6 @@
 const cheerio = require('cheerio');
 const shared = require('./shared');
 
-const pluginOrder = 6;
-
 const preload = (content, resourcePath) => {
   if (!resourcePath.match(/\.html$/)) {
     return content;
@@ -22,4 +20,4 @@ const preload = (content, resourcePath) => {
   return $.html().toString();
 };
 
-module.exports = { preload, pluginOrder };
+module.exports = { preload };

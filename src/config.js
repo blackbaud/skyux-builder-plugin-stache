@@ -1,7 +1,5 @@
 const shared = require('./shared');
 
-const pluginOrder = 1;
-
 const preload = (content, resourcePath) => {
   if (!resourcePath.match(/app-extras\.module\.ts$/)) {
     return content;
@@ -22,4 +20,4 @@ ${content}`;
   return shared.addToProviders(content, 'STACHE_CONFIG_PROVIDERS');
 };
 
-module.exports = { preload, pluginOrder };
+module.exports = { preload };
