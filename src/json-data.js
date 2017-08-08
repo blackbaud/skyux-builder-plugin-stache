@@ -5,6 +5,10 @@ const shared = require('./shared');
 const glob = require('glob');
 
 const preload = (content, resourcePath) => {
+  if (resourcePath.match(/\.html$/)) {
+    return content.toString().replace(/stache\.jsonData\./g, 'stache.jsonData?.');
+  }
+
   if (!resourcePath.match(/app-extras\.module\.ts$/)) {
     return content;
   }
@@ -50,6 +54,7 @@ import {
   STACHE_JSON_DATA_SERVICE_CONFIG
 } from '${modulePath}';
 
+/* tslint:disable:quotemark whitespace max-line-length */
 export const STACHE_JSON_DATA_PROVIDERS: any[] = [
   {
     provide: STACHE_JSON_DATA_SERVICE_CONFIG,
@@ -60,6 +65,7 @@ export const STACHE_JSON_DATA_PROVIDERS: any[] = [
     useClass: StacheJsonDataService
   }
 ];
+/* tslint:enable:quotemark whitespace max-line-length */
 ${content}`;
 
   return shared.addToProviders(content, 'STACHE_JSON_DATA_PROVIDERS');
@@ -67,11 +73,10 @@ ${content}`;
 
 const convertFileNameToObjectPropertyName = (fileName) => {
   return fileName.split('.')[0]
-    .toLowerCase()
-    .replace(/\s+/g, '-')     // Replace spaces with -
+    .replace(/\s+/g, '_')     // Replace spaces with underscores
     .replace(/[^\w-]+/g, '')  // Remove all non-word chars
-    .replace(/_/g, '-')       // Replace all underscores with -
-    .replace(/--+/g, '-')     // Replace multiple - with single -
+    .replace(/-/g, '_')       // Replace all dashes with underscores
+    .replace(/--+/g, '_')     // Replace multiple dashes with single underscore
     .replace(/^-+/, '')       // Trim - from start of text
     .replace(/-+$/, '');      // Trim - from end of text;
 };

@@ -7,10 +7,13 @@ function StachePluginError(message) {
 StachePluginError.prototype = Error.prototype;
 
 const addToProviders = (content, provider) => {
-  return content.replace(
+  return content.toString().replace(
     'providers: [',
     `providers: [
-    ${provider},`);
+      /* tslint:disable:trailing-comma */
+      ${provider},
+      /* tslint:enable:trailing-comma */
+`);
 };
 
 const cheerioConfig = {

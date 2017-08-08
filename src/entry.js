@@ -6,9 +6,9 @@ function StacheEntryPlugin() {
     './*.js',
     {
       ignore: [
-        '*.spec.js',
-        'entry.js',
-        'shared.js'
+        './*.spec.js',
+        './entry.js',
+        './shared.js'
       ],
       cwd: __dirname
     }

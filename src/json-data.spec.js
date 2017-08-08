@@ -12,33 +12,42 @@ describe('JSON Data Plugin', () => {
   it('should add providers to the app-extras.module.ts file', () => {
     spyOn(glob, 'sync').and.returnValue(['foo.json']);
     spyOn(fs, 'readFileSync').and.returnValue('{}');
-    const result = plugin.preload('', 'app-extras.module.ts');
-    expect(result).toContain('STACHE_JSON_DATA_PROVIDERS');
+    const content = new Buffer('');
+    const result = plugin.preload(content, 'app-extras.module.ts');
+    expect(result.toString()).toContain('STACHE_JSON_DATA_PROVIDERS');
+  });
+
+  it('should add elvis operators to html files', () => {
+    const content = new Buffer('{{stache.jsonData.global}}');
+    const result = plugin.preload(content, 'foo.html');
+    expect(result.toString()).toEqual('{{stache.jsonData?.global}}');
   });
 
   it('should not change the content of other files', () => {
-    let result = plugin.preload('', 'foo.html');
-    expect(result).toBe('');
+    const content = new Buffer('');
 
-    result = plugin.preload('', 'foo.js');
-    expect(result).toBe('');
+    let result = plugin.preload(content, 'foo.js');
+    expect(result.toString()).toEqual(content.toString());
 
-    result = plugin.preload('', 'foo.scss');
-    expect(result).toBe('');
+    result = plugin.preload(content, 'foo.scss');
+    expect(result.toString()).toEqual(content.toString());
   });
 
   it('should abort if json files are nonexistant', () => {
     spyOn(glob, 'sync').and.returnValue([]);
-    const result = plugin.preload('', 'app-extras.module.ts');
-    expect(result).toBe('');
+    const content = new Buffer('');
+    const result = plugin.preload(content, 'app-extras.module.ts');
+    expect(result.toString()).toEqual(content.toString());
   });
 
   it('should handle invalid file paths', () => {
     spyOn(glob, 'sync').and.returnValue(['invalid.json']);
     spyOn(fs, 'readFileSync').and.throwError('Invalid file.');
 
+    const content = new Buffer('');
+
     try {
-      plugin.preload('', 'app-extras.module.ts');
+      plugin.preload(content, 'app-extras.module.ts');
     } catch (error) {
       expect(fs.readFileSync).toThrowError('Invalid file.');
       expect(plugin.preload).toThrowError(shared.StachePluginError);
@@ -57,7 +66,8 @@ describe('JSON Data Plugin', () => {
     spyOn(glob, 'sync').and.returnValue(invalidFiles);
     spyOn(console, 'error').and.returnValue('');
 
-    plugin.preload('', 'app-extras.module.ts');
+    const content = new Buffer('');
+    plugin.preload(content, 'app-extras.module.ts');
 
     expect(console.error.calls.count()).toBe(invalidFiles.length);
   });
@@ -71,21 +81,28 @@ describe('JSON Data Plugin', () => {
       'file w1th n0mb3rs.json',
       'file-with-dashes.json',
       'file_with_underscores_____.json',
-      '__proto__.json'
+      '---TEST----.json',
+      'SampleTest.json',
+      'sampleFile.json',
+      'sample-_-file.json'
     ];
 
     spyOn(glob, 'sync').and.returnValue(fileNames);
     spyOn(fs, 'readFileSync').and.returnValue('{}');
 
-    const result = plugin.preload('', 'app-extras.module.ts');
+    const content = new Buffer('');
+    const result = plugin.preload(content, 'app-extras.module.ts');
 
     expect(result).toContain('"config":{');
-    expect(result).toContain('"file-with-spaces":{');
-    expect(result).toContain('"testfile":{');
-    expect(result).toContain('"file-with-uppercase-letters":{');
-    expect(result).toContain('"file-w1th-n0mb3rs":{');
-    expect(result).toContain('"file-with-dashes":{');
-    expect(result).toContain('"file-with-underscores":{');
-    expect(result).toContain('"proto":{');
+    expect(result).toContain('"file_with_spaces":{');
+    expect(result).toContain('"Testfile":{');
+    expect(result).toContain('"file_with_UPPERCASE_LETTERS":{');
+    expect(result).toContain('"file_w1th_n0mb3rs":{');
+    expect(result).toContain('"file_with_dashes":{');
+    expect(result).toContain('"file_with_underscores_____":{');
+    expect(result).toContain('"___TEST____":{');
+    expect(result).toContain('"SampleTest":{');
+    expect(result).toContain('"sampleFile":{');
+    expect(result).toContain('"sample___file":{');
   });
 });
