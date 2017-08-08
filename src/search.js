@@ -87,6 +87,7 @@ describe('Search Results', () => {
       })
       .catch(error => {
         console.log('ERROR', error);
+        expect(error).toBeNull();
         done();
       });
   });
