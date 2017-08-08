@@ -59,4 +59,22 @@ describe('Search Plugin', () => {
 
     expect(fs.writeFileSync).not.toHaveBeenCalled();
   });
+
+  it('should handle errors', () => {
+    const fs = require('fs-extra');
+    const shared = require('./shared');
+    const content = new Buffer('');
+    const path = 'foo.html';
+
+    spyOn(fs, 'writeFileSync').and.throwError('Invalid file.');
+    spyOn(fs, 'existsSync').and.returnValue(true);
+    config.skyux.appSettings.search = true;
+
+    try {
+      search.preload(content, path, config);
+    } catch (error) {
+      expect(fs.writeFileSync).toThrowError('Invalid file.');
+      expect(search.preload).toThrowError(shared.StachePluginError);
+    }
+  });
 });
