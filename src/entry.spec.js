@@ -88,4 +88,40 @@ describe('Entry Plugin', () => {
       expect(error).toEqual(jasmine.any(shared.StachePluginError));
     }
   });
+
+  it('should sort plugins by pluginOrder', () => {
+    const plugins = [
+      {
+        pluginPath: 'a-second-plugin.js',
+        preload: () => { },
+        pluginOrder: 2
+      },
+      {
+        pluginPath: 'third-plugin.js',
+        preload: () => { },
+        pluginOrder: 3
+      },
+      {
+        pluginPath: 'z-first-plugin.js',
+        preload: () => { },
+        pluginOrder: 1
+      },
+      {
+        pluginPath: 'last.js',
+        preload: () => { },
+        pluginOrder: 4
+      },
+      {
+        pluginPath: 'last.js',
+        preload: () => { },
+        pluginOrder: 4
+      }
+    ];
+
+    const plugin = new StacheEntryPlugin();
+    plugins.sort(plugin.sortByPluginOrder);
+    expect(plugins[0].pluginPath).toEqual('z-first-plugin.js');
+    expect(plugins[1].pluginPath).toEqual('a-second-plugin.js');
+    expect(plugins[2].pluginPath).toEqual('third-plugin.js');
+  });
 });

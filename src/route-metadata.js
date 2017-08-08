@@ -3,6 +3,8 @@ const fs = require('fs-extra');
 const glob = require('glob');
 const shared = require('./shared');
 
+const pluginOrder = 5;
+
 const preload = (content, resourcePath, skyPagesConfig) => {
   if (!resourcePath.match(/app-extras\.module\.ts$/)) {
     return content;
@@ -96,6 +98,4 @@ ${content}`;
   return shared.addToProviders(content, 'STACHE_ROUTE_METADATA_PROVIDERS');
 };
 
-module.exports = {
-  preload
-};
+module.exports = { preload, pluginOrder };
