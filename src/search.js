@@ -1,5 +1,6 @@
 const fs = require('fs-extra');
 const path = require('path');
+const shared = require('./shared');
 
 const preload = (content, resourcePath, skyPagesConfig) => {
   if (!skyPagesConfig.skyux.appSettings.search) {
@@ -92,10 +93,14 @@ describe('Search Results', () => {
 });
 `
   function addSearchSpecToProject() {
-    if (fs.existsSync(path.join('e2e', 'stache-search.e2e-spec.ts'))) {
-      return;
+    try {
+      if (fs.existsSync(path.join('e2e', 'stache-search.e2e-spec.ts'))) {
+        return;
+      }
+      fs.writeFileSync(path.join('e2e', 'stache-search.e2e-spec.ts'), template);
+    } catch (error) {
+      throw new shared.StachePluginError(error.message);
     }
-    fs.writeFileSync(path.join('e2e', 'stache-search.e2e-spec.ts'), template);
   }
 
   addSearchSpecToProject();
