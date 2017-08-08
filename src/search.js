@@ -98,8 +98,6 @@ describe('Search Results', () => {
     fs.writeFileSync(path.join('e2e', 'stache-search.e2e-spec.ts'), template);
   }
 
-
-
   addSearchSpecToProject();
 
   return content;
