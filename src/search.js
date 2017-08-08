@@ -92,8 +92,13 @@ describe('Search Results', () => {
 });
 `
   function addSearchSpecToProject() {
+    if (fs.existsSync(path.join('e2e', 'stache-search.e2e-spec.ts'))) {
+      return;
+    }
     fs.writeFileSync(path.join('e2e', 'stache-search.e2e-spec.ts'), template);
   }
+
+
 
   addSearchSpecToProject();
 

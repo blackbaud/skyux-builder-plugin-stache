@@ -46,4 +46,17 @@ describe('Search Plugin', () => {
 
     expect(fs.writeFileSync).toHaveBeenCalled();
   });
+
+  it('should not add the file if it already exists', () => {
+    const content = new Buffer('<stache></stache>');
+    const path = 'foo.html';
+    const fs = require('fs-extra');
+
+    spyOn(fs, 'writeFileSync');
+    spyOn(fs, 'existsSync').and.returnValue(true);
+    config.skyux.appSettings.search = true;
+    search.preload(content, path, config);
+
+    expect(fs.writeFileSync).not.toHaveBeenCalled();
+  });
 });
