@@ -18,14 +18,14 @@ describe('Search Plugin', () => {
   });
 
   it('should not alter the content', () => {
-    const content = 'let foo = "bar";';
+    const content = new Buffer('let foo = "bar";');
     const path = 'foo.js';
     const result = search.preload(content, path, config);
     expect(result).toBe(content);
   });
 
   it('should not add the search spec if search flag is false', () => {
-    const content = '<stache></stache>';
+    const content = new Buffer('<stache></stache>');
     const path = 'foo.html';
     const fs = require('fs-extra');
 
@@ -36,7 +36,7 @@ describe('Search Plugin', () => {
   });
 
   it('should add the search spec to the e2e directory', () => {
-    const content = '<stache></stache>';
+    const content = new Buffer('<stache></stache>');
     const path = 'foo.html';
     const fs = require('fs-extra');
 
