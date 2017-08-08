@@ -44,34 +44,44 @@ describe('Search Results', () => {
   });
 
   it('should generate search results', (done) => {
-    let content = {};
     let appName = JSON.parse(browser.params.skyPagesConfig).skyux.name;
-
-    content[appName] = [];
+    let content = {};
 
     function scrapePageContent(file: string) {
-      SkyHostBrowser.get(file);
-      return element(by.css('body'))
-        .getText()
+      return SkyHostBrowser
+        .get(file)
+        .then(() => {
+          return browser.executeScript([
+            'document.querySelectorAll(',
+            '".stache-sidebar, .stache-breadcrumbs, .stache-table-of-contents"',
+            ').forEach(el => el.remove());'
+          ].join(''));
+        })
+        .then(() => {
+          return element(by.css('.stache-wrapper')).getText();
+        })
         .then((text: string): Promise<any> => {
-          content[appName].push({
-            path: file,
-            text: text
-          });
-          return Promise.resolve();
+            let pageContent = {
+              path: file,
+              text: text
+            };
+            return Promise.resolve(pageContent);
         });
     }
 
     Promise.all(files.map(file => {
       return scrapePageContent(file);
     }))
-      .then(() => {
+      .then((pageContents) => {
+        content[appName] = pageContents;
+        console.log(content);
         return new Promise((resolve, reject) => {
           fs.writeFile(
             path.join(
               __dirname,
               '..',
               'src',
+              'stache',
               'search',
               'search.json'
             ),
