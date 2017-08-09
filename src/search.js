@@ -60,12 +60,12 @@ describe('Search Results', () => {
         .then(() => {
           return element(by.css('.stache-wrapper')).getText();
         })
-        .then((text: string): Promise<any> => {
+        .then((text: string) => {
             let pageContent = {
               path: file,
               text: text
             };
-            return Promise.resolve(pageContent);
+            return pageContent;
         });
     }
 
@@ -74,7 +74,6 @@ describe('Search Results', () => {
     }))
       .then((pageContents) => {
         content[appName] = pageContents;
-        console.log(content);
         return new Promise((resolve, reject) => {
           fs.writeFile(
             path.join(
