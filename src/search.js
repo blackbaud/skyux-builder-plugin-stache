@@ -35,10 +35,14 @@ describe('Search Results', () => {
 
   beforeEach(() => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 500000;
+    // Temporary solution until we can get access to the actual route array
     files = walkSync(path.join(__dirname, '..', 'src', 'app'));
     files = files.map(file => {
       let route = file.split('/app')[1];
       route = route.slice(0, route.length - 11);
+      if (route === '') {
+        route = '/';
+      }
       return route;
     });
   });
@@ -48,6 +52,9 @@ describe('Search Results', () => {
     let content = {};
 
     function scrapePageContent(file: string) {
+      let pageContent = {
+        path: file
+      };
       return SkyHostBrowser
         .get(file)
         .then(() => {
@@ -58,14 +65,23 @@ describe('Search Results', () => {
           ].join(''));
         })
         .then(() => {
-          return element(by.css('.stache-wrapper')).getText();
+            return element(by.css('.stache-wrapper')).getText();
         })
-        .then((text: string) => {
-            let pageContent = {
-              path: file,
-              text: text
-            };
+        .then(text => {
+          pageContent['text'] = text;
+          return element(by.css('.stache-page-title')).getText();
+        })
+        .then(text => {
+          pageContent['title'] = text;
+          return pageContent;
+        })
+        .catch(error => {
+          if (error.name === 'NoSuchElementError') {
+            console.log('Must have the <stache> tag and a pageTitle on page to scrape content.');
             return pageContent;
+          } else {
+            throw new Error(error);
+          }
         });
     }
 
