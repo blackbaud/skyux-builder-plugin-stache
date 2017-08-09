@@ -33,6 +33,14 @@ const walkSync = (dir, filePaths: string[] = []) => {
 describe('Search Results', () => {
   let files;
 
+  function removeUnnecessaryElements() {
+    Array.from(
+      document.querySelectorAll(
+        '.stache-sidebar, .stache-breadcrumbs, .stache-table-of-contents'
+      )
+    ).forEach(el => el.remove());
+  }
+
   beforeEach(() => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 500000;
     // Temporary solution until we can get access to the actual route array
@@ -58,11 +66,7 @@ describe('Search Results', () => {
       return SkyHostBrowser
         .get(file)
         .then(() => {
-          return browser.executeScript([
-            'document.querySelectorAll(',
-            '".stache-sidebar, .stache-breadcrumbs, .stache-table-of-contents"',
-            ').forEach(el => el.remove());'
-          ].join(''));
+          return browser.executeScript(removeUnnecessaryElements);
         })
         .then(() => {
             return element(by.css('.stache-wrapper')).getText();
