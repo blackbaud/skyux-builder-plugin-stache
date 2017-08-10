@@ -1,5 +1,6 @@
 const mock = require('mock-require');
 const StacheEntryPlugin = require('./entry');
+const shared = require('./shared');
 
 describe('Entry Plugin', () => {
   afterEach(() => {
@@ -24,12 +25,12 @@ describe('Entry Plugin', () => {
       }
     };
 
-    mock('./config.js', mockPlugin);
+    mock('./config', mockPlugin);
     mock('./include', mockPlugin);
-    mock('./code-block.js', mockPlugin);
-    mock('./json-data.js', mockPlugin);
-    mock('./route-metadata.js', mockPlugin);
-    mock('./template-reference-variable.js', mockPlugin);
+    mock('./code-block', mockPlugin);
+    mock('./json-data', mockPlugin);
+    mock('./route-metadata', mockPlugin);
+    mock('./template-reference-variable', mockPlugin);
 
     const plugin = new StacheEntryPlugin();
     const content = new Buffer('Content');
@@ -45,19 +46,19 @@ describe('Entry Plugin', () => {
 
   it('should call the plugins in the expected order', () => {
     let callOrder = [];
-    mock('./config.js', {
+    mock('./config', {
       preload() {
         callOrder.push(1);
       }
     });
 
-    mock('./json-data.js', {
+    mock('./json-data', {
       preload() {
         callOrder.push(4);
       }
     });
 
-    mock('./route-metadata.js', {
+    mock('./route-metadata', {
       preload() {
         callOrder.push(5);
       }
@@ -69,13 +70,13 @@ describe('Entry Plugin', () => {
       }
     });
 
-    mock('./code-block.js', {
+    mock('./code-block', {
       preload() {
         callOrder.push(3);
       }
     });
 
-    mock('./template-reference-variable.js', {
+    mock('./template-reference-variable', {
       preload() {
         callOrder.push(6);
       }
@@ -87,5 +88,23 @@ describe('Entry Plugin', () => {
     plugin.preload(content, 'foo.html', {});
 
     expect(callOrder).toEqual([1, 2, 3, 4, 5, 6]);
-  })
+  });
+
+  it('should throw an error if an error is thrown from a plugin', () => {
+    mock('./config', {
+      preload() {
+        throw new shared.StachePluginError('invalid plugin');
+      }
+    });
+
+    const content = new Buffer('');
+    const plugin = new StacheEntryPlugin();
+
+    try {
+      plugin.preload(content, '', {});
+    } catch (error) {
+      expect(plugin.preload).toThrowError(shared.StachePluginError);
+      expect(error.message).toEqual('invalid plugin');
+    }
+  });
 });
