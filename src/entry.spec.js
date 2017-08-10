@@ -35,7 +35,9 @@ describe('Entry Plugin', () => {
     const content = new Buffer('Content');
     const resourcePath = 'foo.html';
     const skyPagesConfig = {};
+
     plugin.preload(content, resourcePath, skyPagesConfig);
+
     expect(content.toString()).toEqual(_content.toString());
     expect(resourcePath).toEqual(_resourcePath);
     expect(skyPagesConfig.toString()).toEqual(_skyPagesConfig.toString());
@@ -81,7 +83,9 @@ describe('Entry Plugin', () => {
 
     const plugin = new StacheEntryPlugin();
     const content = new Buffer('Content');
+
     plugin.preload(content, 'foo.html', {});
+
     expect(callOrder).toEqual([1, 2, 3, 4, 5, 6]);
   })
 });
