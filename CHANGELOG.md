@@ -1,3 +1,6 @@
+# 1.0.5 (2017-08-03)
+- Added plugin to add search spec file to Stache sites if the search flag is enabled.
+
 # 1.0.4 (2017-07-03)
 
 - Added `order` attribute to Route Meta Data Service. [#10](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/10)
