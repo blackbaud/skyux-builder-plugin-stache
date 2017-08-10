@@ -1,7 +1,4 @@
-const glob = require('glob');
 const mock = require('mock-require');
-const path = require('path');
-const shared = require('./shared');
 const StacheEntryPlugin = require('./entry');
 
 describe('Entry Plugin', () => {
@@ -16,9 +13,13 @@ describe('Entry Plugin', () => {
 
   it('should pass the content through all plugins', () => {
     let _content;
+    let _resourcePath;
+    let _skyPagesConfig;
     mock('./config.js', {
       preload(content, resourcePath, skyPagesConfig) {
         _content = content;
+        _resourcePath = resourcePath;
+        _skyPagesConfig = skyPagesConfig;
         return content;
       }
     });
@@ -26,6 +27,8 @@ describe('Entry Plugin', () => {
     mock('./include', {
       preload(content, resourcePath, skyPagesConfig) {
         _content = content;
+        _resourcePath = resourcePath;
+        _skyPagesConfig = skyPagesConfig;
         return content;
       }
     });
@@ -33,6 +36,8 @@ describe('Entry Plugin', () => {
     mock('./code-block.js', {
       preload(content, resourcePath, skyPagesConfig) {
         _content = content;
+        _resourcePath = resourcePath;
+        _skyPagesConfig = skyPagesConfig;
         return content;
       }
     });
@@ -40,6 +45,8 @@ describe('Entry Plugin', () => {
     mock('./json-data.js', {
       preload(content, resourcePath, skyPagesConfig) {
         _content = content;
+        _resourcePath = resourcePath;
+        _skyPagesConfig = skyPagesConfig;
         return content;
       }
     });
@@ -47,6 +54,8 @@ describe('Entry Plugin', () => {
     mock('./route-metadata.js', {
       preload(content, resourcePath, skyPagesConfig) {
         _content = content;
+        _resourcePath = resourcePath;
+        _skyPagesConfig = skyPagesConfig;
         return content;
       }
     });
@@ -54,55 +63,61 @@ describe('Entry Plugin', () => {
     mock('./template-reference-variable.js', {
       preload(content, resourcePath, skyPagesConfig) {
         _content = content;
+        _resourcePath = resourcePath;
+        _skyPagesConfig = skyPagesConfig;
         return content;
       }
     });
 
     const plugin = new StacheEntryPlugin();
     const content = new Buffer('Content');
-    plugin.preload(content, 'foo.html', {});
+    const resourcePath = 'foo.html';
+    const skyPagesConfig = {};
+    plugin.preload(content, resourcePath, skyPagesConfig);
     expect(content.toString()).toEqual(_content.toString());
+    expect(resourcePath).toEqual(_resourcePath);
+    expect(skyPagesConfig.toString()).toEqual(_skyPagesConfig.toString());
   });
 
   it('should call the plugins in the expected order', () => {
     let callOrder = [];
     mock('./config.js', {
-      preload(content, resourcePath, skyPagesConfig) {
+      preload() {
         callOrder.push(1);
         return content;
       }
     });
 
     mock('./json-data.js', {
-      preload(content, resourcePath, skyPagesConfig) {
+      preload() {
         callOrder.push(4);
         return content;
       }
     });
 
     mock('./route-metadata.js', {
-      preload(content, resourcePath, skyPagesConfig) {
+      preload() {
         callOrder.push(5);
         return content;
       }
     });
 
     mock('./include', {
-      preload(content, resourcePath, skyPagesConfig) {
+      preload() {
         callOrder.push(2);
         return content;
       }
     });
 
     mock('./code-block.js', {
-      preload(content, resourcePath, skyPagesConfig) {
+      preload() {
         callOrder.push(3);
         return content;
       }
     });
 
     mock('./template-reference-variable.js', {
-      preload(content, resourcePath, skyPagesConfig) {
+      preload() {
         callOrder.push(6);
         return content;
       }

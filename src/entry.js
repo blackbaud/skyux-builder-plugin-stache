@@ -1,6 +1,3 @@
-const glob = require('glob');
-const shared = require('./shared');
-
 function StacheEntryPlugin() {
   const preload = (content, resourcePath, skyPagesConfig) => {
     const preloadPluginOrder = [
