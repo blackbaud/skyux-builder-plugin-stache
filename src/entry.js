@@ -1,12 +1,12 @@
 function StacheEntryPlugin() {
   const preload = (content, resourcePath, skyPagesConfig) => {
     const preloadPluginOrder = [
-      require('./config.js'),
-      require('./include.js'),
-      require('./code-block.js'),
-      require('./json-data.js'),
-      require('./route-metadata.js'),
-      require('./template-reference-variable.js')
+      require('./config'),
+      require('./include'),
+      require('./code-block'),
+      require('./json-data'),
+      require('./route-metadata'),
+      require('./template-reference-variable')
     ];
 
     preloadPluginOrder.forEach(plugin => {

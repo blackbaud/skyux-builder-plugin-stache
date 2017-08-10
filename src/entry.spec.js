@@ -15,59 +15,21 @@ describe('Entry Plugin', () => {
     let _content;
     let _resourcePath;
     let _skyPagesConfig;
-    mock('./config.js', {
+    const mockPlugin = {
       preload(content, resourcePath, skyPagesConfig) {
         _content = content;
         _resourcePath = resourcePath;
         _skyPagesConfig = skyPagesConfig;
         return content;
       }
-    });
+    };
 
-    mock('./include', {
-      preload(content, resourcePath, skyPagesConfig) {
-        _content = content;
-        _resourcePath = resourcePath;
-        _skyPagesConfig = skyPagesConfig;
-        return content;
-      }
-    });
-
-    mock('./code-block.js', {
-      preload(content, resourcePath, skyPagesConfig) {
-        _content = content;
-        _resourcePath = resourcePath;
-        _skyPagesConfig = skyPagesConfig;
-        return content;
-      }
-    });
-
-    mock('./json-data.js', {
-      preload(content, resourcePath, skyPagesConfig) {
-        _content = content;
-        _resourcePath = resourcePath;
-        _skyPagesConfig = skyPagesConfig;
-        return content;
-      }
-    });
-
-    mock('./route-metadata.js', {
-      preload(content, resourcePath, skyPagesConfig) {
-        _content = content;
-        _resourcePath = resourcePath;
-        _skyPagesConfig = skyPagesConfig;
-        return content;
-      }
-    });
-
-    mock('./template-reference-variable.js', {
-      preload(content, resourcePath, skyPagesConfig) {
-        _content = content;
-        _resourcePath = resourcePath;
-        _skyPagesConfig = skyPagesConfig;
-        return content;
-      }
-    });
+    mock('./config', mockPlugin);
+    mock('./include', mockPlugin);
+    mock('./code-block', mockPlugin);
+    mock('./json-data', mockPlugin);
+    mock('./route-metadata', mockPlugin);
+    mock('./template-reference-variable', mockPlugin);
 
     const plugin = new StacheEntryPlugin();
     const content = new Buffer('Content');
@@ -81,51 +43,23 @@ describe('Entry Plugin', () => {
 
   it('should call the plugins in the expected order', () => {
     let callOrder = [];
-    mock('./config.js', {
-      preload() {
-        callOrder.push(1);
-        return content;
+    const mockPlugin = {
+      preload(callNumber) {
+        callNumber++;
+        callOrder.push(callNumber);
+        return callNumber;
       }
-    });
+    };
 
-    mock('./json-data.js', {
-      preload() {
-        callOrder.push(4);
-        return content;
-      }
-    });
-
-    mock('./route-metadata.js', {
-      preload() {
-        callOrder.push(5);
-        return content;
-      }
-    });
-
-    mock('./include', {
-      preload() {
-        callOrder.push(2);
-        return content;
-      }
-    });
-
-    mock('./code-block.js', {
-      preload() {
-        callOrder.push(3);
-        return content;
-      }
-    });
-
-    mock('./template-reference-variable.js', {
-      preload() {
-        callOrder.push(6);
-        return content;
-      }
-    });
+    mock('./config', mockPlugin);
+    mock('./json-data', mockPlugin);
+    mock('./route-metadata', mockPlugin);
+    mock('./include', mockPlugin);
+    mock('./code-block', mockPlugin);
+    mock('./template-reference-variable', mockPlugin);
 
     const plugin = new StacheEntryPlugin();
-    const content = new Buffer('Content');
-    plugin.preload(content, 'foo.html', {});
+    plugin.preload(0, '', {});
     expect(callOrder).toEqual([1, 2, 3, 4, 5, 6]);
   })
 });
