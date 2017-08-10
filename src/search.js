@@ -56,8 +56,13 @@ describe('Search Results', () => {
   });
 
   it('should generate search results', (done) => {
-    let appName = JSON.parse(browser.params.skyPagesConfig).skyux.name;
-    let content = {};
+    let config = JSON.parse(browser.params.skyPagesConfig);
+    let appName = config.skyux.name;
+    let url = config.skyux.host.url;
+    let content = {
+      name: appName,
+      url: url
+    };
 
     function scrapePageContent(file: string) {
       let pageContent = {
@@ -93,7 +98,7 @@ describe('Search Results', () => {
       return scrapePageContent(file);
     }))
       .then((pageContents) => {
-        content[appName] = pageContents;
+        content['content'] = pageContents;
         return new Promise((resolve, reject) => {
           fs.writeFile(
             path.join(
