@@ -14,12 +14,12 @@ describe('Entry Plugin', () => {
   it('should pass the content through all plugins', () => {
     let _content;
     let _resourcePath;
-    let _skyPagesConfig;
+    let _skyAppConfig;
     const mockPlugin = {
-      preload(content, resourcePath, skyPagesConfig) {
+      preload(content, resourcePath, skyAppConfig) {
         _content = content;
         _resourcePath = resourcePath;
-        _skyPagesConfig = skyPagesConfig;
+        _skyAppConfig = skyAppConfig;
         return content;
       }
     };
@@ -34,11 +34,11 @@ describe('Entry Plugin', () => {
     const plugin = new StacheEntryPlugin();
     const content = new Buffer('Content');
     const resourcePath = 'foo.html';
-    const skyPagesConfig = {};
-    plugin.preload(content, resourcePath, skyPagesConfig);
+    const skyAppConfig = {};
+    plugin.preload(content, resourcePath, skyAppConfig);
     expect(content.toString()).toEqual(_content.toString());
     expect(resourcePath).toEqual(_resourcePath);
-    expect(skyPagesConfig.toString()).toEqual(_skyPagesConfig.toString());
+    expect(skyAppConfig.toString()).toEqual(_skyAppConfig.toString());
   });
 
   it('should call the plugins in the expected order', () => {
