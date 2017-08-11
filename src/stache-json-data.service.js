@@ -68,11 +68,11 @@ const isPropertyNameValid = (propertyName) => {
 
 const setStacheDataObject = (dataObject) => {
   _stacheDataObject = dataObject;
-}
+};
 
 const getStacheDataObject = () => {
   return _stacheDataObject;
-}
+};
 
 const replaceWithStacheData = (replacementCandidate) => {
   if (stacheJsonDataRegex.test(replacementCandidate)) {
@@ -83,7 +83,7 @@ const replaceWithStacheData = (replacementCandidate) => {
   }
 
   return replacementCandidate;
-}
+};
 
 const getDataValue = (keyString, dataObject) => {
   const keys = getKeysFromString(keyString);

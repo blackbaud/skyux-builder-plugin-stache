@@ -2,9 +2,33 @@ const cheerio = require('cheerio');
 const stacheJsonDataService = require('./stache-json-data.service');
 const shared = require('./shared');
 
-const addElvisOperator = (content) => {
-  return content.toString().replace(/stache\.jsonData\./g, 'stache.jsonData?.');
-}
+const preload = (content, resourcePath) => {
+
+  if (stacheJsonDataService.getStacheDataObject() === undefined) {
+    stacheJsonDataService.buildStacheDataObject();
+  }
+
+  if (resourcePath.match(/\.html$/)) {
+    return editHTMLContent(content);
+  }
+
+  if (resourcePath.match(/app-extras\.module\.ts$/)) {
+    return addStacheDataToAppExtrasModule(content, resourcePath);
+  }
+
+  return content;
+};
+
+const editHTMLContent = (content) => {
+  const $ = cheerio.load(content, shared.cheerioConfig);
+  const stacheTags = $('stache');
+
+  if (stacheTags.length > 0) {
+    content = replaceStacheDataAttributes(stacheTags, $);
+  }
+
+  return addElvisOperator(content);
+};
 
 const replaceStacheDataAttributes = (tags, $) => {
   tags.each((i, elem) => {
@@ -13,37 +37,22 @@ const replaceStacheDataAttributes = (tags, $) => {
     let navTitle = $wrapper.attr('navTitle');
 
     if (pageTitle) {
-      $(elem).attr('pageTitle', (i, id) => {
-        return stacheJsonDataService.replaceWithStacheData(id);
+      $(elem).attr('pageTitle', (i, attrValue) => {
+        return stacheJsonDataService.replaceWithStacheData(attrValue);
       });
     }
 
     if (navTitle) {
-      $(elem).attr('pageTitle', (i, id) => {
-        return stacheJsonDataService.replaceWithStacheData(id);
+      $(elem).attr('pageTitle', (i, attrValue) => {
+        return stacheJsonDataService.replaceWithStacheData(attrValue);
       });
     }
   });
-  return addElvisOperator($.html());
-}
+  return $.html();
+};
 
-const preload = (content, resourcePath) => {
-  if (resourcePath.match(/\.html$/)) {
-    const $ = cheerio.load(content, shared.cheerioConfig);
-    const stacheTags = $('stache');
-
-    if (!stacheTags.length) {
-      return addElvisOperator(content);
-    }
-
-    return replaceStacheDataAttributes(stacheTags, $);
-  }
-
-  if (!resourcePath.match(/app-extras\.module\.ts$/)) {
-    return content;
-  }
-
-  return addStacheDataToAppExtrasModule(content, resourcePath);
+const addElvisOperator = (content) => {
+  return content.toString().replace(/stache\.jsonData\./g, 'stache.jsonData?.');
 };
 
 const addStacheDataToAppExtrasModule = (content, resourcePath) => {
@@ -71,6 +80,6 @@ export const STACHE_JSON_DATA_PROVIDERS: any[] = [
 ${content}`;
 
   return shared.addToProviders(content, 'STACHE_JSON_DATA_PROVIDERS');
-}
+};
 
 module.exports = { preload };

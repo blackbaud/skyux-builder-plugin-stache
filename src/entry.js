@@ -1,4 +1,3 @@
-const stacheJsonDataService = require('./stache-json-data.service');
 const shared = require('./shared');
 
 function StacheEntryPlugin() {
@@ -12,8 +11,6 @@ function StacheEntryPlugin() {
         require('./route-metadata'),
         require('./template-reference-variable')
       ];
-
-      stacheJsonDataService.buildStacheDataObject();
 
       preloadPluginOrder.forEach(plugin => {
         content = plugin.preload(content, resourcePath, skyPagesConfig);
