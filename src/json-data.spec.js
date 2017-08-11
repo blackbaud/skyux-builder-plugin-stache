@@ -1,9 +1,12 @@
 const plugin = require('./json-data');
 const glob = require('glob');
 const fs = require('fs-extra');
-// const shared = require('./shared');
+const stacheJsonDataService = require('./stache-json-data.service');
 
 describe('JSON Data Plugin', () => {
+  beforeEach(() => {
+    spyOn(stacheJsonDataService, 'buildStacheDataObject').and.callFake(() => {});
+  });
 
   it('should contain a preload hook', () => {
     expect(plugin.preload).toBeDefined();
@@ -33,76 +36,37 @@ describe('JSON Data Plugin', () => {
     expect(result.toString()).toEqual(content.toString());
   });
 
-  // it('should abort if json files are nonexistant', () => {
-  //   spyOn(glob, 'sync').and.returnValue([]);
-  //   const content = new Buffer('');
-  //   const result = plugin.preload(content, 'app-extras.module.ts');
-  //   expect(result.toString()).toEqual(content.toString());
-  // });
+  it('It should add an elvis operator to stache json attributes in html pages', () => {
+    const content = new Buffer('<stache> {{ stache.jsonData.globals.productNameLong }} </stache>');
+    const result = plugin.preload(content, 'foo.html');
+    expect(result.toString()).toEqual('<stache> {{ stache.jsonData?.globals.productNameLong }} </stache>');
+  });
 
-  // it('should handle invalid file paths', () => {
-  //   spyOn(glob, 'sync').and.returnValue(['invalid.json']);
-  //   spyOn(fs, 'readFileSync').and.throwError('Invalid file.');
+  it('It should replace the pageTitle attribute on the stache tag if it contains a stache data value', () => {
+    spyOn(stacheJsonDataService, 'replaceWithStacheData').and.callFake(() => 'Page Title Value');
+    const content = new Buffer('<stache pageTitle="{{ stache.jsonData.globals.productNameLong }}"></stache>');
+    const result = plugin.preload(content, 'foo.html');
+    expect(result.toString()).toEqual('<stache pageTitle="Page Title Value"></stache>');
+  });
 
-  //   const content = new Buffer('');
+  it('should attempt to build the stache json data object if one does not exist already', () => {
+    spyOn(stacheJsonDataService, 'getStacheDataObject').and.callFake(() => { return undefined; });
+    const content = new Buffer('');
+    plugin.preload(content, 'foo.html');
+    expect(stacheJsonDataService.buildStacheDataObject).toHaveBeenCalled();
+  });
 
-  //   try {
-  //     plugin.preload(content, 'app-extras.module.ts');
-  //   } catch (error) {
-  //     expect(fs.readFileSync).toThrowError('Invalid file.');
-  //     expect(plugin.preload).toThrowError(shared.StachePluginError);
-  //   }
-  // });
+  it('should not try to build the stache json data object if one already exists', () => {
+    spyOn(stacheJsonDataService, 'getStacheDataObject').and.callFake(() => { return true; });
+    const content = new Buffer('');
+    plugin.preload(content, 'foo.html');
+    expect(stacheJsonDataService.buildStacheDataObject).not.toHaveBeenCalled();
+  });
 
-  // it('should log errors for invalid file names', () => {
-  //   const invalidFiles = [
-  //     '.json',
-  //     '*****.json',
-  //     'constructor.json',
-  //     'prototype.json',
-  //     'テナンス中です.json'
-  //   ];
-
-  //   spyOn(glob, 'sync').and.returnValue(invalidFiles);
-  //   spyOn(console, 'error').and.returnValue('');
-
-  //   const content = new Buffer('');
-  //   plugin.preload(content, 'app-extras.module.ts');
-
-  //   expect(console.error.calls.count()).toBe(invalidFiles.length);
-  // });
-
-  // it('should create a valid object key given a file name.', () => {
-  //   const fileNames = [
-  //     'config.json',
-  //     'file with spaces.json',
-  //     'Tes*$^^@*(@$tfile.json',
-  //     'file with UPPERCASE LETTERS.json',
-  //     'file w1th n0mb3rs.json',
-  //     'file-with-dashes.json',
-  //     'file_with_underscores_____.json',
-  //     '---TEST----.json',
-  //     'SampleTest.json',
-  //     'sampleFile.json',
-  //     'sample-_-file.json'
-  //   ];
-
-  //   spyOn(glob, 'sync').and.returnValue(fileNames);
-  //   spyOn(fs, 'readFileSync').and.returnValue('{}');
-
-  //   const content = new Buffer('');
-  //   const result = plugin.preload(content, 'app-extras.module.ts');
-
-  //   expect(result).toContain('"config":{');
-  //   expect(result).toContain('"file_with_spaces":{');
-  //   expect(result).toContain('"Testfile":{');
-  //   expect(result).toContain('"file_with_UPPERCASE_LETTERS":{');
-  //   expect(result).toContain('"file_w1th_n0mb3rs":{');
-  //   expect(result).toContain('"file_with_dashes":{');
-  //   expect(result).toContain('"file_with_underscores_____":{');
-  //   expect(result).toContain('"___TEST____":{');
-  //   expect(result).toContain('"SampleTest":{');
-  //   expect(result).toContain('"sampleFile":{');
-  //   expect(result).toContain('"sample___file":{');
-  // });
+  it('It should replace the navTitle attribute on the stache tag if it contains a stache data value', () => {
+    spyOn(stacheJsonDataService, 'replaceWithStacheData').and.callFake(() => 'Nav Title Value');
+    const content = new Buffer('<stache navTitle="{{ stache.jsonData.globals.productNameLong }}"></stache>');
+    const result = plugin.preload(content, 'foo.html');
+    expect(result.toString()).toEqual('<stache navTitle="Nav Title Value"></stache>');
+  });
 });

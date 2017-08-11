@@ -43,7 +43,7 @@ const replaceStacheDataAttributes = (tags, $) => {
     }
 
     if (navTitle) {
-      $(elem).attr('pageTitle', (i, attrValue) => {
+      $(elem).attr('navTitle', (i, attrValue) => {
         return stacheJsonDataService.replaceWithStacheData(attrValue);
       });
     }

@@ -13,7 +13,7 @@ const buildStacheDataObject = () => {
   const root = shared.resolveAssetsPath('data');
   const filePaths = glob.sync(path.join(root, '*.json'));
 
-  if (!filePaths.length) {
+  if (filePaths.length < 1) {
     return;
   }
 
