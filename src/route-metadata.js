@@ -96,6 +96,4 @@ ${content}`;
   return shared.addToProviders(content, 'STACHE_ROUTE_METADATA_PROVIDERS');
 };
 
-module.exports = {
-  preload
-};
+module.exports = { preload };

@@ -1,8 +1,6 @@
-const glob = require('glob');
 const mock = require('mock-require');
-const path = require('path');
-const shared = require('./shared');
 const StacheEntryPlugin = require('./entry');
+const shared = require('./shared');
 
 describe('Entry Plugin', () => {
   afterEach(() => {
@@ -14,78 +12,99 @@ describe('Entry Plugin', () => {
     expect(plugin.preload).toBeDefined();
   });
 
-  it('should abort if no plugins exist', () => {
-    spyOn(glob, 'sync').and.returnValue([]);
-    const plugin = new StacheEntryPlugin();
-    const content = new Buffer('');
-    const result = plugin.preload(content, '', {});
-    expect(result.toString()).toEqual(content.toString());
-  });
-
-  it('should pass its arguments into the other plugins', () => {
+  it('should pass the content through all plugins', () => {
     let _content;
     let _resourcePath;
-    let _skyAppConfig;
-
-    spyOn(glob, 'sync').and.returnValue(['my-plugin.js']);
-    spyOn(path, 'resolve').and.returnValue('my-plugin.js');
-    mock('my-plugin.js', {
-      preload: (content, resourcePath, skyAppConfig) => {
+    let _skyPagesConfig;
+    const mockPlugin = {
+      preload(content, resourcePath, skyPagesConfig) {
         _content = content;
         _resourcePath = resourcePath;
-        _skyAppConfig = skyAppConfig;
-      }
-    });
-
-    const plugin = new StacheEntryPlugin();
-    const content = new Buffer('<p></p>');
-    plugin.preload(content, 'foo.html', {});
-
-    expect(_content.toString()).toEqual(content.toString());
-    expect(_resourcePath).toEqual('foo.html');
-    expect(_skyAppConfig).toEqual(jasmine.any(Object));
-  });
-
-  it('should abort if the plugin does not have a preload method', () => {
-    spyOn(glob, 'sync').and.returnValue(['my-plugin.js']);
-    spyOn(path, 'resolve').and.returnValue('my-plugin.js');
-    mock('my-plugin.js', {
-      postload: () => { }
-    });
-
-    const plugin = new StacheEntryPlugin();
-    const content = new Buffer('');
-    const result = plugin.preload(content, '', {});
-
-    expect(result.toString()).toEqual(content.toString());
-  });
-
-  it('should abort if the plugin does not change the file\'s content', () => {
-    spyOn(glob, 'sync').and.returnValue(['my-plugin.js']);
-    spyOn(path, 'resolve').and.returnValue('my-plugin.js');
-    mock('my-plugin.js', {
-      preload: (content) => {
+        _skyPagesConfig = skyPagesConfig;
         return content;
       }
+    };
+
+    mock('./config', mockPlugin);
+    mock('./include', mockPlugin);
+    mock('./code-block', mockPlugin);
+    mock('./json-data', mockPlugin);
+    mock('./route-metadata', mockPlugin);
+    mock('./template-reference-variable', mockPlugin);
+
+    const plugin = new StacheEntryPlugin();
+    const content = new Buffer('Content');
+    const resourcePath = 'foo.html';
+    const skyPagesConfig = {};
+
+    plugin.preload(content, resourcePath, skyPagesConfig);
+
+    expect(content.toString()).toEqual(_content.toString());
+    expect(resourcePath).toEqual(_resourcePath);
+    expect(skyPagesConfig.toString()).toEqual(_skyPagesConfig.toString());
+  });
+
+  it('should call the plugins in the expected order', () => {
+    let callOrder = [];
+    mock('./config', {
+      preload() {
+        callOrder.push(1);
+      }
+    });
+
+    mock('./json-data', {
+      preload() {
+        callOrder.push(4);
+      }
+    });
+
+    mock('./route-metadata', {
+      preload() {
+        callOrder.push(5);
+      }
+    });
+
+    mock('./include', {
+      preload() {
+        callOrder.push(2);
+      }
+    });
+
+    mock('./code-block', {
+      preload() {
+        callOrder.push(3);
+      }
+    });
+
+    mock('./template-reference-variable', {
+      preload() {
+        callOrder.push(6);
+      }
     });
 
     const plugin = new StacheEntryPlugin();
-    const content = new Buffer('');
-    const result = plugin.preload(content, '', {});
+    const content = new Buffer('Content');
 
-    expect(result.toString()).toEqual(content.toString());
+    plugin.preload(content, 'foo.html', {});
+
+    expect(callOrder).toEqual([1, 2, 3, 4, 5, 6]);
   });
 
-  it('should throw an error if the plugin is not found', () => {
-    spyOn(glob, 'sync').and.returnValue(['invalid.js']);
-    spyOn(path, 'resolve').and.returnValue('invalid.js');
-    const plugin = new StacheEntryPlugin();
+  it('should throw an error if an error is thrown from a plugin', () => {
+    mock('./config', {
+      preload() {
+        throw new shared.StachePluginError('invalid plugin');
+      }
+    });
+
     const content = new Buffer('');
+    const plugin = new StacheEntryPlugin();
 
     try {
       plugin.preload(content, '', {});
     } catch (error) {
-      expect(error).toEqual(jasmine.any(shared.StachePluginError));
+      expect(plugin.preload).toThrowError(shared.StachePluginError);
+      expect(error.message).toEqual('invalid plugin');
     }
   });
 });
