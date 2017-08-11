@@ -1,4 +1,4 @@
-# 1.0.4 (2017-08-11)
+# 1.0.5 (2017-08-11)
 
 - Now allowing `preload plugins` to be called in a specific order.
 - Fixed a bug that prevented eslint from linting the appropriate files.
