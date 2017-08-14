@@ -1,5 +1,5 @@
 const cheerio = require('cheerio');
-const shared = require('./shared');
+const shared = require('./services/shared');
 
 const preload = (content, resourcePath) => {
   if (!resourcePath.match(/\.html$/)) {

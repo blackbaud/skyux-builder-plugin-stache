@@ -1,7 +1,8 @@
 const fs = require('fs-extra');
 const path = require('path');
 const cheerio = require('cheerio');
-const shared = require('./shared');
+const stacheJsonDataService = require('./services/stache-json-data.service');
+const shared = require('./services/shared');
 
 const preload = (content, resourcePath) => {
   if (!resourcePath.match(/\.html$/)) {
@@ -19,6 +20,10 @@ const preload = (content, resourcePath) => {
 
   includes.each((i, elem) => {
     const $elem = $(elem);
+    $elem.attr('fileName', (i, attrValue) => {
+      return stacheJsonDataService.replaceWithStacheData(attrValue);
+    });
+
     const fileName = $elem.attr('fileName');
     const filePath = path.join(root, fileName);
 

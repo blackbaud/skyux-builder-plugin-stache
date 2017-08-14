@@ -1,12 +1,9 @@
 const plugin = require('./json-data');
 const glob = require('glob');
 const fs = require('fs-extra');
-const stacheJsonDataService = require('./stache-json-data.service');
+const stacheJsonDataService = require('./services/stache-json-data.service');
 
 describe('JSON Data Plugin', () => {
-  beforeEach(() => {
-    spyOn(stacheJsonDataService, 'setStacheDataObject').and.callFake(() => {});
-  });
 
   it('should contain a preload hook', () => {
     expect(plugin.preload).toBeDefined();
@@ -47,20 +44,6 @@ describe('JSON Data Plugin', () => {
     const content = new Buffer('<stache pageTitle="{{ stache.jsonData.globals.productNameLong }}"></stache>');
     const result = plugin.preload(content, 'foo.html');
     expect(result.toString()).toEqual('<stache pageTitle="Page Title Value"></stache>');
-  });
-
-  it('should attempt to build the stache json data object if one does not exist already', () => {
-    spyOn(stacheJsonDataService, 'getStacheDataObject').and.callFake(() => { return undefined; });
-    const content = new Buffer('');
-    plugin.preload(content, 'foo.html');
-    expect(stacheJsonDataService.setStacheDataObject).toHaveBeenCalled();
-  });
-
-  it('should not try to build the stache json data object if one already exists', () => {
-    spyOn(stacheJsonDataService, 'getStacheDataObject').and.callFake(() => { return {}; });
-    const content = new Buffer('');
-    plugin.preload(content, 'foo.html');
-    expect(stacheJsonDataService.setStacheDataObject).not.toHaveBeenCalled();
   });
 
   it('It should replace the navTitle attribute on the stache tag if it contains a stache data value', () => {

@@ -1,6 +1,6 @@
 const glob = require('glob');
 const fs = require('fs-extra');
-const shared = require('./shared');
+const shared = require('./services/shared');
 
 describe('Route Metadata Plugin', () => {
   let plugin;

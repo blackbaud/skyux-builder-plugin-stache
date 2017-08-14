@@ -1,6 +1,6 @@
 const fs = require('fs-extra');
 const plugin = require('./include');
-const shared = require('./shared');
+const shared = require('./services/shared');
 
 describe('Include Plugin', () => {
   beforeAll(() => {

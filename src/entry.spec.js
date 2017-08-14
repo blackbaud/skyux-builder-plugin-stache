@@ -1,10 +1,31 @@
 const mock = require('mock-require');
 const StacheEntryPlugin = require('./entry');
-const shared = require('./shared');
+const shared = require('./services/shared');
+const stacheJsonDataService = require('./services/stache-json-data.service');
 
 describe('Entry Plugin', () => {
   afterEach(() => {
     mock.stopAll();
+  });
+
+  beforeEach(() => {
+    spyOn(stacheJsonDataService, 'setStacheDataObject').and.callFake(() => { });
+  });
+
+  it('should attempt to build the stache json data object if one does not exist already', () => {
+    spyOn(stacheJsonDataService, 'getStacheDataObject').and.callFake(() => undefined);
+    const content = new Buffer('');
+    const plugin = new StacheEntryPlugin();
+    plugin.preload(content, 'foo.html');
+    expect(stacheJsonDataService.setStacheDataObject).toHaveBeenCalled();
+  });
+
+  it('should not try to build the stache json data object if one already exists', () => {
+    spyOn(stacheJsonDataService, 'getStacheDataObject').and.callFake(() => { return {}; });
+    const content = new Buffer('');
+    const plugin = new StacheEntryPlugin();
+    plugin.preload(content, 'foo.html');
+    expect(stacheJsonDataService.setStacheDataObject).not.toHaveBeenCalled();
   });
 
   it('should contain a preload hook', () => {

@@ -1,13 +1,8 @@
 const cheerio = require('cheerio');
-const stacheJsonDataService = require('./stache-json-data.service');
-const shared = require('./shared');
+const stacheJsonDataService = require('./services/stache-json-data.service');
+const shared = require('./services/shared');
 
 const preload = (content, resourcePath) => {
-
-  if (stacheJsonDataService.getStacheDataObject() === undefined) {
-    stacheJsonDataService.setStacheDataObject();
-  }
-
   if (resourcePath.match(/\.html$/)) {
     return editHTMLContent(content);
   }

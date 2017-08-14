@@ -1,25 +1,9 @@
-const plugin = require('./json-data');
 const glob = require('glob');
 const fs = require('fs-extra');
 const shared = require('./shared');
 const stacheJsonDataService = require('./stache-json-data.service');
 
-// const shared = require('./shared');
-
-
 describe('JSON Data Service', () => {
-  it('should handle invalid file paths', () => {
-    spyOn(glob, 'sync').and.returnValue(['invalid.json']);
-    spyOn(fs, 'readFileSync').and.throwError('Invalid file.');
-
-    try {
-      stacheJsonDataService.setStacheDataObject();
-    } catch (error) {
-      expect(fs.readFileSync).toThrowError('Invalid file.');
-      expect(plugin.preload).toThrowError(shared.StachePluginError);
-    }
-  });
-
   it('should not build a data object if no files are found', () => {
     const noFiles = [];
     spyOn(glob, 'sync').and.returnValue(noFiles);
@@ -35,6 +19,18 @@ describe('JSON Data Service', () => {
     stacheJsonDataService.setStacheDataObject(testData);
     let returnData = stacheJsonDataService.getStacheDataObject();
     expect(returnData).toEqual(testData);
+  });
+
+  it('should handle invalid file paths', () => {
+    spyOn(glob, 'sync').and.returnValue(['invalid.json']);
+    spyOn(fs, 'readFileSync').and.throwError('Invalid file.');
+
+    try {
+      stacheJsonDataService.setStacheDataObject();
+    } catch (error) {
+      expect(fs.readFileSync).toThrowError('Invalid file.');
+      expect(stacheJsonDataService.setStacheDataObject).toThrowError(shared.StachePluginError);
+    }
   });
 
   it('should log errors for invalid file names', () => {

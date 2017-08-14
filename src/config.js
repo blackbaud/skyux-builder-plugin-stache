@@ -1,4 +1,4 @@
-const shared = require('./shared');
+const shared = require('./services/shared');
 
 const preload = (content, resourcePath) => {
   if (!resourcePath.match(/app-extras\.module\.ts$/)) {
