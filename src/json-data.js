@@ -48,7 +48,7 @@ const replaceStacheDataAttributes = (tags, $) => {
 };
 
 const addElvisOperator = (content) => {
-  return content.toString().replace(/stache\.jsonData\./g, 'stache.jsonData?.');
+  return content.toString().replace(/\{\{\s*stache.jsonData./g, '{{ stache.jsonData?.');
 };
 
 const addStacheDataToAppExtrasModule = (content, resourcePath) => {

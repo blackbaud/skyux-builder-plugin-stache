@@ -26,7 +26,7 @@ describe('Include Plugin', () => {
     expect(result.toString()).toEqual(content.toString());
   });
 
-  it('should allow for a fileName to be a stacheJsonData value', () => {
+  it('should allow for a fileName to be a stache.JsonData value', () => {
     const includeContents = '<h1>Test</h1>';
     const content = new Buffer(`<stache-include fileName="{{ stache.jsonData.global.fooFile }}"></stache-include>`);
     spyOn(stacheJsonDataService, 'replaceWithStacheData').and.returnValue('foo.html');
