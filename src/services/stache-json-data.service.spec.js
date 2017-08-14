@@ -22,7 +22,7 @@ describe('JSON Data Service', () => {
     expect(returnData).toEqual(testData);
   });
 
-  it('should handle invalid file paths', () => {
+  it('should throw an error for invalid file paths', () => {
     spyOn(glob, 'sync').and.returnValue(['invalid.json']);
     spyOn(fs, 'readFileSync').and.throwError('Invalid file.');
 
@@ -102,5 +102,15 @@ describe('JSON Data Service', () => {
     stacheJsonDataService.setStacheDataObject();
     let result = stacheJsonDataService.replaceWithStacheData('{{ stache.jsonData.globals.test }}');
     expect(result).toBe('value');
+  });
+
+  it('should traverse arrays and objects no matter the length passed to the stache json value', () => {
+    stacheJsonDataService.setStacheDataObject({
+      One: {
+        Two: [{ foo: 'bar' }, { biz: 'baz' }, { Three: 'Target Reached' }]
+      }
+    });
+    let result = stacheJsonDataService.replaceWithStacheData('{{ stache.jsonData.One.Two[2].Three }}');
+    expect(result).toBe('Target Reached');
   });
 });

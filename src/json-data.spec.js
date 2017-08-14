@@ -34,15 +34,23 @@ describe('JSON Data Plugin', () => {
   });
 
   it('It should replace the pageTitle attribute on the stache tag if it contains a stache data value', () => {
-    spyOn(stacheJsonDataService, 'replaceWithStacheData').and.callFake(() => 'Page Title Value');
-    const content = new Buffer('<stache pageTitle="{{ stache.jsonData.globals.productNameLong }}"></stache>');
+    stacheJsonDataService.setStacheDataObject({
+      globals: {
+        testPageTitle : 'Page Title Value'
+      }
+    });
+    const content = new Buffer('<stache pageTitle="{{ stache.jsonData.globals.testPageTitle }}"></stache>');
     const result = plugin.preload(content, 'foo.html');
     expect(result.toString()).toEqual('<stache pageTitle="Page Title Value"></stache>');
   });
 
   it('It should replace the navTitle attribute on the stache tag if it contains a stache data value', () => {
-    spyOn(stacheJsonDataService, 'replaceWithStacheData').and.callFake(() => 'Nav Title Value');
-    const content = new Buffer('<stache navTitle="{{ stache.jsonData.globals.productNameLong }}"></stache>');
+    stacheJsonDataService.setStacheDataObject({
+      globals: {
+        testNavTitle: 'Nav Title Value'
+      }
+    });
+    const content = new Buffer('<stache navTitle="{{ stache.jsonData.globals.testNavTitle }}"></stache>');
     const result = plugin.preload(content, 'foo.html');
     expect(result.toString()).toEqual('<stache navTitle="Nav Title Value"></stache>');
   });
