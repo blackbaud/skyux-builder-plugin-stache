@@ -13,7 +13,7 @@ describe('JSON Data Service', () => {
     spyOn(fs, 'readFileSync').and.throwError('Invalid file.');
 
     try {
-      stacheJsonDataService.buildStacheDataObject();
+      stacheJsonDataService.setStacheDataObject();
     } catch (error) {
       expect(fs.readFileSync).toThrowError('Invalid file.');
       expect(plugin.preload).toThrowError(shared.StachePluginError);
@@ -23,9 +23,18 @@ describe('JSON Data Service', () => {
   it('should not build a data object if no files are found', () => {
     const noFiles = [];
     spyOn(glob, 'sync').and.returnValue(noFiles);
-    stacheJsonDataService.buildStacheDataObject();
+    stacheJsonDataService.setStacheDataObject();
     let result = stacheJsonDataService.getStacheDataObject();
     expect(result).toBe(undefined);
+  });
+
+  it('should set the DataObject if a value is passed in', () => {
+    const testData = {
+      test: true
+    };
+    stacheJsonDataService.setStacheDataObject(testData);
+    let returnData = stacheJsonDataService.getStacheDataObject();
+    expect(returnData).toEqual(testData);
   });
 
   it('should log errors for invalid file names', () => {
@@ -40,7 +49,7 @@ describe('JSON Data Service', () => {
     spyOn(glob, 'sync').and.returnValue(invalidFiles);
     spyOn(console, 'error').and.returnValue('');
 
-    stacheJsonDataService.buildStacheDataObject();
+    stacheJsonDataService.setStacheDataObject();
 
     expect(console.error.calls.count()).toBe(invalidFiles.length);
   });
@@ -63,7 +72,7 @@ describe('JSON Data Service', () => {
     spyOn(glob, 'sync').and.returnValue(fileNames);
     spyOn(fs, 'readFileSync').and.returnValue('{}');
 
-    stacheJsonDataService.buildStacheDataObject();
+    stacheJsonDataService.setStacheDataObject();
 
     let dataResult = stacheJsonDataService.getStacheDataObject();
 
@@ -93,7 +102,7 @@ describe('JSON Data Service', () => {
     spyOn(glob, 'sync').and.returnValue(fileNames);
     spyOn(fs, 'readFileSync').and.returnValue('{"test": "value"}');
 
-    stacheJsonDataService.buildStacheDataObject();
+    stacheJsonDataService.setStacheDataObject();
     let result = stacheJsonDataService.replaceWithStacheData('{{ stache.jsonData.globals.test }}');
     expect(result).toBe('value');
   });

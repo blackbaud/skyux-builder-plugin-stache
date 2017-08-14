@@ -9,11 +9,23 @@ const glob = require('glob');
 const stacheJsonDataRegex = new RegExp(/\{\{\s*stache.jsonData.*\}\}/);
 let _stacheDataObject;
 
+const setStacheDataObject = (dataObject) => {
+  if (dataObject === undefined) {
+    dataObject = buildStacheDataObject();
+  }
+
+  _stacheDataObject = dataObject;
+};
+
+const getStacheDataObject = () => {
+  return _stacheDataObject;
+};
+
 const buildStacheDataObject = () => {
   const root = shared.resolveAssetsPath('data');
   const filePaths = glob.sync(path.join(root, '*.json'));
 
-  if (filePaths.length < 1) {
+  if (!filePaths.length) {
     return;
   }
 
@@ -44,7 +56,7 @@ const buildStacheDataObject = () => {
     return acc;
   }, {});
 
-  setStacheDataObject(dataObject);
+  return dataObject;
 };
 
 const convertFileNameToObjectPropertyName = (fileName) => {
@@ -64,14 +76,6 @@ const isPropertyNameValid = (propertyName) => {
 
   // Parsing as boolean because reserved-words returns `undefined` for falsy values.
   return !reserved.check(propertyName, 'es6', true);
-};
-
-const setStacheDataObject = (dataObject) => {
-  _stacheDataObject = dataObject;
-};
-
-const getStacheDataObject = () => {
-  return _stacheDataObject;
 };
 
 const replaceWithStacheData = (replacementCandidate) => {
@@ -103,4 +107,4 @@ const getKeysFromString = (keyString) => {
     .split('.');
 };
 
-module.exports = { getStacheDataObject, buildStacheDataObject, replaceWithStacheData };
+module.exports = { getStacheDataObject, setStacheDataObject, replaceWithStacheData };

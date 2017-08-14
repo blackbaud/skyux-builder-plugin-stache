@@ -5,7 +5,7 @@ const shared = require('./shared');
 const preload = (content, resourcePath) => {
 
   if (stacheJsonDataService.getStacheDataObject() === undefined) {
-    stacheJsonDataService.buildStacheDataObject();
+    stacheJsonDataService.setStacheDataObject();
   }
 
   if (resourcePath.match(/\.html$/)) {
@@ -48,6 +48,7 @@ const replaceStacheDataAttributes = (tags, $) => {
       });
     }
   });
+
   return $.html();
 };
 

@@ -5,7 +5,7 @@ const stacheJsonDataService = require('./stache-json-data.service');
 
 describe('JSON Data Plugin', () => {
   beforeEach(() => {
-    spyOn(stacheJsonDataService, 'buildStacheDataObject').and.callFake(() => {});
+    spyOn(stacheJsonDataService, 'setStacheDataObject').and.callFake(() => {});
   });
 
   it('should contain a preload hook', () => {
@@ -53,14 +53,14 @@ describe('JSON Data Plugin', () => {
     spyOn(stacheJsonDataService, 'getStacheDataObject').and.callFake(() => { return undefined; });
     const content = new Buffer('');
     plugin.preload(content, 'foo.html');
-    expect(stacheJsonDataService.buildStacheDataObject).toHaveBeenCalled();
+    expect(stacheJsonDataService.setStacheDataObject).toHaveBeenCalled();
   });
 
   it('should not try to build the stache json data object if one already exists', () => {
-    spyOn(stacheJsonDataService, 'getStacheDataObject').and.callFake(() => { return true; });
+    spyOn(stacheJsonDataService, 'getStacheDataObject').and.callFake(() => { return {}; });
     const content = new Buffer('');
     plugin.preload(content, 'foo.html');
-    expect(stacheJsonDataService.buildStacheDataObject).not.toHaveBeenCalled();
+    expect(stacheJsonDataService.setStacheDataObject).not.toHaveBeenCalled();
   });
 
   it('It should replace the navTitle attribute on the stache tag if it contains a stache data value', () => {
