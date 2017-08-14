@@ -83,10 +83,18 @@ describe('Route Metadata Plugin', () => {
   });
 
   it('should allow for stache json data values in pageTitle / navTitle', () => {
-    const content = new Buffer('<stache pageTitle="{{ stache.jsonData.global.title }}"');
-    stacheJsonDataService.setStacheDataObject({global: 'Test Title'});
+    stacheJsonDataService.setStacheDataObject({
+      global: {
+        title: 'Test Title'
+      }
+    });
+    spyOn(glob, 'sync').and.returnValue(['src/app/learn/index.html']);
+    spyOn(fs, 'readFileSync').and.returnValue(
+      `<stache pageTitle="{{ stache.jsonData.global.title }}"></stache>`
+    );
+    const content = new Buffer('<stache pageTitle="{{ stache.jsonData.global.title }}"></stache>');
     const result = plugin.preload(content, 'app-extras.module.ts', config);
-    expect(result.toString()).not.toContain('"name":"Test Title"');
+    expect(result.toString()).toContain('"name":"Test Title"');
   });
 
   it('should prefer `navTitle` to `pageTitle`', () => {
