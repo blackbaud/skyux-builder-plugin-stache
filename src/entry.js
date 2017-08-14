@@ -13,7 +13,7 @@ function StacheEntryPlugin() {
         require('./template-reference-variable')
       ];
 
-      if (stacheJsonDataService.getStacheDataObject() === undefined) {
+      if (!stacheJsonDataService.getStacheDataObject()) {
         stacheJsonDataService.setStacheDataObject();
       }
 

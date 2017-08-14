@@ -17,12 +17,6 @@ describe('JSON Data Plugin', () => {
     expect(result.toString()).toContain('STACHE_JSON_DATA_PROVIDERS');
   });
 
-  it('should add elvis operators to html files', () => {
-    const content = new Buffer('{{stache.jsonData.global}}');
-    const result = plugin.preload(content, 'foo.html');
-    expect(result.toString()).toEqual('{{stache.jsonData?.global}}');
-  });
-
   it('should not change the content of other files', () => {
     const content = new Buffer('');
 

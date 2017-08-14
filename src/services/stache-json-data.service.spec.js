@@ -12,10 +12,11 @@ describe('JSON Data Service', () => {
     expect(result).toBe(undefined);
   });
 
-  it('should set the DataObject if a value is passed in', () => {
+  it('should set the DataObject to a value if one is passed in', () => {
     const testData = {
       test: true
     };
+
     stacheJsonDataService.setStacheDataObject(testData);
     let returnData = stacheJsonDataService.getStacheDataObject();
     expect(returnData).toEqual(testData);

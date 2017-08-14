@@ -1,6 +1,7 @@
 const glob = require('glob');
 const fs = require('fs-extra');
 const shared = require('./services/shared');
+const stacheJsonDataService = require('./services/stache-json-data.service');
 
 describe('Route Metadata Plugin', () => {
   let plugin;
@@ -79,6 +80,13 @@ describe('Route Metadata Plugin', () => {
     const content = new Buffer('');
     const result = plugin.preload(content, 'app-extras.module.ts', config);
     expect(result.toString()).toEqual(content.toString());
+  });
+
+  it('should allow for stache json data values in pageTitle / navTitle', () => {
+    const content = new Buffer('<stache pageTitle="{{ stache.jsonData.global.title }}"');
+    stacheJsonDataService.setStacheDataObject({global: 'Test Title'});
+    const result = plugin.preload(content, 'app-extras.module.ts', config);
+    expect(result.toString()).not.toContain('"name":"Test Title"');
   });
 
   it('should prefer `navTitle` to `pageTitle`', () => {

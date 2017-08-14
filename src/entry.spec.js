@@ -9,7 +9,12 @@ describe('Entry Plugin', () => {
   });
 
   beforeEach(() => {
-    spyOn(stacheJsonDataService, 'setStacheDataObject').and.callFake(() => { });
+    spyOn(stacheJsonDataService, 'setStacheDataObject').and.callFake(() => {});
+  });
+
+  it('should contain a preload hook', () => {
+    const plugin = new StacheEntryPlugin();
+    expect(plugin.preload).toBeDefined();
   });
 
   it('should attempt to build the stache json data object if one does not exist already', () => {
@@ -26,11 +31,6 @@ describe('Entry Plugin', () => {
     const plugin = new StacheEntryPlugin();
     plugin.preload(content, 'foo.html');
     expect(stacheJsonDataService.setStacheDataObject).not.toHaveBeenCalled();
-  });
-
-  it('should contain a preload hook', () => {
-    const plugin = new StacheEntryPlugin();
-    expect(plugin.preload).toBeDefined();
   });
 
   it('should pass the content through all plugins', () => {

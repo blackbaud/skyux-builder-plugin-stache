@@ -1,6 +1,7 @@
 const fs = require('fs-extra');
 const plugin = require('./include');
 const shared = require('./services/shared');
+const stacheJsonDataService = require('./services/stache-json-data.service');
 
 describe('Include Plugin', () => {
   beforeAll(() => {
@@ -18,11 +19,20 @@ describe('Include Plugin', () => {
     expect(result.toString()).toEqual(content.toString());
   });
 
-  it('should not alter the content if the html file does not include any <stache include> tags.', () => {
+  it('should not alter the content if the html file does not include any <stache-include> tags.', () => {
     const content = new Buffer('<p></p>');
     const resourcePath = 'foo.html';
     const result = plugin.preload(content, resourcePath);
     expect(result.toString()).toEqual(content.toString());
+  });
+
+  it('should allow for a fileName to be a stacheJsonData value', () => {
+    const includeContents = '<h1>Test</h1>';
+    const content = new Buffer(`<stache-include fileName="{{ stache.jsonData.global.fooFile }}"></stache-include>`);
+    spyOn(stacheJsonDataService, 'replaceWithStacheData').and.returnValue('foo.html');
+    spyOn(fs, 'readFileSync').and.returnValue(includeContents);
+    plugin.preload(content, 'bar.html');
+    expect(fs.readFileSync).toHaveBeenCalledWith('foo.html');
   });
 
   it('should convert the inner HTML of all <stache-include> to the referenced file.', () => {
