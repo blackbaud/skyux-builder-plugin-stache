@@ -18,9 +18,9 @@ const preload = (content, resourcePath) => {
 
   const root = shared.resolveAssetsPath('includes');
 
-  includes.each((i, elem) => {
+  includes.each((idx, elem) => {
     const $elem = $(elem);
-    $elem.attr('fileName', (i, attrValue) => {
+    $elem.attr('fileName', (idx, attrValue) => {
       return stacheJsonDataService.replaceWithStacheData(attrValue);
     });
 

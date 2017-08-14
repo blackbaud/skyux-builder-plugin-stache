@@ -13,7 +13,7 @@ const preload = (content, resourcePath) => {
     return content;
   }
 
-  codeBlocks.each((i, elem) => {
+  codeBlocks.each((idx, elem) => {
     const $elem = $(elem);
     const innerText = $elem.html()
       .toString()

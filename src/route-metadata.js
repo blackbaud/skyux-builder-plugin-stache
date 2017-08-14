@@ -41,7 +41,7 @@ const preload = (content, resourcePath, skyPagesConfig) => {
       return (htmlPath.endsWith(match));
     });
 
-    stacheTags.each((i, elem) => {
+    stacheTags.each((idx, elem) => {
       const $wrapper = $(elem);
       const preferredName = $wrapper.attr('navTitle') || $wrapper.attr('pageTitle');
       const preferredOrder = $wrapper.attr('navOrder');

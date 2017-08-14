@@ -26,19 +26,19 @@ const editHTMLContent = (content) => {
 };
 
 const replaceStacheDataAttributes = (tags, $) => {
-  tags.each((i, elem) => {
+  tags.each((idx, elem) => {
     const $wrapper = $(elem);
     let pageTitle = $wrapper.attr('pageTitle');
     let navTitle = $wrapper.attr('navTitle');
 
     if (pageTitle) {
-      $(elem).attr('pageTitle', (i, attrValue) => {
+      $(elem).attr('pageTitle', (idx, attrValue) => {
         return stacheJsonDataService.replaceWithStacheData(attrValue);
       });
     }
 
     if (navTitle) {
-      $(elem).attr('navTitle', (i, attrValue) => {
+      $(elem).attr('navTitle', (idx, attrValue) => {
         return stacheJsonDataService.replaceWithStacheData(attrValue);
       });
     }

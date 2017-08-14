@@ -13,7 +13,7 @@ const preload = (content, resourcePath) => {
     return content;
   }
 
-  stacheTags.each((i, elem) => {
+  stacheTags.each((idx, elem) => {
     $(elem).attr('#stache', '');
   });
 
