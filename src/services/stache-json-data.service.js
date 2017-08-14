@@ -107,4 +107,8 @@ const getKeysFromString = (keyString) => {
     .split('.');
 };
 
-module.exports = { getStacheDataObject, setStacheDataObject, replaceWithStacheData };
+module.exports = {
+  getStacheDataObject,
+  replaceWithStacheData,
+  setStacheDataObject
+};
