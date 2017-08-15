@@ -1,6 +1,7 @@
 const cheerio = require('cheerio');
 const jsonDataUtil = require('./utils/json-data');
 const shared = require('./utils/shared');
+
 const buildTimeBindingRegExp = new RegExp(/\{\{\s*@buildtime:\s*stache.jsonData.*\}\}/g);
 
 const preload = (content, resourcePath) => {
@@ -86,8 +87,8 @@ export const STACHE_JSON_DATA_PROVIDERS: any[] = [
     useValue: ${JSON.stringify(globalData)}
   },
   {
-    provide: jsonDataUtil,
-    useClass: jsonDataUtil
+    provide: StacheJsonDataService,
+    useClass: StacheJsonDataService
   }
 ];
 /* tslint:enable:quotemark whitespace max-line-length */
