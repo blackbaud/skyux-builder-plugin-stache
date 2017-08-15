@@ -76,7 +76,7 @@ const addGlobalDataToAppExtrasModule = (content, resourcePath) => {
 
   content = `
 import {
-  jsonDataUtil,
+  StacheJsonDataService,
   STACHE_JSON_DATA_SERVICE_CONFIG
 } from '${modulePath}';
 
