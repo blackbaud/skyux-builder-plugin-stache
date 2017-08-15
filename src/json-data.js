@@ -1,7 +1,7 @@
 const cheerio = require('cheerio');
 const jsonDataUtil = require('./utils/json-data');
 const shared = require('./utils/shared');
-const replaceJsonRegExp = new RegExp(/\{\{\s*@buildtime:\s*stache.jsonData.*\}\}/g);
+const buildTimeBindingRegExp = new RegExp(/\{\{\s*@buildtime:\s*stache.jsonData.*\}\}/g);
 
 const preload = (content, resourcePath) => {
   if (resourcePath.match(/\.html$/)) {
@@ -50,7 +50,7 @@ const parseStacheAttributeBindings = (tags, $) => {
 };
 
 const parseBuildTimeBindings = (content) => {
-  const buildTimeBindings = content.match(replaceJsonRegExp);
+  const buildTimeBindings = content.match(buildTimeBindingRegExp);
 
   if (!buildTimeBindings) {
     return content;
