@@ -33,9 +33,9 @@ describe('JSON Data Plugin', () => {
   });
 
   it('It should add an elvis operator to {{ stache.jsonData.* }} bindings in html pages', () => {
-    const content = new Buffer('<stache> {{ stache.jsonData.globals.productNameLong }} </stache>');
+    const content = new Buffer('<div> {{ stache.jsonData.globals.productNameLong }} </div>');
     const result = plugin.preload(content, 'foo.html');
-    expect(result.toString()).toEqual('<stache> {{ stache.jsonData?.globals.productNameLong }} </stache>');
+    expect(result.toString()).toEqual('<div> {{ stache.jsonData?.globals.productNameLong }} </div>');
   });
 
   it('It should replace the pageTitle attribute on the stache tag if it contains a stache data value', () => {
@@ -49,22 +49,4 @@ describe('JSON Data Plugin', () => {
     const result = plugin.preload(content, 'foo.html');
     expect(result.toString()).toEqual('<stache navTitle="Test Title"></stache>');
   });
-
-  it('It should parse required {{ @buildtime:stache.jsonData.* }} bindings', () => {
-    const content = new Buffer(`
-    {{ @buildtime:stache.jsonData.mock_data.one }}
-    {{ @buildtime:stache.jsonData.mock_data.two }}
-    {{ @buildtime:stache.jsonData.mock_data.three }}
-    {{ @buildtime:stache.jsonData.mock_data.one }}
-    {{ stache.jsonData.mock_data.not_found }}`);
-
-    const result = plugin.preload(content, 'foo.html');
-    expect(result.toString()).toEqual(`
-    One
-    Two
-    Three
-    One
-    {{ stache.jsonData?.mock_data.not_found }}`);
-  });
-
 });
