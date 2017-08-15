@@ -1,15 +1,31 @@
 const mock = require('mock-require');
 const StacheEntryPlugin = require('./entry');
-const shared = require('./services/shared');
-const stacheJsonDataService = require('./services/stache-json-data.service');
+const shared = require('./utils/shared');
 
 describe('Entry Plugin', () => {
-  afterEach(() => {
-    mock.stopAll();
-  });
+  let _content;
+  let _resourcePath;
+  let _skyPagesConfig;
+  const mockPlugin = {
+    preload(content, resourcePath, skyPagesConfig) {
+      _content = content;
+      _resourcePath = resourcePath;
+      _skyPagesConfig = skyPagesConfig;
+      return content;
+    }
+  };
 
   beforeEach(() => {
-    spyOn(stacheJsonDataService, 'setStacheDataObject').and.callFake(() => {});
+    mock('./config', mockPlugin);
+    mock('./include', mockPlugin);
+    mock('./code-block', mockPlugin);
+    mock('./json-data', mockPlugin);
+    mock('./route-metadata', mockPlugin);
+    mock('./template-reference-variable', mockPlugin);
+  });
+
+  afterEach(() => {
+    mock.stopAll();
   });
 
   it('should contain a preload hook', () => {
@@ -17,42 +33,7 @@ describe('Entry Plugin', () => {
     expect(plugin.preload).toBeDefined();
   });
 
-  it('should attempt to build the stache json data object if one does not exist already', () => {
-    spyOn(stacheJsonDataService, 'getStacheDataObject').and.callFake(() => undefined);
-    const content = new Buffer('');
-    const plugin = new StacheEntryPlugin();
-    plugin.preload(content, 'foo.html');
-    expect(stacheJsonDataService.setStacheDataObject).toHaveBeenCalled();
-  });
-
-  it('should not try to build the stache json data object if one already exists', () => {
-    spyOn(stacheJsonDataService, 'getStacheDataObject').and.callFake(() => { return {}; });
-    const content = new Buffer('');
-    const plugin = new StacheEntryPlugin();
-    plugin.preload(content, 'foo.html');
-    expect(stacheJsonDataService.setStacheDataObject).not.toHaveBeenCalled();
-  });
-
   it('should pass the content through all plugins', () => {
-    let _content;
-    let _resourcePath;
-    let _skyPagesConfig;
-    const mockPlugin = {
-      preload(content, resourcePath, skyPagesConfig) {
-        _content = content;
-        _resourcePath = resourcePath;
-        _skyPagesConfig = skyPagesConfig;
-        return content;
-      }
-    };
-
-    mock('./config', mockPlugin);
-    mock('./include', mockPlugin);
-    mock('./code-block', mockPlugin);
-    mock('./json-data', mockPlugin);
-    mock('./route-metadata', mockPlugin);
-    mock('./template-reference-variable', mockPlugin);
-
     const plugin = new StacheEntryPlugin();
     const content = new Buffer('Content');
     const resourcePath = 'foo.html';
@@ -66,6 +47,7 @@ describe('Entry Plugin', () => {
   });
 
   it('should call the plugins in the expected order', () => {
+    mock.stopAll();
     let callOrder = [];
     mock('./config', {
       preload() {
@@ -112,6 +94,7 @@ describe('Entry Plugin', () => {
   });
 
   it('should throw an error if an error is thrown from a plugin', () => {
+    mock.stop('./config');
     mock('./config', {
       preload() {
         throw new shared.StachePluginError('invalid plugin');

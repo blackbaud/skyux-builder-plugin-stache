@@ -6,22 +6,18 @@ const glob = require('glob');
 
 // Matches {{ stache.jsonData. }} with any number of spaces between the '{{' and 'stache.',
 // any keys following the 'jsonData.', and the closing '}}'
-const stacheJsonDataRegex = new RegExp(/\{\{\s*stache.jsonData.*\}\}/);
-let _stacheDataObject;
+const jsonDataRegExp = new RegExp(/\{\{\s*stache.jsonData.*\}\}/);
+let _globalData;
 
-const setStacheDataObject = (dataObject) => {
-  if (dataObject === undefined) {
-    dataObject = buildStacheDataObject();
+const getGlobalData = () => {
+  if (!_globalData) {
+    _globalData = buildGlobalDataFromJson();
   }
 
-  _stacheDataObject = dataObject;
+  return _globalData;
 };
 
-const getStacheDataObject = () => {
-  return _stacheDataObject;
-};
-
-const buildStacheDataObject = () => {
+const buildGlobalDataFromJson = () => {
   const root = shared.resolveAssetsPath('data');
   const filePaths = glob.sync(path.join(root, '*.json'));
 
@@ -78,12 +74,13 @@ const isPropertyNameValid = (propertyName) => {
   return !reserved.check(propertyName, 'es6', true);
 };
 
-const replaceWithStacheData = (replacementCandidate) => {
-  if (stacheJsonDataRegex.test(replacementCandidate)) {
-    const stacheDataKeyString = replacementCandidate.match(stacheJsonDataRegex)[0];
-    const dataValue = getDataValue(stacheDataKeyString, _stacheDataObject);
+const parseAngularBinding = (replacementCandidate) => {
+  const stacheData = getGlobalData();
+  if (jsonDataRegExp.test(replacementCandidate)) {
+    const stacheDataKeyString = replacementCandidate.match(jsonDataRegExp)[0];
+    const dataValue = getDataValue(stacheDataKeyString, stacheData);
 
-    return replacementCandidate.replace(stacheJsonDataRegex, dataValue);
+    return replacementCandidate.replace(jsonDataRegExp, dataValue);
   }
 
   return replacementCandidate;
@@ -95,7 +92,7 @@ const getDataValue = (keyString, dataObject) => {
     return object[key];
   }, dataObject);
 
-  return jsonValue;
+  return jsonValue || keyString;
 };
 
 const getKeysFromString = (keyString) => {
@@ -108,7 +105,6 @@ const getKeysFromString = (keyString) => {
 };
 
 module.exports = {
-  getStacheDataObject,
-  replaceWithStacheData,
-  setStacheDataObject
+  getGlobalData,
+  parseAngularBinding
 };

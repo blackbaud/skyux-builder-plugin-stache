@@ -1,8 +1,8 @@
 const cheerio = require('cheerio');
 const fs = require('fs-extra');
 const glob = require('glob');
-const shared = require('./services/shared');
-const stacheJsonDataService = require('./services/stache-json-data.service');
+const shared = require('./utils/shared');
+const jsonDataUtil = require('./utils/json-data');
 
 const preload = (content, resourcePath, skyPagesConfig) => {
   if (!resourcePath.match(/app-extras\.module\.ts$/)) {
@@ -56,7 +56,7 @@ const preload = (content, resourcePath, skyPagesConfig) => {
         };
 
         if (preferredName !== undefined) {
-          routeMetadata.name = stacheJsonDataService.replaceWithStacheData(preferredName);
+          routeMetadata.name = jsonDataUtil.parseAngularBinding(preferredName);
         }
 
         if (preferredOrder !== undefined) {

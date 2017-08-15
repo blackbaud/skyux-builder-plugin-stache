@@ -1,7 +1,7 @@
 const glob = require('glob');
 const fs = require('fs-extra');
-const shared = require('./services/shared');
-const stacheJsonDataService = require('./services/stache-json-data.service');
+const shared = require('./utils/shared');
+const jsonDataUtil = require('./utils/json-data');
 
 describe('Route Metadata Plugin', () => {
   let plugin;
@@ -17,6 +17,13 @@ describe('Route Metadata Plugin', () => {
         ]
       }
     };
+
+    spyOn(jsonDataUtil, 'parseAngularBinding').and.callFake((value) => {
+      if (/stache.jsonData/.test(value)) {
+        return 'Title';
+      }
+      return value;
+    })
   });
 
   it('should contain a preload hook', () => {
@@ -83,18 +90,13 @@ describe('Route Metadata Plugin', () => {
   });
 
   it('should allow for stache json data values in pageTitle / navTitle', () => {
-    stacheJsonDataService.setStacheDataObject({
-      global: {
-        title: 'Test Title'
-      }
-    });
     spyOn(glob, 'sync').and.returnValue(['src/app/learn/index.html']);
     spyOn(fs, 'readFileSync').and.returnValue(
       `<stache pageTitle="{{ stache.jsonData.global.title }}"></stache>`
     );
     const content = new Buffer('<stache pageTitle="{{ stache.jsonData.global.title }}"></stache>');
     const result = plugin.preload(content, 'app-extras.module.ts', config);
-    expect(result.toString()).toContain('"name":"Test Title"');
+    expect(result.toString()).toContain('"name":"Title"');
   });
 
   it('should prefer `navTitle` to `pageTitle`', () => {

@@ -1,6 +1,7 @@
 const cheerio = require('cheerio');
-const stacheJsonDataService = require('./services/stache-json-data.service');
-const shared = require('./services/shared');
+const jsonDataUtil = require('./utils/json-data');
+const shared = require('./utils/shared');
+const replaceJsonRegExp = new RegExp(/\{\{\s*@buildtime:\s*stache.jsonData.*\}\}/g);
 
 const preload = (content, resourcePath) => {
   if (resourcePath.match(/\.html$/)) {
@@ -19,13 +20,14 @@ const editHTMLContent = (content) => {
   const stacheTags = $('stache');
 
   if (stacheTags.length > 0) {
-    content = replaceStacheDataAttributes(stacheTags, $);
+    content = parseStacheAttributeBindings(stacheTags, $);
   }
 
+  content = parseReplaceAngularBindings($.html().toString());
   return addElvisOperator(content);
 };
 
-const replaceStacheDataAttributes = (tags, $) => {
+const parseStacheAttributeBindings = (tags, $) => {
   tags.each((idx, elem) => {
     const $wrapper = $(elem);
     let pageTitle = $wrapper.attr('pageTitle');
@@ -33,13 +35,13 @@ const replaceStacheDataAttributes = (tags, $) => {
 
     if (pageTitle) {
       $(elem).attr('pageTitle', (idx, attrValue) => {
-        return stacheJsonDataService.replaceWithStacheData(attrValue);
+        return jsonDataUtil.parseAngularBinding(attrValue);
       });
     }
 
     if (navTitle) {
       $(elem).attr('navTitle', (idx, attrValue) => {
-        return stacheJsonDataService.replaceWithStacheData(attrValue);
+        return jsonDataUtil.parseAngularBinding(attrValue);
       });
     }
   });
@@ -47,17 +49,36 @@ const replaceStacheDataAttributes = (tags, $) => {
   return $.html();
 };
 
+const parseReplaceAngularBindings = (content) => {
+  const matches = content.match(replaceJsonRegExp);
+  if (!matches) {
+    return content;
+  }
+  let replaceValues = matches.map(i => {
+    let val = i.replace('@buildtime:', '');
+    return {
+      key: i,
+      value: jsonDataUtil.parseAngularBinding(val)
+    }
+  });
+  replaceValues.forEach(val => {
+    content = content.replace(val.key, val.value);
+  });
+
+  return content;
+};
+
 const addElvisOperator = (content) => {
   return content.toString().replace(/\{\{\s*stache.jsonData./g, '{{ stache.jsonData?.');
 };
 
 const addStacheDataToAppExtrasModule = (content, resourcePath) => {
-  const dataObject = stacheJsonDataService.getStacheDataObject();
+  const globalData = jsonDataUtil.getGlobalData();
   const modulePath = shared.getModulePath(resourcePath);
 
   content = `
 import {
-  StacheJsonDataService,
+  jsonDataUtil,
   STACHE_JSON_DATA_SERVICE_CONFIG
 } from '${modulePath}';
 
@@ -65,11 +86,11 @@ import {
 export const STACHE_JSON_DATA_PROVIDERS: any[] = [
   {
     provide: STACHE_JSON_DATA_SERVICE_CONFIG,
-    useValue: ${JSON.stringify(dataObject)}
+    useValue: ${JSON.stringify(globalData)}
   },
   {
-    provide: StacheJsonDataService,
-    useClass: StacheJsonDataService
+    provide: jsonDataUtil,
+    useClass: jsonDataUtil
   }
 ];
 /* tslint:enable:quotemark whitespace max-line-length */
