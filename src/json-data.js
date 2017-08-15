@@ -9,7 +9,7 @@ const preload = (content, resourcePath) => {
   }
 
   if (resourcePath.match(/app-extras\.module\.ts$/)) {
-    return addStacheDataToAppExtrasModule(content, resourcePath);
+    return addGlobalDataToAppExtrasModule(content, resourcePath);
   }
 
   return content;
@@ -23,7 +23,7 @@ const editHTMLContent = (content) => {
     content = parseStacheAttributeBindings(stacheTags, $);
   }
 
-  content = parseReplaceAngularBindings($.html().toString());
+  content = parseBuildTimeBindings($.html().toString());
   return addElvisOperator(content);
 };
 
@@ -49,7 +49,7 @@ const parseStacheAttributeBindings = (tags, $) => {
   return $.html();
 };
 
-const parseReplaceAngularBindings = (content) => {
+const parseBuildTimeBindings = (content) => {
   const matches = content.match(replaceJsonRegExp);
   if (!matches) {
     return content;
@@ -72,7 +72,7 @@ const addElvisOperator = (content) => {
   return content.toString().replace(/\{\{\s*stache.jsonData./g, '{{ stache.jsonData?.');
 };
 
-const addStacheDataToAppExtrasModule = (content, resourcePath) => {
+const addGlobalDataToAppExtrasModule = (content, resourcePath) => {
   const globalData = jsonDataUtil.getGlobalData();
   const modulePath = shared.getModulePath(resourcePath);
 
