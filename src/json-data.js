@@ -50,19 +50,16 @@ const parseStacheAttributeBindings = (tags, $) => {
 };
 
 const parseBuildTimeBindings = (content) => {
-  const matches = content.match(replaceJsonRegExp);
-  if (!matches) {
+  const buildTimeBindings = content.match(replaceJsonRegExp);
+
+  if (!buildTimeBindings) {
     return content;
   }
-  let replaceValues = matches.map(i => {
-    let val = i.replace('@buildtime:', '');
-    return {
-      key: i,
-      value: jsonDataUtil.parseAngularBinding(val)
-    }
-  });
-  replaceValues.forEach(val => {
-    content = content.replace(val.key, val.value);
+
+  buildTimeBindings.forEach(binding => {
+    let dataBinding = binding.replace('@buildtime:', '');
+    let dataValue = jsonDataUtil.parseAngularBinding(dataBinding);
+    content = content.replace(binding, dataValue);
   });
 
   return content;
