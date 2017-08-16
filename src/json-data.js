@@ -22,6 +22,8 @@ const editHTMLContent = (content) => {
     content = parseStacheAttributeBindings(stacheTags, $);
   }
 
+  content = jsonDataUtil.parseAllBuildTimeBindings($.html().toString());
+
   return addElvisOperator(content);
 };
 
@@ -33,13 +35,13 @@ const parseStacheAttributeBindings = (tags, $) => {
 
     if (pageTitle) {
       $(elem).attr('pageTitle', (idx, attrValue) => {
-        return jsonDataUtil.parseAngularBinding(attrValue);
+        return jsonDataUtil.parseAngularBindings(attrValue);
       });
     }
 
     if (navTitle) {
       $(elem).attr('navTitle', (idx, attrValue) => {
-        return jsonDataUtil.parseAngularBinding(attrValue);
+        return jsonDataUtil.parseAngularBindings(attrValue);
       });
     }
   });

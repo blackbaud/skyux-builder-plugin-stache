@@ -9,6 +9,7 @@ describe('JSON Data Plugin', () => {
   beforeAll(() => {
     spyOn(glob, 'sync').and.returnValue(['mock-data.json']);
     spyOn(fs, 'readFileSync').and.returnValue(mockData);
+    spyOn(jsonDataUtil, 'parseAllBuildTimeBindings').and.callFake(content => content);
     jsonDataUtil.getGlobalData();
   });
 
