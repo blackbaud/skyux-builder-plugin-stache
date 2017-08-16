@@ -91,8 +91,8 @@ const parseAllBuildTimeBindings = (content) => {
   return content;
 }
 
-const parseAngularBindings = (unparsedBindings) => {
-  let angularBinding = unparsedBindings.replace(/@buildtime:/g, '');
+const parseAngularBindings = (unparsedValue) => {
+  let angularBinding = unparsedValue.replace(/@buildtime:/g, '');
   let parsedData;
 
   if (angularBindingRegExp.test(angularBinding)) {
@@ -107,7 +107,7 @@ const parseAngularBindings = (unparsedBindings) => {
     parsedData = angularBinding;
   }
 
-  return parsedData || unparsedBindings;
+  return parsedData || unparsedValue;
 };
 
 const getDataValue = (keyString, dataObject) => {
@@ -116,7 +116,7 @@ const getDataValue = (keyString, dataObject) => {
     return object[key];
   }, dataObject);
 
-  return jsonValue || keyString;
+  return jsonValue;
 };
 
 const getKeysFromString = (keyString) => {
