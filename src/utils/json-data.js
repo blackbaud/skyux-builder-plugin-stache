@@ -3,11 +3,11 @@ const path = require('path');
 const reserved = require('reserved-words');
 const shared = require('./shared');
 const glob = require('glob');
-
+const BUILD_TIME_BINDING = '@buildtime:';
 // Matches {{ stache.jsonData. }} with any number of spaces between the '{{' and 'stache.',
 // any keys following the 'jsonData.', and the closing '}}'
 const angularBindingRegExp = new RegExp(/\{\{\s*stache.jsonData.*?\}\}/g);
-const buildTimeBindingRegExp = new RegExp(/\{\{\s*@buildtime:\s*stache.jsonData.*?\}\}/g);
+const buildTimeBindingRegExp = new RegExp(`\\{\\{\\s*${BUILD_TIME_BINDING}stache.jsonData.*?\\}\\}`, 'g');
 
 let _globalData;
 
@@ -92,7 +92,7 @@ const parseAllBuildTimeBindings = (content) => {
 }
 
 const parseAngularBindings = (unparsedValue) => {
-  let angularBinding = unparsedValue.replace(/@buildtime:/g, '');
+  let angularBinding = unparsedValue.replace(new RegExp(BUILD_TIME_BINDING, 'g'), '');
   let parsedData;
 
   if (angularBindingRegExp.test(angularBinding)) {
