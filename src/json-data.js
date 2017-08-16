@@ -2,8 +2,6 @@ const cheerio = require('cheerio');
 const jsonDataUtil = require('./utils/json-data');
 const shared = require('./utils/shared');
 
-const buildTimeBindingRegExp = new RegExp(/\{\{\s*@buildtime:\s*stache.jsonData.*\}\}/g);
-
 const preload = (content, resourcePath) => {
   if (resourcePath.match(/\.html$/)) {
     return editHTMLContent(content);
@@ -24,7 +22,8 @@ const editHTMLContent = (content) => {
     content = parseStacheAttributeBindings(stacheTags, $);
   }
 
-  content = parseBuildTimeBindings($.html().toString());
+  content = jsonDataUtil.parseAllBuildTimeBindings($.html().toString());
+
   return addElvisOperator(content);
 };
 
@@ -36,34 +35,18 @@ const parseStacheAttributeBindings = (tags, $) => {
 
     if (pageTitle) {
       $(elem).attr('pageTitle', (idx, attrValue) => {
-        return jsonDataUtil.parseAngularBinding(attrValue);
+        return jsonDataUtil.parseAngularBindings(attrValue);
       });
     }
 
     if (navTitle) {
       $(elem).attr('navTitle', (idx, attrValue) => {
-        return jsonDataUtil.parseAngularBinding(attrValue);
+        return jsonDataUtil.parseAngularBindings(attrValue);
       });
     }
   });
 
   return $.html();
-};
-
-const parseBuildTimeBindings = (content) => {
-  const buildTimeBindings = content.match(buildTimeBindingRegExp);
-
-  if (!buildTimeBindings) {
-    return content;
-  }
-
-  buildTimeBindings.forEach(binding => {
-    let dataBinding = binding.replace('@buildtime:', '');
-    let dataValue = jsonDataUtil.parseAngularBinding(dataBinding);
-    content = content.replace(binding, dataValue);
-  });
-
-  return content;
 };
 
 const addElvisOperator = (content) => {

@@ -6,7 +6,9 @@ const glob = require('glob');
 
 // Matches {{ stache.jsonData. }} with any number of spaces between the '{{' and 'stache.',
 // any keys following the 'jsonData.', and the closing '}}'
-const jsonDataRegExp = new RegExp(/\{\{\s*stache.jsonData.*\}\}/);
+const angularBindingRegExp = new RegExp(/\{\{\s*stache.jsonData.*?\}\}/g);
+const buildTimeBindingRegExp = new RegExp(/\{\{\s*@buildtime:\s*stache.jsonData.*?\}\}/g);
+
 let _globalData;
 
 const getGlobalData = () => {
@@ -74,16 +76,38 @@ const isPropertyNameValid = (propertyName) => {
   return !reserved.check(propertyName, 'es6', true);
 };
 
-const parseAngularBinding = (replacementCandidate) => {
-  const stacheData = getGlobalData();
-  if (jsonDataRegExp.test(replacementCandidate)) {
-    const stacheDataKeyString = replacementCandidate.match(jsonDataRegExp)[0];
-    const dataValue = getDataValue(stacheDataKeyString, stacheData);
+const parseAllBuildTimeBindings = (content) => {
+  const buildTimeBindings = content.match(buildTimeBindingRegExp);
 
-    return replacementCandidate.replace(jsonDataRegExp, dataValue);
+  if (!buildTimeBindings) {
+    return content;
   }
 
-  return replacementCandidate;
+  buildTimeBindings.forEach(buildTimeBinding => {
+    let dataValue = parseAngularBindings(buildTimeBinding);
+    content = content.replace(buildTimeBinding, dataValue);
+  });
+
+  return content;
+}
+
+const parseAngularBindings = (unparsedBindings) => {
+  let angularBinding = unparsedBindings.replace(/@buildtime:/g, '');
+  let parsedData;
+
+  if (angularBindingRegExp.test(angularBinding)) {
+    const stacheData = getGlobalData();
+    const bindings = angularBinding.match(angularBindingRegExp);
+
+    bindings.forEach(binding => {
+      const dataValue = getDataValue(binding, stacheData);
+      angularBinding = angularBinding.replace(binding, dataValue);
+    });
+
+    parsedData = angularBinding;
+  }
+
+  return parsedData || unparsedBindings;
 };
 
 const getDataValue = (keyString, dataObject) => {
@@ -106,5 +130,6 @@ const getKeysFromString = (keyString) => {
 
 module.exports = {
   getGlobalData,
-  parseAngularBinding
+  parseAngularBindings,
+  parseAllBuildTimeBindings
 };

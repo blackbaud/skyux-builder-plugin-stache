@@ -56,7 +56,7 @@ const preload = (content, resourcePath, skyPagesConfig) => {
         };
 
         if (preferredName !== undefined) {
-          routeMetadata.name = jsonDataUtil.parseAngularBinding(preferredName);
+          routeMetadata.name = jsonDataUtil.parseAngularBindings(preferredName);
         }
 
         if (preferredOrder !== undefined) {

@@ -6,7 +6,7 @@ const jsonDataUtil = require('./utils/json-data');
 describe('Include Plugin', () => {
   beforeAll(() => {
     spyOn(shared, 'resolveAssetsPath').and.returnValue('');
-    spyOn(jsonDataUtil, 'parseAngularBinding').and.returnValue('test.html');
+    spyOn(jsonDataUtil, 'parseAngularBindings').and.returnValue('test.html');
   });
 
   it('should contain a preload hook', () => {

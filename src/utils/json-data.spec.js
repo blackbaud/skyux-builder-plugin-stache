@@ -96,30 +96,57 @@ describe('JSON Data Util', () => {
     spyOn(fs, 'readFileSync').and.returnValue(mockData);
 
     jsonDataUtil.getGlobalData();
-    let result = jsonDataUtil.parseAngularBinding('{{ stache.jsonData.mock_data.one }}');
+    let result = jsonDataUtil.parseAngularBindings('{{ stache.jsonData.mock_data.one }}');
     expect(result).toBe('One');
   });
 
   it('should traverse arrays and objects to find the _globalData value', () => {
     spyOn(glob, 'sync').and.returnValue(['mock-data.json']);
     spyOn(fs, 'readFileSync').and.returnValue(mockData);
-    let result = jsonDataUtil.parseAngularBinding('{{ stache.jsonData.mock_data.nested[2].thirdNested }}');
+    let result = jsonDataUtil.parseAngularBindings('{{ stache.jsonData.mock_data.nested[2].thirdNested }}');
     expect(result).toBe('Test Target Reached');
   });
 
   it('should find values of stache.jsonData bindings no matter the spaces between brackets', () => {
     spyOn(glob, 'sync').and.returnValue(['mock-data.json']);
     spyOn(fs, 'readFileSync').and.returnValue(mockData);
-    let result = jsonDataUtil.parseAngularBinding('{{          stache.jsonData.mock_data.one}}');
+    let result = jsonDataUtil.parseAngularBindings('{{          stache.jsonData.mock_data.one}}');
     expect(result).toBe('One');
   });
 
   it('should return the original string if no _globalData value is found', () => {
     spyOn(glob, 'sync').and.returnValue(['mock-data.json']);
     spyOn(fs, 'readFileSync').and.returnValue(mockData);
-    let noMatchString = jsonDataUtil.parseAngularBinding('Test String');
-    let noKeyFound = jsonDataUtil.parseAngularBinding('{{ stache.jsonData.mock_data.notFound }}')
+    let noMatchString = jsonDataUtil.parseAngularBindings('Test String');
+    let noKeyFound = jsonDataUtil.parseAngularBindings('{{ stache.jsonData.mock_data.notFound }}')
     expect(noMatchString).toBe('Test String');
     expect(noKeyFound).toBe('{{ stache.jsonData.mock_data.notFound }}');
+  });
+
+  it('It should parse only @buildtime: bindings in parseAllBuildTimeBindings', () => {
+    spyOn(glob, 'sync').and.returnValue(['mock-data.json']);
+    spyOn(fs, 'readFileSync').and.returnValue(mockData);
+    const content = `
+    {{ @buildtime:stache.jsonData.mock_data.one }}
+    {{ @buildtime:stache.jsonData.mock_data.two }}
+    {{ stache.jsonData.mock_data.three }}
+    {{ @buildtime:stache.jsonData.mock_data.one }}
+    {{ stache.jsonData.mock_data.not_found }}`;
+
+    const result = jsonDataUtil.parseAllBuildTimeBindings(content);
+    expect(result.toString()).toEqual(`
+    One
+    Two
+    {{ stache.jsonData.mock_data.three }}
+    One
+    {{ stache.jsonData.mock_data.not_found }}`);
+  });
+
+  it('should parse all bindings passed to parseAngularBindings', () => {
+    spyOn(glob, 'sync').and.returnValue(['mock-data.json']);
+    spyOn(fs, 'readFileSync').and.returnValue(mockData);
+    const bindings = `{{ stache.jsonData.mock_data.one }} {{ @buildtime:stache.jsonData.mock_data.two }} {{ stache.jsonData.mock_data.three }}`
+    let dataValue = jsonDataUtil.parseAngularBindings(bindings)
+    expect(dataValue).toBe('One Two Three');
   });
 });

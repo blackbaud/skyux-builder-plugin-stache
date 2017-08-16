@@ -21,7 +21,7 @@ const preload = (content, resourcePath) => {
   includes.each((idx, elem) => {
     const $elem = $(elem);
     $elem.attr('fileName', (idx, attrValue) => {
-      return jsonDataUtil.parseAngularBinding(attrValue);
+      return jsonDataUtil.parseAngularBindings(attrValue);
     });
 
     const fileName = $elem.attr('fileName');

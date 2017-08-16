@@ -18,7 +18,7 @@ describe('Route Metadata Plugin', () => {
       }
     };
 
-    spyOn(jsonDataUtil, 'parseAngularBinding').and.callFake((value) => {
+    spyOn(jsonDataUtil, 'parseAngularBindings').and.callFake((value) => {
       if (/stache.jsonData/.test(value)) {
         return 'Title';
       }
