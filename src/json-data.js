@@ -34,13 +34,13 @@ const parseStacheAttributeBindings = (tags, $) => {
     let navTitle = $wrapper.attr('navTitle');
 
     if (pageTitle) {
-      $(elem).attr('pageTitle', (idx, attrValue) => {
+      $wrapper.attr('pageTitle', (idx, attrValue) => {
         return jsonDataUtil.parseAngularBindings(attrValue);
       });
     }
 
     if (navTitle) {
-      $(elem).attr('navTitle', (idx, attrValue) => {
+      $wrapper.attr('navTitle', (idx, attrValue) => {
         return jsonDataUtil.parseAngularBindings(attrValue);
       });
     }
