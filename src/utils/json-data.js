@@ -6,8 +6,8 @@ const glob = require('glob');
 const BUILD_TIME_BINDING = '@buildtime:';
 // Matches {{ stache.jsonData. }} with any number of spaces between the '{{' and 'stache.',
 // any keys following the 'jsonData.', and the closing '}}'
-const angularBindingRegExp = new RegExp(/\{\{\s*stache.jsonData.*?\}\}/g);
-const buildTimeBindingRegExp = new RegExp(`\\{\\{\\s*${BUILD_TIME_BINDING}stache.jsonData.*?\\}\\}`, 'g');
+const angularBindingRegExp = new RegExp(/\{\{\s*stache\.jsonData\..*?\}\}/g);
+const buildTimeBindingRegExp = new RegExp(`\\{\\{\\s*${BUILD_TIME_BINDING}\\s*stache\\.jsonData\\..*?\\}\\}`, 'g');
 
 let _globalData;
 
@@ -33,10 +33,10 @@ const buildGlobalDataFromJson = () => {
 
     if (!isPropertyNameValid(propertyName)) {
       console.error(
-        new shared.StachePluginError(
-          `A valid Object property could not be determined from file ${fileName}!
-          The property key '${propertyName}' cannot be used. Please choose another file name.`
-        )
+        new shared.StachePluginError([
+          `A valid Object property could not be determined from file ${fileName}!`,
+          `The property key '${propertyName}' cannot be used. Please choose another file name.`
+        ].join(' '))
       );
       return acc;
     }
