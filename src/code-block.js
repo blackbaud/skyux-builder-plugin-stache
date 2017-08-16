@@ -16,9 +16,7 @@ const preload = (content, resourcePath) => {
 
   codeBlocks.each((idx, elem) => {
     const $elem = $(elem);
-    const innerText = $elem.html();
-    let content = jsonDataUtil.parseAllBuildTimeBindings(innerText);
-    content = content.toString()
+      let content = jsonDataUtil.parseAllBuildTimeBindings($elem.html())
       .replace(/{/g, `{{ '{' }}`)
       .replace(/</g, '&lt;');
 

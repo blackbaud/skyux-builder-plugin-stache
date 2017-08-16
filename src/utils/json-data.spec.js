@@ -166,6 +166,16 @@ describe('JSON Data Util', () => {
     );
   });
 
+  it('should not parse any non @buildtime: bindings in parseAllBuildTimeBindings', () => {
+    spyOn(glob, 'sync').and.returnValue(['mock-data.json']);
+    spyOn(fs, 'readFileSync').and.returnValue(mockData);
+
+    const bindings = `{{ stache.jsonData.mock_data.one }} {{ stache.jsonData.mock_data.two }}`
+    let dataValue = jsonDataUtil.parseAllBuildTimeBindings(bindings)
+
+    expect(dataValue).toBe('{{ stache.jsonData.mock_data.one }} {{ stache.jsonData.mock_data.two }}');
+  });
+
   it('should parse all bindings passed to parseAngularBindings', () => {
     spyOn(glob, 'sync').and.returnValue(['mock-data.json']);
     spyOn(fs, 'readFileSync').and.returnValue(mockData);
