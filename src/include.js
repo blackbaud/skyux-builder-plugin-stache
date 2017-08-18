@@ -19,7 +19,6 @@ const preload = (content, resourcePath) => {
 
   includes.each((idx, elem) => {
     const $elem = $(elem);
-
     const fileName = $elem.attr('fileName');
     const filePath = path.join(root, fileName);
 

@@ -1,7 +1,6 @@
 const plugin = require('./code-block');
 
 describe('Code Block Plugin', () => {
-
   it('should contain a preload hook', () => {
     expect(plugin.preload).toBeDefined();
   });

@@ -2,15 +2,12 @@ const plugin = require('./json-data');
 const glob = require('glob');
 const fs = require('fs-extra');
 const path = require('path');
-const jsonDataUtil = require('./utils/json-data');
 const mockData = fs.readFileSync(path.resolve(__dirname, './fixtures/mock-data.json'));
 
 describe('JSON Data Plugin', () => {
   beforeAll(() => {
     spyOn(glob, 'sync').and.returnValue(['mock-data.json']);
     spyOn(fs, 'readFileSync').and.returnValue(mockData);
-    spyOn(jsonDataUtil, 'parseAllBuildTimeBindings').and.callFake(content => content);
-    jsonDataUtil.getGlobalData();
   });
 
   it('should contain a preload hook', () => {
@@ -33,7 +30,7 @@ describe('JSON Data Plugin', () => {
     expect(result.toString()).toEqual(content.toString());
   });
 
-  it('It should add an elvis operator to {{ stache.jsonData.* }} bindings in html pages', () => {
+  it('It should add an elvis operator to stache jsonData bindings in html pages', () => {
     const content = new Buffer('<div> {{ stache.jsonData.globals.productNameLong }} </div>');
     const result = plugin.preload(content, 'foo.html');
     expect(result.toString()).toEqual('<div> {{ stache.jsonData?.globals.productNameLong }} </div>');

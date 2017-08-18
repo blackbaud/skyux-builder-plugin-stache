@@ -14,7 +14,7 @@ describe('JSON Data Element Attribute Plugin', () => {
     expect(plugin.preload).toBeDefined();
   });
 
-  it('should not change the content of other files', () => {
+  it('should not change the content of non HTML files', () => {
     const content = new Buffer('{{ @buildtime:stache.jsonData.mock_data.one }}');
 
     let result = plugin.preload(content, 'foo.js');
@@ -42,7 +42,7 @@ describe('JSON Data Element Attribute Plugin', () => {
     expect(result.toString()).toEqual('<stache-include fileName="Test Title"></stache-include>');
   });
 
-  it('It should not replace any other non specified attributes', () => {
+  it('It should not replace any non specified attributes', () => {
     const content = new Buffer('<stache-code-block languageType="{{ stache.jsonData.mock_data.one }}"></stache-code-block>');
     const result = plugin.preload(content, 'foo.html');
     expect(result.toString()).toEqual(content.toString());
