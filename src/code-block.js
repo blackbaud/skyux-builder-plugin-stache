@@ -1,6 +1,5 @@
 const cheerio = require('cheerio');
 const shared = require('./utils/shared');
-const jsonDataUtil = require('./utils/json-data');
 
 const preload = (content, resourcePath) => {
   if (!resourcePath.match(/\.html$/)) {
@@ -16,9 +15,10 @@ const preload = (content, resourcePath) => {
 
   codeBlocks.each((idx, elem) => {
     const $elem = $(elem);
-      let content = jsonDataUtil.parseAllBuildTimeBindings($elem.html())
-        .replace(/{/g, `{{ '{' }}`)
-        .replace(/</g, '&lt;');
+    let content = $elem.html()
+      .toString()
+      .replace(/{/g, `{{ '{' }}`)
+      .replace(/</g, '&lt;');
 
     $elem.html(content);
   });

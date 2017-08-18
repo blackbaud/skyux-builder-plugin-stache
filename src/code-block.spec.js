@@ -1,18 +1,6 @@
-const mock = require('mock-require');
+const plugin = require('./code-block');
 
 describe('Code Block Plugin', () => {
-  let plugin;
-  beforeAll(() => {
-    mock('./utils/json-data', {
-      parseAllBuildTimeBindings(content) {
-        return content.toString().replace(/{{ @buildTime:stache.jsonData.codeBlock.test }}/g, 'Test');
-      }
-    });
-  });
-
-  beforeEach(() => {
-    plugin = mock.reRequire('./code-block');
-  })
 
   it('should contain a preload hook', () => {
     expect(plugin.preload).toBeDefined();
@@ -45,16 +33,5 @@ describe('Code Block Plugin', () => {
     const result = plugin.preload(content, path);
     expect(result.toString()).toContain('&lt;p>My content&lt;/p>');
     expect(result.toString()).toContain('{{ \'{\' }}{{ \'{\' }} myVar }}');
-  });
-
-  it('should convert should convert only @buildTime angular bindings.', () => {
-    const content = new Buffer(`
-      <stache-code-block>
-        {{ stache.jsonData.codeBlock.test }} {{ @buildTime:stache.jsonData.codeBlock.test }}
-      </stache-code-block>
-    `);
-    const path = 'foo.html';
-    const result = plugin.preload(content, path);
-    expect(result.toString()).toContain(`{{ '{' }}{{ '{' }} stache.jsonData.codeBlock.test }} Test`);
   });
 });

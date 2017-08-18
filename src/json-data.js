@@ -1,10 +1,9 @@
-const cheerio = require('cheerio');
 const jsonDataUtil = require('./utils/json-data');
 const shared = require('./utils/shared');
 
 const preload = (content, resourcePath) => {
   if (resourcePath.match(/\.html$/)) {
-    return editHTMLContent(content);
+    return addElvisOperator(content);
   }
 
   if (resourcePath.match(/app-extras\.module\.ts$/)) {
@@ -12,41 +11,6 @@ const preload = (content, resourcePath) => {
   }
 
   return content;
-};
-
-const editHTMLContent = (content) => {
-  const $ = cheerio.load(content, shared.cheerioConfig);
-  const stacheTags = $('stache');
-
-  if (stacheTags.length > 0) {
-    content = parseStacheAttributeBindings(stacheTags, $);
-  }
-
-  content = jsonDataUtil.parseAllBuildTimeBindings($.html().toString());
-
-  return addElvisOperator(content);
-};
-
-const parseStacheAttributeBindings = (tags, $) => {
-  tags.each((idx, elem) => {
-    const $wrapper = $(elem);
-    let pageTitle = $wrapper.attr('pageTitle');
-    let navTitle = $wrapper.attr('navTitle');
-
-    if (pageTitle) {
-      $wrapper.attr('pageTitle', (idx, attrValue) => {
-        return jsonDataUtil.parseAngularBindings(attrValue);
-      });
-    }
-
-    if (navTitle) {
-      $wrapper.attr('navTitle', (idx, attrValue) => {
-        return jsonDataUtil.parseAngularBindings(attrValue);
-      });
-    }
-  });
-
-  return $.html();
 };
 
 const addElvisOperator = (content) => {

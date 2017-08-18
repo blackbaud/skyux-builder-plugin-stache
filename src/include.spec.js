@@ -1,12 +1,10 @@
 const fs = require('fs-extra');
 const plugin = require('./include');
 const shared = require('./utils/shared');
-const jsonDataUtil = require('./utils/json-data');
 
 describe('Include Plugin', () => {
   beforeAll(() => {
     spyOn(shared, 'resolveAssetsPath').and.returnValue('');
-    spyOn(jsonDataUtil, 'parseAngularBindings').and.returnValue('test.html');
   });
 
   it('should contain a preload hook', () => {
@@ -25,14 +23,6 @@ describe('Include Plugin', () => {
     const resourcePath = 'foo.html';
     const result = plugin.preload(content, resourcePath);
     expect(result.toString()).toEqual(content.toString());
-  });
-
-  it('should allow for a fileName to be a {{ stache.jsonData.* }} value', () => {
-    const includeContents = '<h1>Test</h1>';
-    const content = new Buffer(`<stache-include fileName="{{ stache.jsonData.global.fooFile }}"></stache-include>`);
-    spyOn(fs, 'readFileSync').and.returnValue(includeContents);
-    plugin.preload(content, 'bar.html');
-    expect(fs.readFileSync).toHaveBeenCalledWith('test.html');
   });
 
   it('should convert the inner HTML of all <stache-include> to the referenced file.', () => {

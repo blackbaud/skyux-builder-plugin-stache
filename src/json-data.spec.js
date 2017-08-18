@@ -24,7 +24,7 @@ describe('JSON Data Plugin', () => {
   });
 
   it('should not change the content of other files', () => {
-    const content = new Buffer('');
+    const content = new Buffer('{{ @buildtime:stache.jsonData.mock_data.one }}');
 
     let result = plugin.preload(content, 'foo.js');
     expect(result.toString()).toEqual(content.toString());
@@ -37,17 +37,5 @@ describe('JSON Data Plugin', () => {
     const content = new Buffer('<div> {{ stache.jsonData.globals.productNameLong }} </div>');
     const result = plugin.preload(content, 'foo.html');
     expect(result.toString()).toEqual('<div> {{ stache.jsonData?.globals.productNameLong }} </div>');
-  });
-
-  it('It should replace the pageTitle attribute on the stache tag if it contains a stache data value', () => {
-    const content = new Buffer('<stache pageTitle="{{ stache.jsonData.mock_data.title }}"></stache>');
-    const result = plugin.preload(content, 'foo.html');
-    expect(result.toString()).toEqual('<stache pageTitle="Test Title"></stache>');
-  });
-
-  it('It should replace the navTitle attribute on the stache tag if it contains a stache data value', () => {
-    const content = new Buffer('<stache navTitle="{{ stache.jsonData.mock_data.title }}"></stache>');
-    const result = plugin.preload(content, 'foo.html');
-    expect(result.toString()).toEqual('<stache navTitle="Test Title"></stache>');
   });
 });

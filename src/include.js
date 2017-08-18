@@ -1,7 +1,6 @@
 const fs = require('fs-extra');
 const path = require('path');
 const cheerio = require('cheerio');
-const jsonDataUtil = require('./utils/json-data');
 const shared = require('./utils/shared');
 
 const preload = (content, resourcePath) => {
@@ -20,9 +19,6 @@ const preload = (content, resourcePath) => {
 
   includes.each((idx, elem) => {
     const $elem = $(elem);
-    $elem.attr('fileName', (idx, attrValue) => {
-      return jsonDataUtil.parseAngularBindings(attrValue);
-    });
 
     const fileName = $elem.attr('fileName');
     const filePath = path.join(root, fileName);
