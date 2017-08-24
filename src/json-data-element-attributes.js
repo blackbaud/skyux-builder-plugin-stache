@@ -5,10 +5,6 @@ const elements = [
   {
     tag: 'stache',
     attributes: ['pageTitle', 'navTitle']
-  },
-  {
-    tag: 'stache-include',
-    attributes: ['fileName']
   }
 ];
 

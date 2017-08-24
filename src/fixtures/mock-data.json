@@ -13,5 +13,7 @@
       "thirdNested": "Test Target Reached"
     }
   ],
-  "title" : "Test Title"
+  "title" : "Test Title",
+  "mockFileOne": "test1.html",
+  "mockFileTwo": "test2.html"
 }

@@ -36,12 +36,6 @@ describe('JSON Data Element Attribute Plugin', () => {
     expect(result.toString()).toEqual('<stache navTitle="Test Title"></stache>');
   });
 
-  it('It should replace the fileName attribute on the stache-include tag if it contains a stache data value', () => {
-    const content = new Buffer('<stache-include fileName="{{ stache.jsonData.mock_data.title }}"></stache-include>');
-    const result = plugin.preload(content, 'foo.html');
-    expect(result.toString()).toEqual('<stache-include fileName="Test Title"></stache-include>');
-  });
-
   it('It should not replace any non specified attributes', () => {
     const content = new Buffer('<stache-code-block languageType="{{ stache.jsonData.mock_data.one }}"></stache-code-block>');
     const result = plugin.preload(content, 'foo.html');
