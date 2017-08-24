@@ -1,5 +1,6 @@
 # 1.0.6 (2017-08-24)
 
+- Added support for nesting `<stache-include>` tags inside each other. [#17](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/17)
 - Allow `@buildtime:` stache.jsonData to be parsed during build time. [#15](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/15)
 - Stache tag attributes `navTitle`, `pageTitle`, and stache-include attribute `fileName`, are parsed during build time to allow the use of stache.jsonData bindings for their values. [#231](https://github.com/blackbaud/stache2/issues/231)
 
