@@ -7,7 +7,6 @@ const jsonDataUtil = require('./utils/json-data');
 const root = shared.resolveAssetsPath('includes');
 
 const replace = (content) => {
-
   const $ = cheerio.load(content, shared.cheerioConfig);
   const $includes = $('stache-include');
 
