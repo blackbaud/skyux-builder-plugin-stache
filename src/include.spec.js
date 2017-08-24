@@ -47,4 +47,28 @@ describe('Include Plugin', () => {
       expect(plugin.preload).toThrowError(shared.StachePluginError);
     }
   });
+
+  it('should support nested includes', () => {
+    const includeComponent = '<stache-include fileName="test2.html"></stache-include>';
+    const includeContents1 = '<h1>Test1</h1>';
+    const includeContents2 = '<h1>Test2</h1>';
+
+    spyOn(fs, 'readFileSync').and.callFake(file => {
+      if (file.indexOf('test1.html') > -1) {
+        return includeContents1 + includeComponent;
+      }
+
+      if (file.indexOf('test2.html') > -1) {
+        return includeContents2;
+      }
+
+      return '';
+    });
+
+    const content = new Buffer(`<stache-include fileName="test1.html"></stache-include>`);
+    const resourcePath = 'foo.html';
+    const result = plugin.preload(content, resourcePath);
+    expect(result.toString()).toContain(includeContents1);
+    expect(result.toString()).toContain(includeContents2);
+  })
 });
