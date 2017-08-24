@@ -66,7 +66,7 @@ describe('Entry Plugin', () => {
 
     mock('./json-data-element-attributes', {
       preload() {
-        callOrder.push(2);
+        callOrder.push(3);
       }
     });
 
@@ -84,7 +84,7 @@ describe('Entry Plugin', () => {
 
     mock('./include', {
       preload() {
-        callOrder.push(3);
+        callOrder.push(2);
       }
     });
 

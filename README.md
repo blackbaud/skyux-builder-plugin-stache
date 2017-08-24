@@ -30,8 +30,8 @@ Please log all issues related to Stache (and its plugins) at [blackbaud/stache2]
 ## A Note About Plugin Order
 
 1. `config` runs first to set up any config necessary that could affect later options.   At least that's the theory behind that one going first it seems to make sense.
-2. `element attributes`  this runs second, to replace specified element attributes with their appropriate values before they are needed in other plugins.
-3. `include`,  this plugin has to run before we do any further content replacement, as the snippets that get pulled into the file from this include block, could very well contain stache jsonData themselves.
+2. `include`,  this plugin has to run before we do any further content replacement, as the snippets that get pulled into the file from this include block, could very well contain stache jsonData themselves.
+3. `element attributes`  this runs third, to replace specified element attributes with their appropriate values before they are needed in other plugins, even if they are part of the `<stache-include>` content.
 4. `build-time`,  Here we need to run over ALL the contents of the page before any further manipulation and replace all the `@buildtime` data objects,  this is required before we run the `code-block` plugin, so that we can use the `@buildtime` inside them
 5. `code-block` needs to run before the `json-data` plugin, but after the `@buildtime` plugin, as here we want to escape the `{{` characters so they can render properly on the page without being interpolated by Angular and causing errors.  It has to run before the `json-data` plugin, otherwise it will try to add the elvis operator to the blocks where it likely isn't wanted.
 
