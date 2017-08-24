@@ -3,7 +3,6 @@ const path = require('path');
 const cheerio = require('cheerio');
 const shared = require('./utils/shared');
 const jsonDataUtil = require('./utils/json-data');
-
 const root = shared.resolveAssetsPath('includes');
 
 const replace = (content) => {
