@@ -1,6 +1,6 @@
 {
   "name": "@blackbaud/skyux-builder-plugin-stache",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "A SKY UX Builder plugin to enhance the Stache 2 component library.",
   "main": "index.js",
   "scripts": {

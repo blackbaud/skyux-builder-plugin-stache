@@ -1,5 +1,5 @@
 const cheerio = require('cheerio');
-const shared = require('./shared');
+const shared = require('./utils/shared');
 
 const preload = (content, resourcePath) => {
   if (!resourcePath.match(/\.html$/)) {
@@ -13,14 +13,14 @@ const preload = (content, resourcePath) => {
     return content;
   }
 
-  codeBlocks.each((i, elem) => {
+  codeBlocks.each((idx, elem) => {
     const $elem = $(elem);
-    const innerText = $elem.html()
+    let content = $elem.html()
       .toString()
       .replace(/{/g, `{{ '{' }}`)
       .replace(/</g, '&lt;');
 
-    $elem.text(innerText);
+    $elem.html(content);
   });
 
   return $.html().toString();

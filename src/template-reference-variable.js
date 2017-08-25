@@ -1,5 +1,5 @@
 const cheerio = require('cheerio');
-const shared = require('./shared');
+const shared = require('./utils/shared');
 
 const preload = (content, resourcePath) => {
   if (!resourcePath.match(/\.html$/)) {
@@ -13,7 +13,7 @@ const preload = (content, resourcePath) => {
     return content;
   }
 
-  stacheTags.each((i, elem) => {
+  stacheTags.each((idx, elem) => {
     $(elem).attr('#stache', '');
   });
 

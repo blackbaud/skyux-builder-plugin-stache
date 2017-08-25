@@ -1,7 +1,14 @@
+# 1.0.6 (2017-08-24)
+
+- Added support for nesting `<stache-include>` tags inside each other. [#17](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/17)
+- Allow `@buildtime:` stache.jsonData to be parsed during build time. [#15](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/15)
+- Stache tag attributes `navTitle`, `pageTitle`, and stache-include attribute `fileName`, are parsed during build time to allow the use of stache.jsonData bindings for their values. [#231](https://github.com/blackbaud/stache2/issues/231)
+
 # 1.0.5 (2017-08-11)
 
 - Now allowing `preload plugins` to be called in a specific order.
 - Fixed a bug that prevented eslint from linting the appropriate files.
+- Allows the stache-code-block to be used inside a stache-include.  [#293](https://github.com/blackbaud/stache2/issues/293)
 
 # 1.0.4 (2017-07-03)
 

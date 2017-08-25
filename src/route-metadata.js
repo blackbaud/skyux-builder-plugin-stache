@@ -1,7 +1,8 @@
 const cheerio = require('cheerio');
 const fs = require('fs-extra');
 const glob = require('glob');
-const shared = require('./shared');
+const shared = require('./utils/shared');
+const jsonDataUtil = require('./utils/json-data');
 
 const preload = (content, resourcePath, skyPagesConfig) => {
   if (!resourcePath.match(/app-extras\.module\.ts$/)) {
@@ -40,7 +41,7 @@ const preload = (content, resourcePath, skyPagesConfig) => {
       return (htmlPath.endsWith(match));
     });
 
-    stacheTags.each((i, elem) => {
+    stacheTags.each((idx, elem) => {
       const $wrapper = $(elem);
       const preferredName = $wrapper.attr('navTitle') || $wrapper.attr('pageTitle');
       const preferredOrder = $wrapper.attr('navOrder');
@@ -55,7 +56,7 @@ const preload = (content, resourcePath, skyPagesConfig) => {
         };
 
         if (preferredName !== undefined) {
-          routeMetadata.name = preferredName;
+          routeMetadata.name = jsonDataUtil.parseAngularBindings(preferredName);
         }
 
         if (preferredOrder !== undefined) {

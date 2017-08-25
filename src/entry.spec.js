@@ -1,8 +1,31 @@
 const mock = require('mock-require');
 const StacheEntryPlugin = require('./entry');
-const shared = require('./shared');
+const shared = require('./utils/shared');
 
 describe('Entry Plugin', () => {
+  let _content;
+  let _resourcePath;
+  let _skyPagesConfig;
+  const mockPlugin = {
+    preload(content, resourcePath, skyPagesConfig) {
+      _content = content;
+      _resourcePath = resourcePath;
+      _skyPagesConfig = skyPagesConfig;
+      return content;
+    }
+  };
+
+  beforeEach(() => {
+    mock('./config', mockPlugin);
+    mock('./include', mockPlugin);
+    mock('./code-block', mockPlugin);
+    mock('./json-data-build-time', mockPlugin);
+    mock('./json-data-element-attributes', mockPlugin);
+    mock('./json-data', mockPlugin);
+    mock('./route-metadata', mockPlugin);
+    mock('./template-reference-variable', mockPlugin);
+  });
+
   afterEach(() => {
     mock.stopAll();
   });
@@ -13,25 +36,6 @@ describe('Entry Plugin', () => {
   });
 
   it('should pass the content through all plugins', () => {
-    let _content;
-    let _resourcePath;
-    let _skyPagesConfig;
-    const mockPlugin = {
-      preload(content, resourcePath, skyPagesConfig) {
-        _content = content;
-        _resourcePath = resourcePath;
-        _skyPagesConfig = skyPagesConfig;
-        return content;
-      }
-    };
-
-    mock('./config', mockPlugin);
-    mock('./include', mockPlugin);
-    mock('./code-block', mockPlugin);
-    mock('./json-data', mockPlugin);
-    mock('./route-metadata', mockPlugin);
-    mock('./template-reference-variable', mockPlugin);
-
     const plugin = new StacheEntryPlugin();
     const content = new Buffer('Content');
     const resourcePath = 'foo.html';
@@ -45,7 +49,9 @@ describe('Entry Plugin', () => {
   });
 
   it('should call the plugins in the expected order', () => {
+    mock.stopAll();
     let callOrder = [];
+
     mock('./config', {
       preload() {
         callOrder.push(1);
@@ -54,13 +60,25 @@ describe('Entry Plugin', () => {
 
     mock('./json-data', {
       preload() {
+        callOrder.push(6);
+      }
+    });
+
+    mock('./json-data-element-attributes', {
+      preload() {
+        callOrder.push(3);
+      }
+    });
+
+    mock('./json-data-build-time', {
+      preload() {
         callOrder.push(4);
       }
     });
 
     mock('./route-metadata', {
       preload() {
-        callOrder.push(5);
+        callOrder.push(7);
       }
     });
 
@@ -72,13 +90,13 @@ describe('Entry Plugin', () => {
 
     mock('./code-block', {
       preload() {
-        callOrder.push(3);
+        callOrder.push(5);
       }
     });
 
     mock('./template-reference-variable', {
       preload() {
-        callOrder.push(6);
+        callOrder.push(8);
       }
     });
 
@@ -87,10 +105,11 @@ describe('Entry Plugin', () => {
 
     plugin.preload(content, 'foo.html', {});
 
-    expect(callOrder).toEqual([1, 2, 3, 4, 5, 6]);
+    expect(callOrder).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
   });
 
   it('should throw an error if an error is thrown from a plugin', () => {
+    mock.stop('./config');
     mock('./config', {
       preload() {
         throw new shared.StachePluginError('invalid plugin');

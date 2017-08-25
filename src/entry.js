@@ -1,11 +1,15 @@
-const shared = require('./shared');
+const shared = require('./utils/shared');
 
 function StacheEntryPlugin() {
   const preload = (content, resourcePath, skyPagesConfig) => {
     try {
+      // This load order for these plugins is necessary and intentional. Do not change without good reason.
+      // For more information reference the README.
       const preloadPluginOrder = [
         require('./config'),
         require('./include'),
+        require('./json-data-element-attributes'),
+        require('./json-data-build-time'),
         require('./code-block'),
         require('./json-data'),
         require('./route-metadata'),
