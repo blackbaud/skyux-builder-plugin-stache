@@ -1,4 +1,5 @@
 const path = require('path');
+const providersRegExp = new RegExp(/providers\s*:\s*?\[/);
 
 function StachePluginError(message) {
   this.name = 'StachePluginError';
@@ -7,14 +8,31 @@ function StachePluginError(message) {
 StachePluginError.prototype = Error.prototype;
 
 const addToProviders = (content, provider) => {
+
+  if (!hasProvidersArray(content)) {
+    content = addProvidersArrayToModule(content);
+  }
+
   return content.toString().replace(
-    'providers: [',
+    providersRegExp,
     `providers: [
       /* tslint:disable:trailing-comma */
       ${provider},
       /* tslint:enable:trailing-comma */
-`);
+  `);
 };
+
+const hasProvidersArray = (content) => {
+  return providersRegExp.test(content.toString());
+}
+
+const addProvidersArrayToModule = (content) => {
+  return content.toString().replace(
+    '@NgModule({',
+    `@NgModule({
+        providers: [],
+  `);
+}
 
 const cheerioConfig = {
   lowerCaseTags: false,

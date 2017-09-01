@@ -25,6 +25,25 @@ describe('Shared methods and properties', () => {
     expect(shared.resolveAssetsPath).toEqual(jasmine.any(Function));
   });
 
+  it('should add the providers array to the @ngModule if none is present.', () => {
+    const content = new Buffer(`
+      @NgModule({
+        imports: [
+          StacheModule
+        ],
+        exports: [
+          StacheModule
+        ]
+      });`);
+    const withProviders = shared.addToProviders(content, 'SOME_PROVIDERS');
+    expect(withProviders).toContain(`
+      @NgModule({
+        providers: [
+      /* tslint:disable:trailing-comma */
+      SOME_PROVIDERS,
+      /* tslint:enable:trailing-comma */`);
+  });
+
   it('should add a provider string to the providers array in file\'s contents', () => {
     const content = new Buffer('providers: []');
     const result = shared.addToProviders(content, 'SOME_PROVIDERS');
