@@ -34,14 +34,16 @@ describe('Shared methods and properties', () => {
         exports: [
           StacheModule
         ]
-      });`);
+      });`
+    );
     const withProviders = shared.addToProviders(content, 'SOME_PROVIDERS');
     expect(withProviders).toContain(`
       @NgModule({
         providers: [
       /* tslint:disable:trailing-comma */
       SOME_PROVIDERS,
-      /* tslint:enable:trailing-comma */`);
+      /* tslint:enable:trailing-comma */`
+    );
   });
 
   it('should add a provider string to the providers array in file\'s contents', () => {
