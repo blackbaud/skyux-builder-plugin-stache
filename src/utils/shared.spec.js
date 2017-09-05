@@ -1,5 +1,6 @@
 const shared = require('./shared');
-
+// matches providers: [] including new lines between the [].
+const providersArrayRegExp = new RegExp(/providers\s*:\s*?\[([\s\S]*?).*?\]/g);
 describe('Shared methods and properties', () => {
   it('should exist', () => {
     expect(shared).toBeDefined();
@@ -25,7 +26,7 @@ describe('Shared methods and properties', () => {
     expect(shared.resolveAssetsPath).toEqual(jasmine.any(Function));
   });
 
-  it('should add the providers array to the @ngModule if none is present.', () => {
+  it('should add the providers array to the @ngModule.', () => {
     const content = new Buffer(`
       @NgModule({
         imports: [
@@ -42,8 +43,74 @@ describe('Shared methods and properties', () => {
         providers: [
       /* tslint:disable:trailing-comma */
       SOME_PROVIDERS,
-      /* tslint:enable:trailing-comma */`
-    );
+      /* tslint:enable:trailing-comma */
+  ]`);
+    expect(providersArrayRegExp.test(content.toString())).toBe(false);
+    expect(providersArrayRegExp.test(withProviders)).toBe(true);
+  });
+
+  it('should add the providers array only if one does not exist in any format', () => {
+    const content1 = new Buffer(`
+      @NgModule({
+        providers: [],
+        imports: [],
+        exportsL []
+      })
+    `);
+
+    const content2 = new Buffer(`
+      @NgModule({
+        providers:[        ],
+        imports: [],
+        exportsL []
+      })
+    `);
+
+    const content3 = new Buffer(`
+      @NgModule({
+        providers          : [ ],
+        imports: [],
+        exportsL []
+      })
+    `);
+
+    const content4 = new Buffer(`
+      @NgModule({
+        providers          :
+          [ ],
+        imports: [],
+        exportsL []
+      })
+    `);
+
+    const content5 = new Buffer(`
+      @NgModule({
+        imports: [],
+        exports: []
+      })
+    `);
+
+    const testContent1 = shared.addToProviders(content1, 'SOME_PROVIDERS');
+    const testContent2 = shared.addToProviders(content2, 'SOME_PROVIDERS');
+    const testContent3 = shared.addToProviders(content3, 'SOME_PROVIDERS');
+    const testContent4 = shared.addToProviders(content4, 'SOME_PROVIDERS');
+    const testContent5 = shared.addToProviders(content5, 'SOME_PROVIDERS');
+
+    const originalContent1Match = content1.toString().match(providersArrayRegExp);
+    const originalContent5Match = content5.toString().match(providersArrayRegExp);
+    const content1Matches = testContent1.toString().match(providersArrayRegExp);
+    const content2Matches = testContent2.toString().match(providersArrayRegExp);
+    const content3Matches = testContent3.toString().match(providersArrayRegExp);
+    const content4Matches = testContent4.toString().match(providersArrayRegExp);
+    const content5Matches = testContent5.toString().match(providersArrayRegExp);
+
+    expect(originalContent1Match.length).toBe(1);
+    expect(originalContent5Match).toBe(null);
+    expect(content1Matches.length).toBe(1);
+    expect(content2Matches.length).toBe(1);
+    expect(content3Matches.length).toBe(1);
+    expect(content4Matches.length).toBe(1);
+    expect(content5Matches.length).toBe(1);
   });
 
   it('should add a provider string to the providers array in file\'s contents', () => {
