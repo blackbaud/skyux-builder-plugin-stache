@@ -1,3 +1,7 @@
+# 1.0.7 (2017-09-05)
+
+- Fixed a [bug](https://github.com/blackbaud/stache2/issues/290) where providers would not be added if no `providers` array existed on the `app.extras` module. [#18](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/18)
+
 # 1.0.6 (2017-08-24)
 
 - Added support for nesting `<stache-include>` tags inside each other. [#17](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/17)
