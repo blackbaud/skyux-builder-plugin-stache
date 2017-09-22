@@ -13,7 +13,8 @@ function StacheEntryPlugin() {
         require('./code-block'),
         require('./json-data'),
         require('./route-metadata'),
-        require('./template-reference-variable')
+        require('./template-reference-variable'),
+        require('./search')
       ];
 
       preloadPluginOrder.forEach(plugin => {
