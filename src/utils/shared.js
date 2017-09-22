@@ -42,7 +42,7 @@ const cheerioConfig = {
 
 const getModulePath = (resourcePath) => {
   let modulePath = '@blackbaud/stache';
-  if (/(\/|\\)stache2(\/|\\)/.test(String.raw`${resourcePath}`)) {
+  if (String.raw`${resourcePath}`.match(/(\/|\\)stache2(\/|\\)/)) {
     modulePath = './public';
   }
 
