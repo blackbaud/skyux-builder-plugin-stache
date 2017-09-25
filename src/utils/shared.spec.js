@@ -125,6 +125,10 @@ describe('Shared methods and properties', () => {
 
     result = shared.getModulePath('/stache2/src/app/index.html');
     expect(result).toBe('./public');
+
+    // Windows:
+    result = shared.getModulePath(String.raw`\stache2\src\app\index.html`);
+    expect(result).toBe('./public');
   });
 
   it('should resolve a directory for Stache assets folder', () => {
