@@ -5,20 +5,20 @@ const preload = (content, resourcePath) => {
   }
 
   const modulePath = shared.getModulePath(resourcePath);
-  const providers = `
-  {
-    provide: SkyAppSearchResultsProvider,
-    useClass: StacheSearchResultsProvider
-  }`;
 
   content = `
 import { SkyAppSearchResultsProvider } from '@blackbaud/skyux-builder/runtime';
-import { StacheSearchResultsProvider } from ${modulePath};
+import { StacheSearchResultsProvider } from '${modulePath}';
+
+export const STACHE_SEARCH_RESULTS_PROVIDERS: any[] = [{
+  provide: SkyAppSearchResultsProvider,
+  useClass: StacheSearchResultsProvider
+}];
 
 ${content}
 `;
 
-  return shared.addToProviders(content, providers);
+  return shared.addToProviders(content, 'STACHE_SEARCH_RESULTS_PROVIDERS');
 };
 
 module.exports = { preload };
