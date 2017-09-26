@@ -1,3 +1,7 @@
+# 1.0.8 (2017-09-25)
+
+- Fixed a bug causing the plugin to look for the `@blackbaud/stache2` route when serving Stache 2 repo locally on windows machines. [#21](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/21)
+
 # 1.0.7 (2017-09-05)
 
 - Fixed a [bug](https://github.com/blackbaud/stache2/issues/290) where providers would not be added if no `providers` array existed on the `app.extras` module. [#18](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/18)
