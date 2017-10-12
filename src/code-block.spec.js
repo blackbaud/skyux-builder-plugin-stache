@@ -33,4 +33,18 @@ describe('Code Block Plugin', () => {
     expect(result.toString()).toContain('&lt;p>My content&lt;/p>');
     expect(result.toString()).toContain('{{ \'{\' }}{{ \'{\' }} myVar }}');
   });
+
+  it('should convert the inner HTML of all <stache-code> to HTML entities.', () => {
+    const content = new Buffer(`
+      <stache-code>
+        <p>My content</p>
+        {{ myVar }}
+        $(document).ready();
+      </stache-code>
+    `);
+    const path = 'foo.html';
+    const result = plugin.preload(content, path);
+    expect(result.toString()).toContain('&lt;p>My content&lt;/p>');
+    expect(result.toString()).toContain('{{ \'{\' }}{{ \'{\' }} myVar }}');
+  });
 });
