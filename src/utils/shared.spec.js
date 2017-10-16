@@ -144,9 +144,9 @@ describe('Shared methods and properties', () => {
     expect(result.message).toEqual('Plugin failure.');
   });
 
-  it('should replace a string with escaped html characters', () => {
+  it('should convert a string to use HTML entities for specific characters', () => {
     const rawContent = '<div> { var } </div>';
-    const content = shared.replaceHtmlCharacters(rawContent);
+    const content = shared.convertToHTMLEntities(rawContent);
     expect(content).toEqual('&lt;div> {{ \'{\' }} var } &lt;/div>');
   });
 });
