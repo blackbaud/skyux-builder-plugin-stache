@@ -143,4 +143,10 @@ describe('Shared methods and properties', () => {
     const result = new shared.StachePluginError();
     expect(result.message).toEqual('Plugin failure.');
   });
+
+  it('should convert a string to use HTML entities for specific characters', () => {
+    const rawContent = '<div> { var } </div>';
+    const content = shared.convertToHTMLEntities(rawContent);
+    expect(content).toEqual('&lt;div> {{ \'{\' }} var } &lt;/div>');
+  });
 });
