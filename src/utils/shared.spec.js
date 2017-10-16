@@ -143,4 +143,10 @@ describe('Shared methods and properties', () => {
     const result = new shared.StachePluginError();
     expect(result.message).toEqual('Plugin failure.');
   });
+
+  it('should replace a string with escaped html characters', () => {
+    const rawContent = '<div> { var } </div>';
+    const content = shared.replaceHtmlCharacters(rawContent);
+    expect(content).toEqual('&lt;div> {{ \'{\' }} var } &lt;/div>');
+  });
 });

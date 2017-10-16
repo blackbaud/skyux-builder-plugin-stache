@@ -1,6 +1,6 @@
-const plugin = require('./code-block');
+const plugin = require('./code');
 
-describe('Code Block Plugin', () => {
+describe('Code Plugin', () => {
   it('should contain a preload hook', () => {
     expect(plugin.preload).toBeDefined();
   });
@@ -12,21 +12,20 @@ describe('Code Block Plugin', () => {
     expect(result.toString()).toEqual(content.toString());
   });
 
-  it('should alter the content if the html file does not include any <stache-code-block> tags.', () => {
+  it('should alter the content if the html file does not include any <stache-code> tags.', () => {
     const content = new Buffer('<p></p>');
     const path = 'foo.html';
     const result = plugin.preload(content, path);
     expect(result.toString()).toEqual(content.toString());
   });
 
-  it('should convert the inner HTML of all <stache-code-block> to HTML entities.', () => {
+  it('should convert the inner HTML of all <stache-code> to HTML entities.', () => {
     const content = new Buffer(`
-      <stache-code-block>
+      <stache-code>
         <p>My content</p>
         {{ myVar }}
         $(document).ready();
-      </stache-code-block>
-      <stache-code-block></stache-code-block>
+      </stache-code>
     `);
     const path = 'foo.html';
     const result = plugin.preload(content, path);
