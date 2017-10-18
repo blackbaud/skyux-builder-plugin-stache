@@ -7,13 +7,13 @@ const preload = (content, resourcePath) => {
   }
 
   const $ = cheerio.load(content, shared.cheerioConfig);
-  const codeBlocks = $('stache-code-block');
+  const codeTags = $('stache-code');
 
-  if (!codeBlocks.length) {
+  if (!codeTags.length) {
     return content;
   }
 
-  codeBlocks.each((idx, elem) => {
+  codeTags.each((idx, elem) => {
     const $elem = $(elem);
     const rawContent = $elem.html().toString();
     const content = shared.convertToHTMLEntities(rawContent);
