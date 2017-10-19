@@ -1,3 +1,7 @@
+# 1.1.0 (2017-10-19)
+
+- `stache-code` now escapes characters `<` and `{` [#23](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/23)
+
 # 1.0.8 (2017-09-25)
 
 - Fixed a bug causing the plugin to look for the `@blackbaud/stache2` route when serving Stache 2 repo locally on windows machines. [#21](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/21)
