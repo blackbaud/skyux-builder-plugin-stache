@@ -19,9 +19,9 @@ describe('Code Plugin', () => {
     expect(result.toString()).toEqual(content.toString());
   });
 
-  it('should convert the inner HTML of all <stache-code> to HTML entities if the "escapeChars" flag is true.', () => {
+  it('should convert the inner HTML of all <stache-code> to HTML entities if the "escapeCharacters" flag is true.', () => {
     const content = new Buffer(`
-      <stache-code escapeChars="true">
+      <stache-code escapeCharacters="true">
         <p>My content</p>
         {{ myVar }}
         $(document).ready();
@@ -33,14 +33,14 @@ describe('Code Plugin', () => {
     expect(result.toString()).toContain('{{ \'{\' }}{{ \'{\' }} myVar }}');
   });
 
-  it('should not convert the inner HTML of all <stache-code> to HTML entities if "escapeChars" attribute is not true', () => {
+  it('should not convert the inner HTML of all <stache-code> to HTML entities if "escapeCharacters" attribute is not true', () => {
     const content = new Buffer(`
       <stache-code>
         <p>My content</p>
         {{ myVar }}
         $(document).ready();
       </stache-code>
-      <stache-code escapeChars="fooBar">
+      <stache-code escapeCharacters="fooBar">
         <p>My content</p>
         {{ myVar }}
         $(document).ready();
