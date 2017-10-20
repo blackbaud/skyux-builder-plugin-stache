@@ -7,7 +7,7 @@ const preload = (content, resourcePath) => {
   }
 
   const $ = cheerio.load(content, shared.cheerioConfig);
-  const codeTags = $('stache-code');
+  const codeTags = $('stache-code[escapeChars="true"]');
 
   if (!codeTags.length) {
     return content;
