@@ -26,6 +26,7 @@ describe('Entry Plugin', () => {
     mock('./json-data', mockPlugin);
     mock('./route-metadata', mockPlugin);
     mock('./template-reference-variable', mockPlugin);
+    mock('./search', mockPlugin);
   });
 
   afterEach(() => {
