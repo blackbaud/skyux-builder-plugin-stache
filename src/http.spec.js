@@ -1,4 +1,4 @@
-const plugin = require('./auth-http');
+const plugin = require('./http');
 
 describe('Auth Http Plugin', () => {
   it('should contain a preload hook', () => {

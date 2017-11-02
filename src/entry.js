@@ -7,7 +7,7 @@ function StacheEntryPlugin() {
       // For more information reference the README.
       const preloadPluginOrder = [
         require('./config'),
-        require('./auth-http'),
+        require('./http'),
         require('./include'),
         require('./json-data-element-attributes'),
         require('./json-data-build-time'),
