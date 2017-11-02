@@ -56,8 +56,14 @@ const resolveAssetsPath = (...pathSegments) => {
   return path.resolve.apply(path, args);
 };
 
+const convertToHTMLEntities = (content) => {
+  return content.replace(/{/g, `{{ '{' }}`)
+    .replace(/</g, '&lt;');
+}
+
 module.exports = {
   StachePluginError,
+  convertToHTMLEntities,
   addToProviders,
   cheerioConfig,
   getModulePath,
