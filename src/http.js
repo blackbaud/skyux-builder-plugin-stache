@@ -5,25 +5,25 @@ const preload = (content, resourcePath, skyPagesConfig) => {
     return content;
   }
 
-  const useAuth = skyPagesConfig.skyux.auth;
+  const modulePath = shared.getModulePath(resourcePath);
+  let httpName;
+  let httpPath;
 
-  function injectHttpService() {
-    if (useAuth) {
-      return `import { SkyAuthHttp } from '@blackbaud/skyux-builder/runtime';`;
-    } else {
-      return `import { Http } from '@angular/http';`;
-    }
+  if (skyPagesConfig.skyux.auth) {
+    httpName = 'SkyAuthHttp';
+    httpPath = '@blackbaud/skyux-builder/runtime';
+  } else {
+    httpName = 'Http';
+    httpPath = '@angular/http';
   }
 
-  const modulePath = shared.getModulePath(resourcePath);
-
   content = `
-${injectHttpService()}
+import { ${httpName} } from '${httpPath}';
 import { StacheHttpService } from '${modulePath}';
 
 export const STACHE_HTTP_PROVIDERS: any[] = [{
   provide: StacheHttpService,
-  useExisting: ${useAuth ? `SkyAuthHttp` : `Http`}
+  useExisting: ${httpName}
 }];
 ${content}`;
 
