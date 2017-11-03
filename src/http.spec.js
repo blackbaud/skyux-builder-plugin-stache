@@ -1,17 +1,11 @@
-const plugin = require('./search');
+const plugin = require('./http');
 
-describe('Search Provider Plugin', () => {
+describe('Auth Http Plugin', () => {
   let config;
   beforeEach(() => {
     config = {
       skyux: {
-        appSettings: {
-          stache: {
-            searchConfig: {
-              enableSearchBeta: true
-            }
-          }
-        }
+        auth: true
       }
     };
   });
@@ -23,7 +17,7 @@ describe('Search Provider Plugin', () => {
   it('should add providers to the app-extras.module.ts file', () => {
     const content = new Buffer('');
     const result = plugin.preload(content, 'app-extras.module.ts', config);
-    expect(result.toString()).toContain('STACHE_SEARCH_RESULTS_PROVIDERS');
+    expect(result.toString()).toContain('STACHE_HTTP_PROVIDERS');
   });
 
   it('should not change the content of other files', () => {
@@ -39,17 +33,16 @@ describe('Search Provider Plugin', () => {
     expect(result.toString()).toEqual(content.toString());
   });
 
-  it('should return if enable search beta is undefined', () => {
-    config.skyux.appSettings.stache.searchConfig.enableSearchBeta = undefined;
+  it('should inject the angular http library if auth is not true', () => {
+    config.skyux.auth = false;
     const content = new Buffer('');
     const result = plugin.preload(content, 'app-extras.module.ts', config);
-    expect(result.toString()).not.toContain('STACHE_SEARCH_RESULTS_PROVIDERS');
+    expect(result.toString()).toContain('@angular/http');
   });
 
-  it('should return if enable search beta is false', () => {
-    config.skyux.appSettings.stache.searchConfig.enableSearchBeta = false;
+  it('should inject the sky auth http library if auth is true', () => {
     const content = new Buffer('');
     const result = plugin.preload(content, 'app-extras.module.ts', config);
-    expect(result.toString()).not.toContain('STACHE_SEARCH_RESULTS_PROVIDERS');
+    expect(result.toString()).toContain('@blackbaud/skyux-builder/runtime');
   });
 });
