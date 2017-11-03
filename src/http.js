@@ -6,6 +6,7 @@ const preload = (content, resourcePath, skyPagesConfig) => {
   }
 
   const modulePath = shared.getModulePath(resourcePath);
+  const provider = `STACHE_HTTP_PROVIDERS`;
   let httpName;
   let httpPath;
 
@@ -21,13 +22,13 @@ const preload = (content, resourcePath, skyPagesConfig) => {
 import { ${httpName} } from '${httpPath}';
 import { StacheHttpService } from '${modulePath}';
 
-export const STACHE_HTTP_PROVIDERS: any[] = [{
+export const ${provider}: any[] = [{
   provide: StacheHttpService,
   useExisting: ${httpName}
 }];
 ${content}`;
 
-  return shared.addToProviders(content, 'STACHE_HTTP_PROVIDERS');
+  return shared.addToProviders(content, provider);
 };
 
 module.exports = { preload };
