@@ -1,6 +1,12 @@
 const shared = require('./utils/shared');
-const preload = (content, resourcePath) => {
+const preload = (content, resourcePath, skyPagesConfig) => {
   if (!resourcePath.match(/app-extras\.module\.ts$/)) {
+    return content;
+  }
+
+  const enableSearchBeta = skyPagesConfig.skyux.appSettings.stache.searchConfig.enableSearchBeta;
+
+  if (!enableSearchBeta || enableSearchBeta === undefined) {
     return content;
   }
 
