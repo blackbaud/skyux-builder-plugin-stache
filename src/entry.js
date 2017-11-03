@@ -7,6 +7,7 @@ function StacheEntryPlugin() {
       // For more information reference the README.
       const preloadPluginOrder = [
         require('./config'),
+        require('./http'),
         require('./include'),
         require('./json-data-element-attributes'),
         require('./json-data-build-time'),
@@ -14,7 +15,8 @@ function StacheEntryPlugin() {
         require('./code'),
         require('./json-data'),
         require('./route-metadata'),
-        require('./template-reference-variable')
+        require('./template-reference-variable'),
+        require('./search')
       ];
 
       preloadPluginOrder.forEach(plugin => {

@@ -6,18 +6,19 @@ const preload = (content, resourcePath) => {
   }
 
   const modulePath = shared.getModulePath(resourcePath);
+  const provider = `STACHE_CONFIG_PROVIDERS`;
 
   content = `
 import { SkyAppConfig } from '@blackbaud/skyux-builder/runtime';
 import { StacheConfigService } from '${modulePath}';
 
-export const STACHE_CONFIG_PROVIDERS: any[] = [{
+export const ${provider}: any[] = [{
   provide: StacheConfigService,
   useExisting: SkyAppConfig
 }];
 ${content}`;
 
-  return shared.addToProviders(content, 'STACHE_CONFIG_PROVIDERS');
+  return shared.addToProviders(content, provider);
 };
 
 module.exports = { preload };

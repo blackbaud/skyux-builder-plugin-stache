@@ -1,3 +1,7 @@
+# 1.2.0 (2017-11-2)
+- Added provider for search. [#20](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/20)
+- Added provider for auth http. [#27](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/27)
+
 # 1.1.1 (2017-10-20)
 
 - Bugfix for `stache-code` to only escape characters when the `escapeCharacters` attribute is set to true on the element. [#25](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/25)
