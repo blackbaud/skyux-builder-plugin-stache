@@ -4,9 +4,23 @@ const preload = (content, resourcePath, skyPagesConfig) => {
     return content;
   }
 
-  const enableSearchBeta = skyPagesConfig.skyux.appSettings.stache.searchConfig.enableSearchBeta;
+  function checkConfig(config) {
+    if (
+      config &&
+      config.skyux &&
+      config.skyux.appSettings &&
+      config.skyux.appSettings.stache &&
+      config.skyux.appSettings.stache.searchConfig &&
+      config.skyux.appSettings.stache.searchConfig.enableSearchBeta
+    ) {
+      return config.skyux.appSettings.stache.searchConfig.enableSearchBeta;
+    }
+    return false;
+  }
 
-  if (!enableSearchBeta || enableSearchBeta === undefined) {
+  const enableSearchBeta = checkConfig(skyPagesConfig);
+
+  if (!enableSearchBeta) {
     return content;
   }
 
