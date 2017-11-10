@@ -12,7 +12,7 @@ describe('Markdown Plugin', () => {
     expect(result.toString()).toEqual(content.toString());
   });
 
-  it('should alter the content if the html file does not include any <stache-markdown> tags.', () => {
+  it('should not alter the content if the html file does not include any <stache-markdown> tags.', () => {
     const content = new Buffer('<p></p>');
     const path = 'foo.html';
     const result = plugin.preload(content, path);
@@ -35,11 +35,44 @@ describe('Markdown Plugin', () => {
 </ul>`);
   });
 
+  it('should handle separate renderings for different header levels', () => {
+    const content = new Buffer(`
+<stache-markdown>
+# Title Heading
+
+## Page Anchor Heading
+
+### H3 Heading
+
+#### H4 Heading
+</stache-markdown>
+`);
+
+    const path = 'foo.html';
+    const result = plugin.preload(content, path).toString();
+
+    expect(result).toContain(`
+<stache-page-title>
+  Title Heading
+</stache-page-title>
+
+<stache-page-anchor>
+  Page Anchor Heading
+</stache-page-anchor>
+
+<h3>
+  H3 Heading
+</h3>
+
+<h4>
+  H4 Heading
+</h4>
+`);
+  });
+
   it('should use a custom renderer for headings, code-blocks, code', () => {
     const content = new Buffer(`
 <stache-markdown>
-# Heading 1
-
 ## Heading 2
 </stache-markdown>
 
@@ -57,12 +90,9 @@ This is an \`inline\` code example.
 `);
     const path = 'foo.html';
     const result = plugin.preload(content, path).toString();
-    expect(result).toContain(
-`<stache-page-anchor level="1">
-Heading 1
-</stache-page-anchor>
-<stache-page-anchor level="2">
-Heading 2
+    expect(result).toContain(`
+<stache-page-anchor>
+  Heading 2
 </stache-page-anchor>`);
 
     expect(result).toContain(
