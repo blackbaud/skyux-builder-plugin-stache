@@ -19,6 +19,7 @@ describe('Entry Plugin', () => {
     mock('./config', mockPlugin);
     mock('./http', mockPlugin),
     mock('./include', mockPlugin);
+    mock('./markdown', mockPlugin);
     mock('./code-block', mockPlugin);
     mock('./code', mockPlugin);
     mock('./json-data-build-time', mockPlugin);
@@ -63,7 +64,7 @@ describe('Entry Plugin', () => {
 
     mock('./json-data', {
       preload() {
-        callOrder.push(7);
+        callOrder.push(8);
       }
     });
 
@@ -81,7 +82,7 @@ describe('Entry Plugin', () => {
 
     mock('./route-metadata', {
       preload() {
-        callOrder.push(8);
+        callOrder.push(9);
       }
     });
 
@@ -91,21 +92,27 @@ describe('Entry Plugin', () => {
       }
     });
 
-    mock('./code-block', {
+    mock('./markdown', {
       preload() {
         callOrder.push(5);
       }
     });
 
-    mock('./code', {
+    mock('./code-block', {
       preload() {
         callOrder.push(6);
       }
     });
 
+    mock('./code', {
+      preload() {
+        callOrder.push(7);
+      }
+    });
+
     mock('./template-reference-variable', {
       preload() {
-        callOrder.push(9);
+        callOrder.push(10);
       }
     });
 
@@ -114,7 +121,7 @@ describe('Entry Plugin', () => {
 
     plugin.preload(content, 'foo.html', {});
 
-    expect(callOrder).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    expect(callOrder).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
   });
 
   it('should throw an error if an error is thrown from a plugin', () => {

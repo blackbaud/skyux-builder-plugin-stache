@@ -11,6 +11,7 @@ function StacheEntryPlugin() {
         require('./include'),
         require('./json-data-element-attributes'),
         require('./json-data-build-time'),
+        require('./markdown'),
         require('./code-block'),
         require('./code'),
         require('./json-data'),
