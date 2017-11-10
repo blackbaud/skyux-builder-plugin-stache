@@ -52,9 +52,9 @@ describe('Markdown Plugin', () => {
     const result = plugin.preload(content, path).toString();
 
     expect(result).toContain(`
-<stache-page-title>
+<h1>
   Title Heading
-</stache-page-title>
+</h1>
 
 <stache-page-anchor>
   Page Anchor Heading

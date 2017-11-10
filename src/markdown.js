@@ -12,28 +12,17 @@ ${code}
 `;
 
   renderer.heading = (text, level) => {
-    let parsedHeading = '';
-
-    switch (level) {
-      case 1:
-        parsedHeading = `
-<stache-page-title>
-  ${text}
-</stache-page-title>
-`;
-        break;
-      case 2:
-        parsedHeading = `
-<stache-page-anchor>
-  ${text}
-</stache-page-anchor>
-`;
-        break;
-      default:
-        parsedHeading = `
+    let parsedHeading = `
 <h${level}>
   ${text}
 </h${level}>
+`;
+
+    if (level === 2) {
+      parsedHeading = `
+<stache-page-anchor>
+  ${text}
+</stache-page-anchor>
 `;
     }
 
