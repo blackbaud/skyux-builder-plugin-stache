@@ -11,11 +11,23 @@ ${code}
 </stache-code-block>
 `;
 
-  renderer.heading = (text, level) =>
-`<stache-page-anchor level="${level}">
-${text}
+  renderer.heading = (text, level) => {
+    let parsedHeading = `
+<h${level}>
+  ${text}
+</h${level}>
+`;
+
+    if (level === 2) {
+      parsedHeading = `
+<stache-page-anchor>
+  ${text}
 </stache-page-anchor>
 `;
+    }
+
+    return parsedHeading;
+  };
 
   renderer.codespan = (text) => `<stache-code>${text}</stache-code>`;
 
