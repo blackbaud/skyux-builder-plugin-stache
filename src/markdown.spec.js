@@ -19,6 +19,27 @@ describe('Markdown Plugin', () => {
     expect(result.toString()).toEqual(content.toString());
   });
 
+  it('should respect and render html inside markdown component', () => {
+    const content = new Buffer(`
+<stache-markdown>
+<ul>
+  <li>
+    item
+  </li>
+</ul>
+</stache-markdown>
+`);
+    const path = 'foo.html';
+    const result = plugin.preload(content, path).toString();
+    expect(result).toContain(`
+<stache-markdown><ul>
+  <li>
+    item
+  </li>
+</ul>
+</stache-markdown>`);
+  });
+
   it('should convert the inner markdown of all <stache-markdown> to HTML.', () => {
     const content = new Buffer(`
 <stache-markdown>

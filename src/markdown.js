@@ -49,7 +49,7 @@ const preload = (content, resourcePath) => {
 
   markdownBlocks.each((idx, elem) => {
     const $elem = $(elem);
-    const rawContent = $elem.text();
+    const rawContent = $elem.html().toString();
     const content = marked(rawContent, { renderer: renderer });
     $elem.html(content);
   });
