@@ -2,10 +2,6 @@ const cheerio = require('cheerio');
 const marked = require('marked');
 const shared = require('./utils/shared');
 
-marked.setOptions({
-  sanitize: true
-});
-
 const getRenderer = () => {
   const renderer = new marked.Renderer();
 
@@ -53,7 +49,7 @@ const preload = (content, resourcePath) => {
 
   markdownBlocks.each((idx, elem) => {
     const $elem = $(elem);
-    const rawContent = $elem.text();
+    const rawContent = $elem.html().toString();
     const content = marked(rawContent, { renderer: renderer });
     $elem.html(content);
   });
