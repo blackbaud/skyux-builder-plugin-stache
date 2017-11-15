@@ -2,6 +2,10 @@ const cheerio = require('cheerio');
 const marked = require('marked');
 const shared = require('./utils/shared');
 
+marked.setOptions({
+  sanitize: true
+});
+
 const getRenderer = () => {
   const renderer = new marked.Renderer();
 
