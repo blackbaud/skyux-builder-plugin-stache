@@ -16,8 +16,7 @@ function StacheEntryPlugin() {
         require('./code'),
         require('./json-data'),
         require('./route-metadata'),
-        require('./template-reference-variable'),
-        require('./search')
+        require('./template-reference-variable')
       ];
 
       preloadPluginOrder.forEach(plugin => {
