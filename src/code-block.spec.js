@@ -33,4 +33,19 @@ describe('Code Block Plugin', () => {
     expect(result.toString()).toContain('&lt;p>My content&lt;/p>');
     expect(result.toString()).toContain('{{ \'{\' }}{{ \'{\' }} myVar }}');
   });
+
+  it('should remove invalid auto closing tags', () => {
+    const content = new Buffer(`
+      <stache-code-block languageType="csharp">
+        public async Task<string> someMethod()
+        {
+          //Do some stuff
+        }
+      </stache-code-block>
+    `);
+    const path = 'foo.html';
+    const result = plugin.preload(content, path);
+    expect(result.toString()).not.toContain('</string>');
+    expect(result.toString()).not.toContain('&lt;/string>');
+  });
 });
