@@ -1,6 +1,3 @@
-# 1.3.1 (2017-12-6)
-- Fixed bug with auto closing tags on languages with generics [#33](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/33)
-
 # 1.3.0 (2017-11-20)
 
 - Added markdown plugin. [#28](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/28) Thanks @Blackbaud-BobbyEarl!

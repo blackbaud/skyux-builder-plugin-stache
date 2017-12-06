@@ -34,11 +34,6 @@ const addProvidersArrayToModule = (content) => {
   `);
 }
 
-const codeBlockLanguagesWithGenerics = [
-  'csharp',
-  'java'
-];
-
 const cheerioConfig = {
   lowerCaseTags: false,
   lowerCaseAttributeNames: false,
@@ -71,7 +66,6 @@ module.exports = {
   convertToHTMLEntities,
   addToProviders,
   cheerioConfig,
-  codeBlockLanguagesWithGenerics,
   getModulePath,
   resolveAssetsPath
 };
