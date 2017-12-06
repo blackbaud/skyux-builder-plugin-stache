@@ -17,7 +17,7 @@ const preload = (content, resourcePath) => {
     const $elem = $(elem);
     let rawContent = $elem.html().toString();
     if (shared.codeBlockLanguagesWithGenerics.includes($elem.attr('languageType'))) {
-      rawContent = rawContent.replace(/<\/(.*)>/, '');
+      rawContent = rawContent.replace(/<\/(.*?)>/, '');
     }
     const content = shared.convertToHTMLEntities(rawContent);
     $elem.html(content);
