@@ -15,7 +15,10 @@ const preload = (content, resourcePath) => {
 
   codeBlocks.each((idx, elem) => {
     const $elem = $(elem);
-    const rawContent = $elem.html().toString();
+    let rawContent = $elem.html().toString();
+    if (shared.codeBlockLanguagesWithGenerics.includes($elem.attr('languageType'))) {
+      rawContent = rawContent.replace(/<\/(.*)>/, '');
+    }
     const content = shared.convertToHTMLEntities(rawContent);
     $elem.html(content);
   });
