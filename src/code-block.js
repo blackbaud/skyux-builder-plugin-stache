@@ -22,7 +22,7 @@ const preload = (content, resourcePath) => {
     const $elem = $(elem);
     let rawContent = $elem.html().toString();
     if (codeBlockLanguagesWithGenerics.includes($elem.attr('languageType'))) {
-      rawContent = rawContent.replace(/<\/(.*?)>/g, '');
+      rawContent = rawContent.replace(/<\/(.*?)>$/g, '');
     }
     const content = shared.convertToHTMLEntities(rawContent);
     $elem.html(content);
