@@ -8,6 +8,11 @@ const preload = (content, resourcePath) => {
 
   const $ = cheerio.load(content, shared.cheerioConfig);
   const codeBlocks = $('stache-code-block');
+  const codeBlockLanguagesWithGenerics = [
+    'csharp',
+    'java',
+    'typescript'
+  ];
 
   if (!codeBlocks.length) {
     return content;
@@ -15,7 +20,10 @@ const preload = (content, resourcePath) => {
 
   codeBlocks.each((idx, elem) => {
     const $elem = $(elem);
-    const rawContent = $elem.html().toString();
+    let rawContent = $elem.html().toString();
+    if (codeBlockLanguagesWithGenerics.includes($elem.attr('languageType'))) {
+      rawContent = rawContent.replace(/<\/(.*?)>$/g, '');
+    }
     const content = shared.convertToHTMLEntities(rawContent);
     $elem.html(content);
   });
