@@ -10,7 +10,8 @@ const preload = (content, resourcePath) => {
   const codeBlocks = $('stache-code-block');
   const codeBlockLanguagesWithGenerics = [
     'csharp',
-    'java'
+    'java',
+    'typescript'
   ];
 
   if (!codeBlocks.length) {
