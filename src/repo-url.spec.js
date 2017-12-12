@@ -1,6 +1,7 @@
 const fs = require('fs-extra');
 const githubMock = require('./fixtures/github-repo-data.json');
 const plugin = require('./repo-url');
+const StacheError = require('./utils/shared').StachePluginError;
 const vstsMock = require('./fixtures/vsts-repo-data.json');
 
 describe('Repo Url Plugin', () => {
@@ -62,5 +63,31 @@ describe('Repo Url Plugin', () => {
 
     result = plugin.preload(content, 'app-extras.module.ts');
     expect(result.toString()).toEqual(content.toString());
+  });
+
+  it('should handle errors with reading the json file', () => {
+    const content = new Buffer('');
+    fs.readJsonSync = jasmine.createSpy().and.callFake(() => {
+      throw new Error('Cannot read file');
+    });
+
+    let test = function () {
+      return plugin.preload(content, 'app-extras.module.ts');
+    }
+
+    expect(test).toThrowError(StacheError);
+  });
+
+  it('should handle errors with writing the json file', () => {
+    const content = new Buffer('');
+    fs.writeFileSync = jasmine.createSpy().and.callFake(() => {
+      throw new Error('Cannot write file');
+    });
+
+    let test = function () {
+      return plugin.preload(content, 'app-extras.module.ts');
+    }
+
+    expect(test).toThrowError(StacheError);
   });
 });

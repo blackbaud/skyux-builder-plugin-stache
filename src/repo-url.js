@@ -24,7 +24,13 @@ const preload = (content, resourcePath) => {
     return result;
   }
 
-  const packageJson = fs.readJsonSync(path.join(process.cwd(), 'package.json'));
+  let packageJson;
+
+  try {
+    packageJson = fs.readJsonSync(path.join(process.cwd(), 'package.json'));
+  } catch (error) {
+    throw new shared.StachePluginError(error.message);
+  }
 
   let url = packageJson.repository.url;
 
@@ -36,7 +42,11 @@ const preload = (content, resourcePath) => {
 
   const filePath = shared.resolveAssetsPath('data');
 
-  fs.writeFileSync(path.join(filePath, 'repo.json'), JSON.stringify(repoLink));
+  try {
+    fs.writeFileSync(path.join(filePath, 'repo.json'), JSON.stringify(repoLink));
+  } catch (error) {
+    throw new shared.StachePluginError(error.message);
+  }
 
   return content;
 };
