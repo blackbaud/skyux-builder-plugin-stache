@@ -16,6 +16,7 @@ describe('Entry Plugin', () => {
   };
 
   beforeEach(() => {
+    mock('./repo-url', mockPlugin);
     mock('./config', mockPlugin);
     mock('./http', mockPlugin),
     mock('./include', mockPlugin);
