@@ -8,8 +8,8 @@ const preload = (content, resourcePath) => {
   }
 
   function generateRepoUrlObject(url) {
-    const githubFilePathRoot = '/tree/master/src/app/';
-    const vstsFilePathRoot = '?path=%2Fsrc%2Fapp%2F';
+    const githubFilePathRoot = '/tree/master/src/app';
+    const vstsFilePathRoot = '?path=%2Fsrc%2Fapp';
     const vstsRepoBranchSelector = '&version=GBmaster';
 
     let result = {};
@@ -28,6 +28,9 @@ const preload = (content, resourcePath) => {
 
   try {
     packageJson = fs.readJsonSync(path.join(process.cwd(), 'package.json'));
+    if (packageJson.repository === undefined) {
+      throw new Error('Package.json must have a repository object and url key to use edit button feature.');
+    }
   } catch (error) {
     throw new shared.StachePluginError(error.message);
   }

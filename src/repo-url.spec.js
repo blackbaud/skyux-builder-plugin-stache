@@ -5,6 +5,7 @@ const StacheError = require('./utils/shared').StachePluginError;
 const vstsMock = require('./fixtures/vsts-repo-data.json');
 
 describe('Repo Url Plugin', () => {
+  const content = new Buffer('');
   let fileContents;
   let filePath;
 
@@ -23,26 +24,23 @@ describe('Repo Url Plugin', () => {
   });
 
   it('should write the repo.json file to the stache data directory', () => {
-    const content = new Buffer('');
     plugin.preload(content, 'app-extras.module.ts');
     expect(fileContents).toEqual(JSON.stringify({
-      url: 'https://blackbaud.visualstudio.com/Products/_git/skyux-spa-stache-test-pipeline?path=%2Fsrc%2Fapp%2F',
+      url: 'https://blackbaud.visualstudio.com/Products/_git/skyux-spa-stache-test-pipeline?path=%2Fsrc%2Fapp',
       vstsBranchSelector: '&version=GBmaster'
     }));
     expect(filePath).toEqual(process.cwd() + '/src/stache/data/repo.json');
   });
 
   it('should format the url for github', () => {
-    const content = new Buffer('');
     fs.readJsonSync = jasmine.createSpy().and.returnValue(githubMock);
     plugin.preload(content, 'app-extras.module.ts');
     expect(fileContents).toEqual(JSON.stringify({
-      url: 'https://github.com/blackbaud/stache-search/tree/master/src/app/'
+      url: 'https://github.com/blackbaud/stache-search/tree/master/src/app'
     }));
   });
 
   it('should strip out the .git from the end of urls if it exists', () => {
-    const content = new Buffer('');
     fs.readJsonSync = jasmine.createSpy().and.returnValue(githubMock);
     plugin.preload(content, 'app-extras.module.ts');
 
@@ -50,8 +48,6 @@ describe('Repo Url Plugin', () => {
   });
 
   it('should not change the content of files', () => {
-    const content = new Buffer('');
-
     let result = plugin.preload(content, 'foo.html');
     expect(result.toString()).toEqual(content.toString());
 
@@ -65,8 +61,16 @@ describe('Repo Url Plugin', () => {
     expect(result.toString()).toEqual(content.toString());
   });
 
+  it('should throw an error if the repository object is undefined', () => {
+    fs.readJsonSync = jasmine.createSpy().and.returnValue({});
+    let test = function () {
+      return plugin.preload(content, 'app-extras.module.ts');
+    }
+
+    expect(test).toThrowError('Package.json must have a repository object and url key to use edit button feature.');
+  });
+
   it('should handle errors with reading the json file', () => {
-    const content = new Buffer('');
     fs.readJsonSync = jasmine.createSpy().and.callFake(() => {
       throw new Error('Cannot read file');
     });
@@ -79,7 +83,6 @@ describe('Repo Url Plugin', () => {
   });
 
   it('should handle errors with writing the json file', () => {
-    const content = new Buffer('');
     fs.writeFileSync = jasmine.createSpy().and.callFake(() => {
       throw new Error('Cannot write file');
     });

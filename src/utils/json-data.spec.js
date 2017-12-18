@@ -142,7 +142,7 @@ describe('JSON Data Util', () => {
     expect(noMatchString).toBe('undefined');
   });
 
-  it('It should parse only @buildtime: bindings in parseAllBuildTimeBindings', () => {
+  it('should parse only @buildtime: bindings in parseAllBuildTimeBindings', () => {
     spyOn(glob, 'sync').and.returnValue(['mock-data.json']);
     spyOn(fs, 'readFileSync').and.returnValue(mockData);
 
