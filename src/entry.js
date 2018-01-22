@@ -6,6 +6,7 @@ function StacheEntryPlugin() {
       // This load order for these plugins is necessary and intentional. Do not change without good reason.
       // For more information reference the README.
       const preloadPluginOrder = [
+        require('./repo-url'),
         require('./config'),
         require('./http'),
         require('./include'),
