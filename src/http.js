@@ -5,7 +5,7 @@ const preload = (content, resourcePath, skyPagesConfig) => {
     return content;
   }
 
-  const modulePath = shared.getModulePath(resourcePath);
+  const modulePath = shared.getModulePath(resourcePath, skyPagesConfig);
   const provider = `STACHE_HTTP_PROVIDERS`;
   let httpName;
   let httpPath;

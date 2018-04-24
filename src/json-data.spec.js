@@ -16,7 +16,8 @@ describe('JSON Data Plugin', () => {
 
   it('should add providers to the app-extras.module.ts file', () => {
     const content = new Buffer('');
-    const result = plugin.preload(content, 'app-extras.module.ts');
+    const config = { skyux: { name: 'stache2'}};
+    const result = plugin.preload(content, 'app-extras.module.ts', config);
     expect(result.toString()).toContain('STACHE_JSON_DATA_PROVIDERS');
   });
 

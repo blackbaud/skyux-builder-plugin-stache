@@ -1,13 +1,13 @@
 const jsonDataUtil = require('./utils/json-data');
 const shared = require('./utils/shared');
 
-const preload = (content, resourcePath) => {
+const preload = (content, resourcePath, skyPagesConfig) => {
   if (resourcePath.match(/\.html$/)) {
     return addElvisOperator(content);
   }
 
   if (resourcePath.match(/app-extras\.module\.ts$/)) {
-    return addGlobalDataToAppExtrasModule(content, resourcePath);
+    return addGlobalDataToAppExtrasModule(content, resourcePath, skyPagesConfig);
   }
 
   return content;
@@ -17,9 +17,9 @@ const addElvisOperator = (content) => {
   return content.toString().replace(/\{\{\s*stache.jsonData./g, '{{ stache.jsonData?.');
 };
 
-const addGlobalDataToAppExtrasModule = (content, resourcePath) => {
+const addGlobalDataToAppExtrasModule = (content, resourcePath, skyPagesConfig) => {
   const globalData = jsonDataUtil.getGlobalData();
-  const modulePath = shared.getModulePath(resourcePath);
+  const modulePath = shared.getModulePath(resourcePath, skyPagesConfig);
 
   content = `
 import {
