@@ -1,6 +1,5 @@
 const path = require('path');
 const providersRegExp = new RegExp(/providers\s*:\s*?\[/);
-const stache2 = 'stache2';
 
 function StachePluginError(message) {
   this.name = 'StachePluginError';
@@ -43,7 +42,7 @@ const cheerioConfig = {
 
 const getModulePath = (resourcePath, skyPagesConfig) => {
   let modulePath = '@blackbaud/stache'
-  if (skyPagesConfig.skyux.name === stache2) {
+  if (skyPagesConfig.skyux.name === 'stache2') {
     modulePath = './public';
   }
 
