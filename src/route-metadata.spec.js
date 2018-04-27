@@ -10,6 +10,7 @@ describe('Route Metadata Plugin', () => {
   beforeEach(() => {
     plugin = require('./route-metadata');
     config = {
+      skyux: { name: 'stache2'},
       runtime: {
         routes: [
           { routePath: 'learn' },

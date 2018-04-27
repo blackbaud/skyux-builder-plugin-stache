@@ -1,11 +1,11 @@
 const shared = require('./utils/shared');
 
-const preload = (content, resourcePath) => {
+const preload = (content, resourcePath, skyPagesConfig) => {
   if (!resourcePath.match(/app-extras\.module\.ts$/)) {
     return content;
   }
 
-  const modulePath = shared.getModulePath(resourcePath);
+  const modulePath = shared.getModulePath(resourcePath, skyPagesConfig);
   const provider = `STACHE_CONFIG_PROVIDERS`;
 
   content = `

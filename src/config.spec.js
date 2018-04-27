@@ -6,8 +6,9 @@ describe('Config Plugin', () => {
   });
 
   it('should add providers to the app-extras.module.ts file', () => {
+    const config = { skyux: { name: 'stache2'}};
     const content = new Buffer('');
-    const result = plugin.preload(content, 'app-extras.module.ts');
+    const result = plugin.preload(content, 'app-extras.module.ts', config);
     expect(result.toString()).toContain('STACHE_CONFIG_PROVIDERS');
   });
 

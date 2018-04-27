@@ -40,11 +40,9 @@ const cheerioConfig = {
   decodeEntities: false
 };
 
-const getModulePath = (resourcePath) => {
-  let modulePath = '@blackbaud/stache';
-  // For backslashes, we need to convert the string to raw:
-  // https://stackoverflow.com/questions/10041998/get-backslashes-inside-a-string-javascript
-  if (String.raw`${resourcePath}`.match(/(\/|\\)stache2(\/|\\)/)) {
+const getModulePath = (resourcePath, skyPagesConfig) => {
+  let modulePath = '@blackbaud/stache'
+  if (skyPagesConfig.skyux.name === 'stache2') {
     modulePath = './public';
   }
 
