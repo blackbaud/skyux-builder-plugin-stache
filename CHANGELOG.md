@@ -1,3 +1,7 @@
+# 1.4.0 (2018-05-09)
+
+- Update logic to choose module path by application name instead of by application path. [#37](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/37)
+
 # 1.3.1 (2018-01-05)
 
 - Updated the marked dependency to fix a security issue. [#35](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/35)
