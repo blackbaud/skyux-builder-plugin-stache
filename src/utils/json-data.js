@@ -21,7 +21,7 @@ const getGlobalData = () => {
 
 const buildGlobalDataFromJson = () => {
   const root = shared.resolveAssetsPath('data');
-  const filePaths = glob.sync(path.join(root, '*.json'));
+  const filePaths = glob.sync(path.join(root, '/**/*.json'));
 
   if (!filePaths.length) {
     return;
@@ -30,7 +30,6 @@ const buildGlobalDataFromJson = () => {
   const dataObject = filePaths.reduce((acc, filePath) => {
     const fileName = path.basename(filePath);
     const propertyName = convertFileNameToObjectPropertyName(fileName);
-    console.log('propertyName', propertyName);
     if (!isPropertyNameValid(propertyName)) {
       console.error(
         new shared.StachePluginError([

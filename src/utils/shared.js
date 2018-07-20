@@ -51,7 +51,6 @@ const getModulePath = (resourcePath, skyPagesConfig) => {
 
 const resolveAssetsPath = (...pathSegments) => {
   const args = [process.cwd(), 'src', 'stache'].concat(pathSegments);
-  console.log('args', args);
   return path.resolve.apply(path, args);
 };
 
