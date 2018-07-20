@@ -28,9 +28,8 @@ const buildGlobalDataFromJson = () => {
   }
 
   const dataObject = filePaths.reduce((acc, filePath) => {
-    const fileName = path.basename(filePath);
+    const fileName = filePath.replace(root, '');
     const propertyName = convertFileNameToObjectPropertyName(fileName);
-
     if (!isPropertyNameValid(propertyName)) {
       console.error(
         new shared.StachePluginError([
@@ -49,7 +48,7 @@ const buildGlobalDataFromJson = () => {
       throw new shared.StachePluginError(error.message);
     }
 
-    acc[propertyName] = JSON.parse(contents);
+    buildJsonDataObject(acc, propertyName, JSON.parse(contents));
 
     return acc;
   }, {});
@@ -59,12 +58,15 @@ const buildGlobalDataFromJson = () => {
 
 const convertFileNameToObjectPropertyName = (fileName) => {
   return fileName.split('.')[0]
-    .replace(/\s+/g, '_')     // Replace spaces with underscores
-    .replace(/[^\w-]+/g, '')  // Remove all non-word chars
-    .replace(/-/g, '_')       // Replace all dashes with underscores
-    .replace(/--+/g, '_')     // Replace multiple dashes with single underscore
-    .replace(/^-+/, '')       // Trim - from start of text
-    .replace(/-+$/, '');      // Trim - from end of text;
+    .replace(/^./g, '')        // Remove first character in string
+    .replace(/\\+/g, '.')      // Replace back-slashes with a single period
+    .replace(/\/+/g, '.')      // Replace slashes with a single period
+    .replace(/\s+/g, '_')      // Replace spaces with underscores
+    .replace(/[^.\w-]+/g, '')  // Remove all non-word chars other than periods
+    .replace(/-/g, '_')        // Replace all dashes with underscores
+    .replace(/--+/g, '_')      // Replace multiple dashes with single underscore
+    .replace(/^-+/, '')        // Trim - from start of text
+    .replace(/-+$/, '');       // Trim - from end of text;
 };
 
 const isPropertyNameValid = (propertyName) => {
@@ -74,6 +76,16 @@ const isPropertyNameValid = (propertyName) => {
 
   // Parsing as boolean because reserved-words returns `undefined` for falsy values.
   return !reserved.check(propertyName, 'es6', true);
+};
+
+const buildJsonDataObject = (baseObject, dataObjectPath, dataValue) => {
+  const keys = dataObjectPath.split('.');
+  const lastKey = keys.pop();
+  const lastObj = keys.reduce((obj, key) =>
+      obj[key] = obj[key] || {},
+      baseObject);
+  lastObj[lastKey] = dataValue;
+  return baseObject;
 };
 
 const parseAllBuildTimeBindings = (content) => {
