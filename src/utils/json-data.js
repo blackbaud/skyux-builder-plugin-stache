@@ -30,7 +30,7 @@ const buildGlobalDataFromJson = () => {
   const dataObject = filePaths.reduce((acc, filePath) => {
     const fileName = path.basename(filePath);
     const propertyName = convertFileNameToObjectPropertyName(fileName);
-    
+
     if (!isPropertyNameValid(propertyName)) {
       console.error(
         new shared.StachePluginError([
