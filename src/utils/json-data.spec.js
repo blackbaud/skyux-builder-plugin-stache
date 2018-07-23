@@ -185,4 +185,14 @@ describe('JSON Data Util', () => {
 
     expect(dataValue).toBe('One Two');
   });
+
+  it('should parse nested directories', () => {
+    spyOn(glob, 'sync').and.returnValue(['data/mock-data.json']);
+    spyOn(fs, 'readFileSync').and.returnValue(mockData);
+
+    const bindings = `{{ stache.jsonData.data.mock_data.one }} {{ @buildtime:stache.jsonData.data.mock_data.two }}`
+    let dataValue = jsonDataUtil.parseAngularBindings(bindings);
+
+    expect(dataValue).toBe('One Two');
+  });
 });
