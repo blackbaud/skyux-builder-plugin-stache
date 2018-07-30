@@ -34,7 +34,7 @@ const buildGlobalDataFromJson = () => {
       console.error(
         new shared.StachePluginError([
           `A valid Object property could not be determined from file ${fileName}!`,
-          `The property keys '${propertyNameSegments}' cannot be used. Please choose rename your file and path.`
+          `The property keys '${propertyNameSegments}' cannot be used. Please rename your file and path.`
         ].join(' '))
       );
       return acc;
