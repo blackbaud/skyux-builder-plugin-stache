@@ -34,7 +34,7 @@ const buildGlobalDataFromJson = () => {
       console.error(
         new shared.StachePluginError([
           `A valid Object property could not be determined from file ${fileName}!`,
-          `The property keys '${propertyNameSegments}' cannot be used. Please rename your file and path.`
+          `The property keys '${propertyNameSegments.join('.')}' cannot be used. Please rename your file and path.`
         ].join(' '))
       );
       return acc;
@@ -78,7 +78,7 @@ const isPropertyNameValid = (propertyName) => {
 
   // Parsing as boolean because reserved-words returns `undefined` for falsy values.
   let valid = true;
-  propertyName.map(key => {
+  propertyName.forEach(key => {
     if (reserved.check(key, 'es6', true)) {
       valid = false;
     }
