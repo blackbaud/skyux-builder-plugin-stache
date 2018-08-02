@@ -21,21 +21,20 @@ const getGlobalData = () => {
 
 const buildGlobalDataFromJson = () => {
   const root = shared.resolveAssetsPath('data');
-  const filePaths = glob.sync(path.join(root, '*.json'));
+  const filePaths = glob.sync(path.join(root, '/**/*.json'));
 
   if (!filePaths.length) {
     return;
   }
 
   const dataObject = filePaths.reduce((acc, filePath) => {
-    const fileName = path.basename(filePath);
-    const propertyName = convertFileNameToObjectPropertyName(fileName);
-
-    if (!isPropertyNameValid(propertyName)) {
+    const fileName = filePath.replace(root, '');
+    const propertyNameSegments = convertFileNameToObjectPropertyNameSegments(fileName);
+    if (!isPropertyNameValid(propertyNameSegments)) {
       console.error(
         new shared.StachePluginError([
           `A valid Object property could not be determined from file ${fileName}!`,
-          `The property key '${propertyName}' cannot be used. Please choose another file name.`
+          `The property keys '${propertyNameSegments.join('.')}' cannot be used. Please rename your file and path.`
         ].join(' '))
       );
       return acc;
@@ -49,7 +48,7 @@ const buildGlobalDataFromJson = () => {
       throw new shared.StachePluginError(error.message);
     }
 
-    acc[propertyName] = JSON.parse(contents);
+    buildJsonDataObject(acc, propertyNameSegments, JSON.parse(contents));
 
     return acc;
   }, {});
@@ -57,23 +56,45 @@ const buildGlobalDataFromJson = () => {
   return dataObject;
 };
 
-const convertFileNameToObjectPropertyName = (fileName) => {
-  return fileName.split('.')[0]
-    .replace(/\s+/g, '_')     // Replace spaces with underscores
-    .replace(/[^\w-]+/g, '')  // Remove all non-word chars
-    .replace(/-/g, '_')       // Replace all dashes with underscores
-    .replace(/--+/g, '_')     // Replace multiple dashes with single underscore
-    .replace(/^-+/, '')       // Trim - from start of text
-    .replace(/-+$/, '');      // Trim - from end of text;
+const convertFileNameToObjectPropertyNameSegments = (fileName) => {
+  fileName =  fileName.split('.')[0]
+    .replace(/\\+/g, '.')      // Replace back-slashes with a single period
+    .replace(/\/+/g, '.')      // Replace slashes with a single period
+    .replace(/\s+/g, '_')      // Replace spaces with underscores
+    .replace(/[^.\w-]+/g, '')  // Remove all non-word chars other than periods
+    .replace(/-/g, '_')        // Replace all dashes with underscores
+    .replace(/--+/g, '_')      // Replace multiple dashes with single underscore
+    .replace(/^-+/, '')        // Trim - from start of text
+    .replace(/-+$/, '');       // Trim - from end of text;
+
+  // Split up nested property name in to an array of valid keys and return
+  return fileName.split('.').filter(key => { return !!key });
 };
 
 const isPropertyNameValid = (propertyName) => {
-  if (!propertyName || propertyName === 'prototype') {
+  if (!propertyName || !propertyName.length || propertyName.indexOf('prototype') > -1) {
     return false;
   }
 
   // Parsing as boolean because reserved-words returns `undefined` for falsy values.
-  return !reserved.check(propertyName, 'es6', true);
+  let valid = true;
+  propertyName.forEach(key => {
+    if (reserved.check(key, 'es6', true)) {
+      valid = false;
+    }
+  });
+  return valid;
+};
+
+const buildJsonDataObject = (baseObject, dataAttrNames, dataValue) => {
+  const lastKey = dataAttrNames.pop();
+  const lastObj = dataAttrNames.reduce((obj, key) => {
+      return obj[key] = obj[key] || {}
+    },
+    baseObject
+  );
+  lastObj[lastKey] = dataValue;
+  return baseObject;
 };
 
 const parseAllBuildTimeBindings = (content) => {
