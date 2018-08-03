@@ -134,10 +134,12 @@ describe('Shared methods and properties', () => {
   });
 
   it('should resolve a directory for Stache assets folder', () => {
-    let result = shared.resolveAssetsPath('foo');
+    let result = shared.resolveAssetsPath('foo')
+      .replace(/\\/g, '/');
     expect(result.endsWith('src/stache/foo')).toBe(true);
 
-    result = shared.resolveAssetsPath('foo', 'bar');
+    result = shared.resolveAssetsPath('foo', 'bar')
+      .replace(/\\/g, '/');
     expect(result.endsWith('src/stache/foo/bar')).toBe(true);
   });
 
