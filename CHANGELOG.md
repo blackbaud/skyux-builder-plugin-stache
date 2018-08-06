@@ -1,6 +1,7 @@
-# 1.5.0 (2018-08-02)
+# 1.5.1 (2018-08-02)
 
 - Updated to allow users to have nested folders in Stache application data. [#39](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/39)
+- Fixed issue with Windows integration
 
 # 1.4.0 (2018-05-09)
 
