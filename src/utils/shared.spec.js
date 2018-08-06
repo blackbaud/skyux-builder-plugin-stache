@@ -134,13 +134,12 @@ describe('Shared methods and properties', () => {
   });
 
   it('should resolve a directory for Stache assets folder', () => {
-    let result = shared.resolveAssetsPath('foo')
-      .replace(/\\/g, '/');
-    expect(result.endsWith('src/stache/foo')).toBe(true);
+    const path = require('path');
+    const foo_result = shared.resolveAssetsPath('foo');
+    expect(foo_result.endsWith(path.join('src', 'stache', 'foo')));
 
-    result = shared.resolveAssetsPath('foo', 'bar')
-      .replace(/\\/g, '/');
-    expect(result.endsWith('src/stache/foo/bar')).toBe(true);
+    const foobar_result = shared.resolveAssetsPath('foo', 'bar');
+    expect(foobar_result.endsWith(path.join('src', 'stache', 'foo', 'bar')));
   });
 
   it('should export an error object with a default message', () => {
