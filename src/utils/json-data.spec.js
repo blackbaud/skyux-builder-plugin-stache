@@ -195,19 +195,4 @@ describe('JSON Data Util', () => {
 
     expect(dataValue).toBe('One Two');
   });
-
-  it('should be OS agnostic', () => {
-    const input = '\\src\\stache\\data';
-    const ouput = '/src/stache/data/**/*.json';
-    
-    spyOn(shared, 'resolveAssetsPath').and.returnValue(input);
-    spyOn(glob, 'sync').and.returnValue(['data/mock-data.json']);
-    spyOn(fs, 'readFileSync').and.returnValue(mockData);
-
-    const bindings = `{{ stache.jsonData.data.mock_data.one }} {{ @buildtime:stache.jsonData.data.mock_data.two }}`
-    let dataValue = jsonDataUtil.parseAngularBindings(bindings);
-
-    expect(glob.sync).toHaveBeenCalledWith(ouput);
-    expect(dataValue).toBe('One Two');
-  });
 });
