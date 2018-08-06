@@ -20,7 +20,8 @@ const getGlobalData = () => {
 };
 
 const buildGlobalDataFromJson = () => {
-  const root = shared.resolveAssetsPath('data');
+  const root = shared.resolveAssetsPath('data')
+    .replace(/\\/g, '/');
   const filePaths = glob.sync(path.join(root, '/**/*.json'));
 
   if (!filePaths.length) {
