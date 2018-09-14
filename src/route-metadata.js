@@ -60,13 +60,11 @@ const preload = (content, resourcePath, skyPagesConfig) => {
           routeMetadata.name = jsonDataUtil.parseAngularBindings(preferredName);
         }
 
-        if (hideFromSidebar === 'true') {
-          routeMetadata.hideFromSidebar = hideFromSidebar;
-        }
-
         if (preferredOrder !== undefined) {
           routeMetadata.order = preferredOrder;
         }
+
+        routeMetadata.hideFromSidebar = hideFromSidebar;
 
         routes.push(routeMetadata);
       });
