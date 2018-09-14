@@ -45,6 +45,7 @@ const preload = (content, resourcePath, skyPagesConfig) => {
       const $wrapper = $(elem);
       const preferredName = $wrapper.attr('navTitle') || $wrapper.attr('pageTitle');
       const preferredOrder = $wrapper.attr('navOrder');
+      const hideFromSidebar = $wrapper.attr('hideFromNavbar');
 
       if (!preferredName && !preferredOrder) {
         return;
@@ -57,6 +58,10 @@ const preload = (content, resourcePath, skyPagesConfig) => {
 
         if (preferredName !== undefined) {
           routeMetadata.name = jsonDataUtil.parseAngularBindings(preferredName);
+        }
+
+        if (hideFromSidebar === 'true') {
+          routeMetadata.hideFromSidebar = hideFromSidebar;
         }
 
         if (preferredOrder !== undefined) {
