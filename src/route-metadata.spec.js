@@ -121,7 +121,7 @@ describe('Route Metadata Plugin', () => {
     expect(result.toString()).toContain('"order":"8675309"');
   });
 
-  fit('should set hideFromSidebar if `hideFromSidebar` attribute exists', () => {
+  it('should set hideFromSidebar if `hideFromSidebar` attribute exists', () => {
     spyOn(glob, 'sync').and.returnValue(['src/app/learn/index.html']);
     spyOn(fs, 'readFileSync').and.returnValue(
       `<stache pageTitle="FAQ" hideFromSidebar="true"></stache>`
