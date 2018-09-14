@@ -47,6 +47,7 @@ const preload = (content, resourcePath, skyPagesConfig) => {
       const preferredOrder = $wrapper.attr('navOrder');
       const hideFromSidebar = $wrapper.attr('hideFromNavbar');
 
+      console.log('hide', hideFromSidebar);
       if (!preferredName && !preferredOrder) {
         return;
       }
