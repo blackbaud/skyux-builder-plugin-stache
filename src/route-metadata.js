@@ -45,6 +45,7 @@ const preload = (content, resourcePath, skyPagesConfig) => {
       const $wrapper = $(elem);
       const preferredName = $wrapper.attr('navTitle') || $wrapper.attr('pageTitle');
       const preferredOrder = $wrapper.attr('navOrder');
+      const showInNav = $wrapper.attr('showInNav');
 
       if (!preferredName && !preferredOrder) {
         return;
@@ -62,6 +63,8 @@ const preload = (content, resourcePath, skyPagesConfig) => {
         if (preferredOrder !== undefined) {
           routeMetadata.order = preferredOrder;
         }
+
+        routeMetadata.showInNav = showInNav !== 'false';
 
         routes.push(routeMetadata);
       });

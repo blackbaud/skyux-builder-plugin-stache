@@ -121,6 +121,16 @@ describe('Route Metadata Plugin', () => {
     expect(result.toString()).toContain('"order":"8675309"');
   });
 
+  it('should set showInNav if `showInNav` attribute exists', () => {
+    spyOn(glob, 'sync').and.returnValue(['src/app/learn/index.html']);
+    spyOn(fs, 'readFileSync').and.returnValue(
+      `<stache pageTitle="FAQ" showInNav="false"></stache>`
+    );
+    const content = new Buffer('');
+    const result = plugin.preload(content, 'app-extras.module.ts', config);
+    expect(result.toString()).toContain('"showInNav"');
+  });
+
   it('should add navOrder to the route if `navOrder` is provided', () => {
     spyOn(glob, 'sync').and.returnValue(['src/app/learn/index.html']);
     spyOn(fs, 'readFileSync').and.returnValue(
