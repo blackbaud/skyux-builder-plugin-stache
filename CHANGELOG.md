@@ -1,3 +1,7 @@
+# 1.6.0 (2018-09-20)
+
+- Updated to allow users to hide pages from the Stache sidebar. [#43](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/43)
+
 # 1.5.1 (2018-08-02)
 
 - Updated to allow users to have nested folders in Stache application data. [#39](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/39)
