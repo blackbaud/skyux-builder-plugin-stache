@@ -29,6 +29,17 @@ function StacheEntryPlugin() {
     return content;
   };
 
+  const runCommand = (command, argv) => {
+    switch(command) {
+      case 'stache-update':
+      require('./update-dependencies')(argv);
+      break;
+      default:
+      return false;
+    }
+    return true;
+  };
+
   return Object.freeze({ preload });
 }
 
