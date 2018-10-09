@@ -3,7 +3,7 @@ const path = require('path');
 const spawn = require('cross-spawn');
 const logger = require('@blackbaud/skyux-logger');
 const latestVersion = require('latest-version');
-const rootPath = path.join(__dirname, '../../../../..');
+const rootPath = process.cwd();
 const rimraf = require('rimraf');
 
 /**
