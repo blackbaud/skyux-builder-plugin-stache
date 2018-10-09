@@ -24,7 +24,6 @@ const cleanUpTemplate = (skyux, builder, stache, whiteList) => {
   return new Promise((resolve, reject) => {
     packageJson.dependencies = packageJson.dependencies || {};
     packageJson.devDependencies = packageJson.devDependencies || {};
-    packageJson.peerDependencies = packageJson.peerDependencies || {};
 
     packageJson.dependencies['@blackbaud/skyux'] = skyux;
     packageJson.dependencies['@blackbaud/stache'] = stache;
