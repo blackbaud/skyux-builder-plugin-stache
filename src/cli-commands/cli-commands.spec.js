@@ -1,7 +1,7 @@
 
 const mock = require('mock-require');
 const mockCliCommands = require('./cli-commands');
-describe('Entry Plugin', () => {
+describe('Cli Commands', () => {
 
   const mockUpdate = jasmine.createSpy().and.returnValue(() => {});
 
