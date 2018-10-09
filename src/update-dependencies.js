@@ -10,10 +10,10 @@ const rimraf = require('rimraf');
  * Sets the latest versions of skyux, skyux-builder, stache, and whtelist plugin and to the package.json.
  */
 const getLatestVersions = () => Promise.all([
-  latestVersion('@blackbaud/skyux', { version: 'latest-2' }),
-  latestVersion('@blackbaud/skyux-builder', { version: 'latest-1' }),
-  latestVersion('@blackbaud/stache', { version: 'latest-2' }),
-  latestVersion('@blackbaud/skyux-builder-plugin-auth-email-whitelist', { version: 'latest-1' })
+  latestVersion('@blackbaud/skyux', { version: '2' }),
+  latestVersion('@blackbaud/skyux-builder', { version: '1' }),
+  latestVersion('@blackbaud/stache', { version: '2' }),
+  latestVersion('@blackbaud/skyux-builder-plugin-auth-email-whitelist', { version: '1' })
 ]);
 
 const cleanUpTemplate = (skyux, builder, stache, whiteList) => {
@@ -49,25 +49,6 @@ const cleanUpTemplate = (skyux, builder, stache, whiteList) => {
 
   });
 }
-
-const checkoutBranch = () => {
-  logger.info('Switching to branch update-dependencies.');
-  const npmProcess = spawn('git', ['checkout', '-b', 'update-dependencies'], {
-    cwd: rootPath,
-    stdio: 'inherit'
-  });
-
-  return new Promise((resolve, reject) => {
-    npmProcess.on('exit', (code) => {
-      if (code !== 0) {
-        reject('Switching to branch update-dependencies failed.');
-        return;
-      }
-
-      resolve();
-    });
-  });
-};
 
 const removeNodeModules = () => {
   logger.info('Removing node_modules folder');
@@ -110,7 +91,6 @@ const notify = () => {
 module.exports = (args) => {
   return getLatestVersions()
     .then((v) => cleanUpTemplate(v[0], v[1], v[2], v[3]))
-    .then(checkoutBranch)
     .then(removeNodeModules)
     .then(npmInstall)
     .then(notify)

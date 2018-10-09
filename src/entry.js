@@ -40,7 +40,7 @@ function StacheEntryPlugin() {
     return true;
   };
 
-  return Object.freeze({ preload });
+  return Object.freeze({ preload, runCommand });
 }
 
 module.exports = StacheEntryPlugin;
