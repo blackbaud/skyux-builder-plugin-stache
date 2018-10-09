@@ -15,8 +15,6 @@ describe('Entry Plugin', () => {
     }
   };
 
-  const mockUpdate = jasmine.createSpy().and.returnValue(() => {});
-
   beforeEach(() => {
     mock('./config', mockPlugin);
     mock('./http', mockPlugin),
@@ -29,7 +27,6 @@ describe('Entry Plugin', () => {
     mock('./json-data', mockPlugin);
     mock('./route-metadata', mockPlugin);
     mock('./template-reference-variable', mockPlugin);
-    mock('./cli-commands/update-dependencies', mockUpdate);
   });
 
   afterEach(() => {
@@ -143,18 +140,5 @@ describe('Entry Plugin', () => {
       expect(plugin.preload).toThrowError(shared.StachePluginError);
       expect(error.message).toEqual('invalid plugin');
     }
-  });
-
-  it('should run the update command when runCommand is called with \'update-dependencies\'', () => {
-    const plugin = new StacheEntryPlugin();
-    let response = plugin.runCommand('stache-update', 'args');
-    expect(mockUpdate).toHaveBeenCalled();
-    expect(response).toBe(true);
-  });
-
-  it('should return false if the command is not recognized by runCommand', () => {
-    const plugin = new StacheEntryPlugin();
-    let response = plugin.runCommand('unknown-command', 'args');
-    expect(response).toBe(false);
   });
 });

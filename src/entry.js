@@ -29,18 +29,7 @@ function StacheEntryPlugin() {
     return content;
   };
 
-  const runCommand = (command) => {
-    switch(command) {
-      case 'stache-update':
-        require('./cli-commands/update-dependencies')();
-      break;
-      default:
-      return false;
-    }
-    return true;
-  };
-
-  return Object.freeze({ preload, runCommand });
+  return Object.freeze({ preload });
 }
 
 module.exports = StacheEntryPlugin;
