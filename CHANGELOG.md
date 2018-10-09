@@ -1,3 +1,9 @@
+# 1.7.0 (2018-10-09)
+
+- Created and exposed a runCommand method to enable new SKY UX cli commands. [#45](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/45)
+- Created the `stache-update` SKY UX cli command to update the users package.json dependencies and installing them.
+- Refactored plugins to a separate folder, exposed a `publicAPI` module containing both the preload and runCommand methods.
+
 # 1.6.0 (2018-09-20)
 
 - Updated to allow users to hide pages from the Stache sidebar. [#43](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/43)
