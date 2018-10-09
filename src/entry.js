@@ -32,7 +32,7 @@ function StacheEntryPlugin() {
   const runCommand = (command) => {
     switch(command) {
       case 'stache-update':
-      require('./update-dependencies')();
+        require('./cli-commands/update-dependencies')();
       break;
       default:
       return false;

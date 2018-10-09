@@ -3,7 +3,7 @@ const path = require('path');
 const spawn = require('cross-spawn');
 const logger = require('@blackbaud/skyux-logger');
 const latestVersion = require('latest-version');
-const rootPath = path.join(__dirname, '../../../..');
+const rootPath = path.join(__dirname, '../../../../..');
 const rimraf = require('rimraf');
 
 /**
@@ -17,6 +17,7 @@ const getLatestVersions = () => Promise.all([
 ]);
 
 const cleanUpTemplate = (skyux, builder, stache, whiteList) => {
+  logger.info('Updating package.json.');
   const packagePath = path.join(rootPath, 'package.json');
 
   const packageJson = fs.readJSONSync(packagePath);
@@ -42,7 +43,7 @@ const cleanUpTemplate = (skyux, builder, stache, whiteList) => {
       fs.writeJsonSync(packagePath, packageJson, { spaces: 2 });
       resolve();
     } catch(err) {
-      logger.info('stache-update failed.');
+      logger.info('Updating package.json failed.');
       reject(err);
     }
 
@@ -50,11 +51,11 @@ const cleanUpTemplate = (skyux, builder, stache, whiteList) => {
 }
 
 const removeNodeModules = () => {
-  logger.info('Removing node_modules folder');
+  logger.info('Removing node_modules folder.');
   return new Promise((resolve, reject) => {
     rimraf(path.join(rootPath, 'node_modules'), {} , (err) => {
       if (err) {
-        logger.info('Failed to remove node_modules');
+        logger.info('Failed to remove node_modules.');
         reject(err);
         return;
       }
@@ -65,7 +66,7 @@ const removeNodeModules = () => {
 }
 
 const npmInstall = () => {
-  logger.info('Running npm install');
+  logger.info('Running npm install.');
   const npmProcess = spawn('npm', ['install'], {
     cwd: rootPath,
     stdio: 'inherit'
@@ -89,7 +90,7 @@ const notify = () => {
 
 module.exports = () => {
   return getLatestVersions()
-    .then((v) => cleanUpTemplate(v[0], v[1], v[2], v[3]))
+    .then((v) => cleanUpTemplate(...v))
     .then(removeNodeModules)
     .then(npmInstall)
     .then(notify)
