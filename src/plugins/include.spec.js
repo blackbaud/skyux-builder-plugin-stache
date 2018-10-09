@@ -95,8 +95,6 @@ describe('Include Plugin', () => {
       if (file.indexOf('test2.html') > -1) {
         return includeContents2;
       }
-
-      return '';
     });
 
     const content = new Buffer(`<stache-include fileName="test1.html"></stache-include>`);
@@ -119,8 +117,6 @@ describe('Include Plugin', () => {
       if (file.indexOf('test2.html') > -1) {
         return includeContents2;
       }
-
-      return '';
     });
 
     const content = new Buffer(`<stache-include fileName="{{ stache.jsonData.mock_data.mockFileOne }}"></stache-include>`);
