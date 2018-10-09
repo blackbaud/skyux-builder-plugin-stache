@@ -14,7 +14,7 @@ describe('Public API', () => {
   }
 
   beforeEach(() => {
-    mock('./src/entry', mockEntryPlugin);
+    mock('./src/plugins/entry', mockEntryPlugin);
     mock('./src/cli-commands/cli-commands', cliCommands);
   });
 

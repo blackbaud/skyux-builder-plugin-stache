@@ -1,4 +1,4 @@
-const StacheEntryPlugin = require('./entry');
+const StacheEntryPlugin = require('./plugins/entry');
 const cliCommands = require('./cli-commands/cli-commands');
 const entryPlugin = new StacheEntryPlugin();
 
