@@ -87,7 +87,7 @@ const notify = () => {
   logger.info('stache-update has successfully updated your dependences.');
 }
 
-module.exports = (args) => {
+module.exports = () => {
   return getLatestVersions()
     .then((v) => cleanUpTemplate(v[0], v[1], v[2], v[3]))
     .then(removeNodeModules)

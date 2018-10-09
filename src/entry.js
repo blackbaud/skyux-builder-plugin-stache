@@ -29,10 +29,10 @@ function StacheEntryPlugin() {
     return content;
   };
 
-  const runCommand = (command, argv) => {
+  const runCommand = (command) => {
     switch(command) {
       case 'stache-update':
-      require('./update-dependencies')(argv);
+      require('./update-dependencies')();
       break;
       default:
       return false;
