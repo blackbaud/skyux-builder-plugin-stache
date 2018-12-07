@@ -1,5 +1,4 @@
 const shared = require('./utils/shared');
-
 function StacheEntryPlugin() {
   const preload = (content, resourcePath, skyPagesConfig) => {
     try {
@@ -12,7 +11,7 @@ function StacheEntryPlugin() {
         require('./json-data-element-attributes'),
         require('./json-data-build-time'),
         require('./markdown'),
-        require('./code-block'),
+        require('@blackbaud/skyux-builder-plugin-code-block'),
         require('./code'),
         require('./json-data'),
         require('./route-metadata'),

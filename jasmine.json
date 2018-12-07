@@ -7,5 +7,6 @@
     "helpers/**/*.js"
   ],
   "stopSpecOnExpectationFailure": false,
+  "javascript.validate.enable": false,
   "random": false
 }
