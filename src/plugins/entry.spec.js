@@ -23,7 +23,7 @@ describe('Entry Plugin', () => {
     mock('./json-data-build-time', mockPlugin);
     mock('./markdown', mockPlugin);
     mock('./code-block', mockPlugin);
-    mock('@blackbaud/skyux-lib-code-block', mockPlugin);
+    mock('@blackbaud/skyux-builder-plugin-code-block', mockPlugin);
     mock('./code', mockPlugin);
     mock('./json-data', mockPlugin);
     mock('./route-metadata', mockPlugin);
@@ -110,7 +110,7 @@ describe('Entry Plugin', () => {
       }
     });
 
-    mock('@blackbaud/skyux-lib-code-block', {
+    mock('@blackbaud/skyux-builder-plugin-code-block', {
       preload() {
         callOrder.push(8);
       }
