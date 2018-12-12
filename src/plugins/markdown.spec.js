@@ -117,9 +117,9 @@ This is an \`inline\` code example.
 </stache-page-anchor>`);
 
     expect(result).toContain(
-`<stache-code-block languageType="js">
+`<sky-code-block languageType="js">
 JS-code
-</stache-code-block>
+</sky-code-block>
 `);
 
     expect(result).toContain(`<p>This is an <stache-code>inline</stache-code> code example.</p>`);

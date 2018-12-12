@@ -41,4 +41,10 @@ describe('JSON Data Element Attribute Plugin', () => {
     const result = plugin.preload(content, 'foo.html');
     expect(result.toString()).toEqual(content.toString());
   });
+
+  it('It should not replace any non specified attributes', () => {
+    const content = new Buffer('<sky-code-block languageType="{{ stache.jsonData.mock_data.one }}"></sky-code-block>');
+    const result = plugin.preload(content, 'foo.html');
+    expect(result.toString()).toEqual(content.toString());
+  });
 });
