@@ -19,11 +19,12 @@ describe('Entry Plugin', () => {
     mock('./config', mockPlugin);
     mock('./http', mockPlugin),
     mock('./include', mockPlugin);
+    mock('./json-data-element-attributes', mockPlugin);
+    mock('./json-data-build-time', mockPlugin);
     mock('./markdown', mockPlugin);
     mock('./code-block', mockPlugin);
+    mock('@blackbaud/skyux-lib-code-block', mockPlugin);
     mock('./code', mockPlugin);
-    mock('./json-data-build-time', mockPlugin);
-    mock('./json-data-element-attributes', mockPlugin);
     mock('./json-data', mockPlugin);
     mock('./route-metadata', mockPlugin);
     mock('./template-reference-variable', mockPlugin);
@@ -63,55 +64,67 @@ describe('Entry Plugin', () => {
 
     mock('./json-data', {
       preload() {
-        callOrder.push(8);
+        callOrder.push(10);
       }
     });
 
     mock('./json-data-element-attributes', {
       preload() {
-        callOrder.push(3);
-      }
-    });
-
-    mock('./json-data-build-time', {
-      preload() {
         callOrder.push(4);
       }
     });
 
-    mock('./route-metadata', {
-      preload() {
-        callOrder.push(9);
-      }
-    });
-
-    mock('./include', {
+    mock('./http', {
       preload() {
         callOrder.push(2);
       }
-    });
+    }),
 
-    mock('./markdown', {
+    mock('./json-data-build-time', {
       preload() {
         callOrder.push(5);
       }
     });
 
-    mock('./code-block', {
+    mock('./route-metadata', {
+      preload() {
+        callOrder.push(11);
+      }
+    });
+
+    mock('./include', {
+      preload() {
+        callOrder.push(3);
+      }
+    });
+
+    mock('./markdown', {
       preload() {
         callOrder.push(6);
       }
     });
 
-    mock('./code', {
+    mock('./code-block', {
       preload() {
         callOrder.push(7);
       }
     });
 
+    mock('@blackbaud/skyux-lib-code-block', {
+      preload() {
+        callOrder.push(8);
+      }
+    });
+
+    mock('./code', {
+      preload() {
+        callOrder.push(9);
+      }
+    });
+
     mock('./template-reference-variable', {
       preload() {
-        callOrder.push(10);
+        callOrder.push(12);
       }
     });
 
@@ -120,7 +133,7 @@ describe('Entry Plugin', () => {
 
     plugin.preload(content, 'foo.html', {});
 
-    expect(callOrder).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    expect(callOrder).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
   });
 
   it('should throw an error if an error is thrown from a plugin', () => {

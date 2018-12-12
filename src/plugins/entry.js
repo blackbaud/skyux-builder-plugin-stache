@@ -13,6 +13,7 @@ function StacheEntryPlugin() {
         require('./json-data-build-time'),
         require('./markdown'),
         require('./code-block'),
+        require('@blackbaud/skyux-lib-code-block'),
         require('./code'),
         require('./json-data'),
         require('./route-metadata'),
