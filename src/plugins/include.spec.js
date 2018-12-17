@@ -60,6 +60,20 @@ describe('Include Plugin', () => {
     expect(result.toString()).toEqual(content.toString());
   });
 
+  it('should not convert stache-include tags inside of a sky-code-block.', () => {
+    const includeContents = '<h1>Test</h1>';
+    spyOn(fs, 'readFileSync').and.returnValue(includeContents);
+    const content = new Buffer(`
+      <sky-code-block>
+        <stache-include fileName="test.html"></stache-include>
+      </sky-code-block>
+    `);
+    const resourcePath = 'foo.html';
+    const result = plugin.preload(content, resourcePath);
+    expect(result.toString()).not.toContain(includeContents);
+    expect(result.toString()).toEqual(content.toString());
+  });
+
   it('It should replace stache.jsonData bindings in the fileName with the data value', () => {
     const content = new Buffer('<stache-include fileName="{{ stache.jsonData.mock_data.mockFileOne }}"></stache-include>');
     const includeContents = '<h1>Test1</h1>';

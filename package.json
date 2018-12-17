@@ -21,6 +21,7 @@
   "homepage": "https://github.com/blackbaud/skyux-builder-plugin-stache#readme",
   "dependencies": {
     "@blackbaud/skyux-logger": "1.0.2",
+    "@blackbaud/skyux-builder-plugin-code-block": "1.0.0-rc.1",
     "cheerio": "0.22.0",
     "cross-spawn": "6.0.5",
     "fs-extra": "3.0.1",

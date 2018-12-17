@@ -6,9 +6,9 @@ const getRenderer = () => {
   const renderer = new marked.Renderer();
 
   renderer.code = (code, language) =>
-`<stache-code-block languageType="${language}">
+`<sky-code-block languageType="${language}">
 ${code}
-</stache-code-block>
+</sky-code-block>
 `;
 
   renderer.heading = (text, level) => {
