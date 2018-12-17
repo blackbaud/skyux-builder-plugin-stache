@@ -1,3 +1,7 @@
+# 1.8.0 (2018-12-17)
+
+- Added the new [skyux code block plugin](https://github.com/blackbaud/skyux-builder-plugin-code-block) as a dependency. [#48](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/48)
+
 # 1.7.0 (2018-10-09)
 
 - Created and exposed a runCommand method to enable new SKY UX cli commands. [#45](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/45)
