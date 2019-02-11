@@ -9,7 +9,7 @@ const preload = (content, resourcePath, skyPagesConfig) => {
   const provider = `STACHE_CONFIG_PROVIDERS`;
 
   content = `
-import { SkyAppConfig } from '@blackbaud/skyux-builder/runtime';
+import { SkyAppConfig } from '@skyux-sdk/builder/runtime';
 import { StacheConfigService } from '${modulePath}';
 
 export const ${provider}: any[] = [{
