@@ -22,7 +22,6 @@ describe('Entry Plugin', () => {
     mock('./json-data-element-attributes', mockPlugin);
     mock('./json-data-build-time', mockPlugin);
     mock('./markdown', mockPlugin);
-    mock('./code-block', mockPlugin);
     mock('@blackbaud/skyux-builder-plugin-code-block', mockPlugin);
     mock('./code', mockPlugin);
     mock('./json-data', mockPlugin);
@@ -64,7 +63,7 @@ describe('Entry Plugin', () => {
 
     mock('./json-data', {
       preload() {
-        callOrder.push(10);
+        callOrder.push(9);
       }
     });
 
@@ -88,7 +87,7 @@ describe('Entry Plugin', () => {
 
     mock('./route-metadata', {
       preload() {
-        callOrder.push(11);
+        callOrder.push(10);
       }
     });
 
@@ -104,27 +103,21 @@ describe('Entry Plugin', () => {
       }
     });
 
-    mock('./code-block', {
+    mock('@blackbaud/skyux-builder-plugin-code-block', {
       preload() {
         callOrder.push(7);
       }
     });
 
-    mock('@blackbaud/skyux-builder-plugin-code-block', {
+    mock('./code', {
       preload() {
         callOrder.push(8);
       }
     });
 
-    mock('./code', {
-      preload() {
-        callOrder.push(9);
-      }
-    });
-
     mock('./template-reference-variable', {
       preload() {
-        callOrder.push(12);
+        callOrder.push(11);
       }
     });
 
@@ -133,7 +126,7 @@ describe('Entry Plugin', () => {
 
     plugin.preload(content, 'foo.html', {});
 
-    expect(callOrder).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+    expect(callOrder).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
   });
 
   it('should throw an error if an error is thrown from a plugin', () => {
