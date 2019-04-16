@@ -7,13 +7,13 @@ describe('Config Plugin', () => {
 
   it('should add providers to the app-extras.module.ts file', () => {
     const config = { skyux: { name: 'stache2'}};
-    const content = new Buffer('');
+    const content = new Buffer.from('');
     const result = plugin.preload(content, 'app-extras.module.ts', config);
     expect(result.toString()).toContain('STACHE_CONFIG_PROVIDERS');
   });
 
   it('should not change the content of other files', () => {
-    const content = new Buffer('');
+    const content = new Buffer.from('');
 
     let result = plugin.preload(content, 'foo.html');
     expect(result.toString()).toEqual(content.toString());

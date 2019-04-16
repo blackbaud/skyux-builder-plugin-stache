@@ -41,7 +41,7 @@ describe('Entry Plugin', () => {
 
   it('should pass the content through all plugins', () => {
     const plugin = new StacheEntryPlugin();
-    const content = new Buffer('Content');
+    const content = new Buffer.from('Content');
     const resourcePath = 'foo.html';
     const skyPagesConfig = {};
 
@@ -129,7 +129,7 @@ describe('Entry Plugin', () => {
     });
 
     const plugin = new StacheEntryPlugin();
-    const content = new Buffer('Content');
+    const content = new Buffer.from('Content');
 
     plugin.preload(content, 'foo.html', {});
 
@@ -144,7 +144,7 @@ describe('Entry Plugin', () => {
       }
     });
 
-    const content = new Buffer('');
+    const content = new Buffer.from('');
     const plugin = new StacheEntryPlugin();
 
     try {

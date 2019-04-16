@@ -24,14 +24,14 @@ describe('Include Plugin', () => {
   });
 
   it('should not alter the content if the resourcePath is not an html file.', () => {
-    const content = new Buffer('let foo = "bar";');
+    const content = new Buffer.from('let foo = "bar";');
     const resourcePath = 'foo.js';
     const result = plugin.preload(content, resourcePath);
     expect(result.toString()).toEqual(content.toString());
   });
 
   it('should not alter the content if the html file does not include any <stache-include> tags.', () => {
-    const content = new Buffer('<p></p>');
+    const content = new Buffer.from('<p></p>');
     const resourcePath = 'foo.html';
     const result = plugin.preload(content, resourcePath);
     expect(result.toString()).toEqual(content.toString());
@@ -40,7 +40,7 @@ describe('Include Plugin', () => {
   it('should convert the inner HTML of all <stache-include> to the referenced file.', () => {
     const includeContents = '<h1>Test</h1>';
     spyOn(fs, 'readFileSync').and.returnValue(includeContents);
-    const content = new Buffer(`<stache-include fileName="test.html"></stache-include>`);
+    const content = new Buffer.from(`<stache-include fileName="test.html"></stache-include>`);
     const resourcePath = 'foo.html';
     const result = plugin.preload(content, resourcePath);
     expect(result.toString()).toContain(includeContents);
@@ -49,7 +49,7 @@ describe('Include Plugin', () => {
   it('should not convert stache-include tags inside of a sky-code-block.', () => {
     const includeContents = '<h1>Test</h1>';
     spyOn(fs, 'readFileSync').and.returnValue(includeContents);
-    const content = new Buffer(`
+    const content = new Buffer.from(`
       <sky-code-block>
         <stache-include fileName="test.html"></stache-include>
       </sky-code-block>
@@ -61,7 +61,7 @@ describe('Include Plugin', () => {
   });
 
   it('It should replace stache.jsonData bindings in the fileName with the data value', () => {
-    const content = new Buffer('<stache-include fileName="{{ stache.jsonData.mock_data.mockFileOne }}"></stache-include>');
+    const content = new Buffer.from('<stache-include fileName="{{ stache.jsonData.mock_data.mockFileOne }}"></stache-include>');
     const includeContents = '<h1>Test1</h1>';
     spyOn(fs, 'readFileSync').and.returnValue(includeContents);
     const result = plugin.preload(content, 'foo.html');
@@ -72,7 +72,7 @@ describe('Include Plugin', () => {
     spyOn(fs, 'readFileSync').and.throwError('Invalid file.');
 
     const resourcePath = 'invalid.html';
-    const content = new Buffer(`<stache-include fileName="${resourcePath}"></stache-include>`);
+    const content = new Buffer.from(`<stache-include fileName="${resourcePath}"></stache-include>`);
 
     try {
       plugin.preload(content, resourcePath);
@@ -97,7 +97,7 @@ describe('Include Plugin', () => {
       }
     });
 
-    const content = new Buffer(`<stache-include fileName="test1.html"></stache-include>`);
+    const content = new Buffer.from(`<stache-include fileName="test1.html"></stache-include>`);
     const resourcePath = 'foo.html';
     const result = plugin.preload(content, resourcePath);
     expect(result.toString()).toContain(includeContents1);
@@ -119,7 +119,7 @@ describe('Include Plugin', () => {
       }
     });
 
-    const content = new Buffer(`<stache-include fileName="{{ stache.jsonData.mock_data.mockFileOne }}"></stache-include>`);
+    const content = new Buffer.from(`<stache-include fileName="{{ stache.jsonData.mock_data.mockFileOne }}"></stache-include>`);
     const resourcePath = 'foo.html';
     const result = plugin.preload(content, resourcePath);
     expect(result.toString()).toContain(includeContents1);
