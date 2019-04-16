@@ -43,6 +43,6 @@ describe('Auth Http Plugin', () => {
   it('should inject the sky auth http library if auth is true', () => {
     const content = new Buffer('');
     const result = plugin.preload(content, 'app-extras.module.ts', config);
-    expect(result.toString()).toContain('@blackbaud/skyux-builder/runtime');
+    expect(result.toString()).toContain('@skyux/http');
   });
 });

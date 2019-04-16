@@ -12,7 +12,7 @@ const preload = (content, resourcePath, skyPagesConfig) => {
 
   if (skyPagesConfig.skyux.auth) {
     httpName = 'SkyAuthHttp';
-    httpPath = '@blackbaud/skyux-builder/runtime';
+    httpPath = '@skyux/http';
   } else {
     httpName = 'Http';
     httpPath = '@angular/http';
