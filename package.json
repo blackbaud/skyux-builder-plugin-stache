@@ -19,9 +19,13 @@
     "url": "https://github.com/blackbaud/stache2/issues"
   },
   "homepage": "https://github.com/blackbaud/skyux-builder-plugin-stache#readme",
-  "dependencies": {
+  "peerDependencies": {
+    "@skyux/config": "3.5.0",
+    "@skyux/http": "3.5.0",
     "@blackbaud/skyux-logger": "1.0.2",
-    "@blackbaud/skyux-builder-plugin-code-block": "1.0.0-rc.1",
+    "@blackbaud/skyux-builder-plugin-code-block": "1.0.1"
+  },
+  "dependencies": {
     "cheerio": "0.22.0",
     "cross-spawn": "6.0.5",
     "fs-extra": "3.0.1",
@@ -32,6 +36,7 @@
     "reserved-words": "0.1.1"
   },
   "devDependencies": {
+    "@blackbaud/skyux-builder-plugin-code-block": "1.0.1",
     "eslint": "4.0.0",
     "eslint-plugin-standard": "3.0.1",
     "istanbul": "0.4.5",
