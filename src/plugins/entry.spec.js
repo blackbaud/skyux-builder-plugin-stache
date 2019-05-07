@@ -16,7 +16,6 @@ describe('Entry Plugin', () => {
   };
 
   beforeEach(() => {
-    mock('./config', mockPlugin);
     mock('./http', mockPlugin),
     mock('./include', mockPlugin);
     mock('./json-data-element-attributes', mockPlugin);
@@ -55,69 +54,57 @@ describe('Entry Plugin', () => {
     mock.stopAll();
     let callOrder = [];
 
-    mock('./config', {
-      preload() {
-        callOrder.push(1);
-      }
-    });
-
     mock('./json-data', {
       preload() {
-        callOrder.push(9);
+        callOrder.push('json-data');
       }
     });
 
     mock('./json-data-element-attributes', {
       preload() {
-        callOrder.push(4);
+        callOrder.push('json-data-element-attributes');
       }
     });
 
     mock('./http', {
       preload() {
-        callOrder.push(2);
+        callOrder.push('http');
       }
     }),
 
     mock('./json-data-build-time', {
       preload() {
-        callOrder.push(5);
+        callOrder.push('json-data-build-time');
       }
     });
 
     mock('./route-metadata', {
       preload() {
-        callOrder.push(10);
+        callOrder.push('route-metadata');
       }
     });
 
     mock('./include', {
       preload() {
-        callOrder.push(3);
+        callOrder.push('include');
       }
     });
 
     mock('./markdown', {
       preload() {
-        callOrder.push(6);
-      }
-    });
-
-    mock('@blackbaud/skyux-builder-plugin-code-block', {
-      preload() {
-        callOrder.push(7);
+        callOrder.push('markdown');
       }
     });
 
     mock('./code', {
       preload() {
-        callOrder.push(8);
+        callOrder.push('code');
       }
     });
 
     mock('./template-reference-variable', {
       preload() {
-        callOrder.push(11);
+        callOrder.push('template-reference-variable');
       }
     });
 
@@ -126,12 +113,22 @@ describe('Entry Plugin', () => {
 
     plugin.preload(content, 'foo.html', {});
 
-    expect(callOrder).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+    expect(callOrder).toEqual([
+      'http',
+      'include',
+      'json-data-element-attributes',
+      'json-data-build-time',
+      'markdown',
+      'code',
+      'json-data',
+      'route-metadata',
+      'template-reference-variable'
+    ]);
   });
 
   it('should throw an error if an error is thrown from a plugin', () => {
-    mock.stop('./config');
-    mock('./config', {
+    mock.stop('./code');
+    mock('./code', {
       preload() {
         throw new shared.StachePluginError('invalid plugin');
       }
