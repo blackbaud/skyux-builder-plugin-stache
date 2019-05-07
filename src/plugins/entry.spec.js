@@ -16,13 +16,10 @@ describe('Entry Plugin', () => {
   };
 
   beforeEach(() => {
-    mock('./config', mockPlugin);
-    mock('./http', mockPlugin),
     mock('./include', mockPlugin);
     mock('./json-data-element-attributes', mockPlugin);
     mock('./json-data-build-time', mockPlugin);
     mock('./markdown', mockPlugin);
-    mock('@blackbaud/skyux-builder-plugin-code-block', mockPlugin);
     mock('./code', mockPlugin);
     mock('./json-data', mockPlugin);
     mock('./route-metadata', mockPlugin);
@@ -63,61 +60,49 @@ describe('Entry Plugin', () => {
 
     mock('./json-data', {
       preload() {
-        callOrder.push(9);
+        callOrder.push(7);
       }
     });
 
     mock('./json-data-element-attributes', {
       preload() {
-        callOrder.push(4);
+        callOrder.push(3);
       }
     });
 
-    mock('./http', {
-      preload() {
-        callOrder.push(2);
-      }
-    }),
-
     mock('./json-data-build-time', {
       preload() {
-        callOrder.push(5);
+        callOrder.push(4);
       }
     });
 
     mock('./route-metadata', {
       preload() {
-        callOrder.push(10);
+        callOrder.push(8);
       }
     });
 
     mock('./include', {
       preload() {
-        callOrder.push(3);
+        callOrder.push(2);
       }
     });
 
     mock('./markdown', {
       preload() {
-        callOrder.push(6);
-      }
-    });
-
-    mock('@blackbaud/skyux-builder-plugin-code-block', {
-      preload() {
-        callOrder.push(7);
+        callOrder.push(5);
       }
     });
 
     mock('./code', {
       preload() {
-        callOrder.push(8);
+        callOrder.push(6);
       }
     });
 
     mock('./template-reference-variable', {
       preload() {
-        callOrder.push(11);
+        callOrder.push(9);
       }
     });
 
@@ -126,7 +111,7 @@ describe('Entry Plugin', () => {
 
     plugin.preload(content, 'foo.html', {});
 
-    expect(callOrder).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+    expect(callOrder).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]);
   });
 
   it('should throw an error if an error is thrown from a plugin', () => {
