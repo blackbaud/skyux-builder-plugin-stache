@@ -6,21 +6,21 @@ describe('Markdown Plugin', () => {
   });
 
   it('should not alter the content if the resourcePath is not an html file.', () => {
-    const content = new Buffer('let foo = "bar";');
+    const content = new Buffer.from('let foo = "bar";');
     const path = 'foo.js';
     const result = plugin.preload(content, path);
     expect(result.toString()).toEqual(content.toString());
   });
 
   it('should not alter the content if the html file does not include any <stache-markdown> tags.', () => {
-    const content = new Buffer('<p></p>');
+    const content = new Buffer.from('<p></p>');
     const path = 'foo.html';
     const result = plugin.preload(content, path);
     expect(result.toString()).toEqual(content.toString());
   });
 
   it('should respect and render html inside markdown component', () => {
-    const content = new Buffer(`
+    const content = new Buffer.from(`
 <stache-markdown>
 <ul>
   <li>
@@ -41,7 +41,7 @@ describe('Markdown Plugin', () => {
   });
 
   it('should convert the inner markdown of all <stache-markdown> to HTML.', () => {
-    const content = new Buffer(`
+    const content = new Buffer.from(`
 <stache-markdown>
 - Item 1
 - Item 2
@@ -57,7 +57,7 @@ describe('Markdown Plugin', () => {
   });
 
   it('should handle separate renderings for different header levels', () => {
-    const content = new Buffer(`
+    const content = new Buffer.from(`
 <stache-markdown>
 # Title Heading
 
@@ -92,7 +92,7 @@ describe('Markdown Plugin', () => {
   });
 
   it('should use a custom renderer for headings, code-blocks, code', () => {
-    const content = new Buffer(`
+    const content = new Buffer.from(`
 <stache-markdown>
 ## Heading 2
 </stache-markdown>
