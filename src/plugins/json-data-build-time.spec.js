@@ -15,7 +15,7 @@ describe('JSON Data Build Time Plugin', () => {
   });
 
   it('should not change the content of non HTML files', () => {
-    const content = new Buffer.from('{{ @buildtime:stache.jsonData.mock_data.one }}');
+    const content = new Buffer('{{ @buildtime:stache.jsonData.mock_data.one }}');
 
     let result = plugin.preload(content, 'foo.js');
     expect(result.toString()).toEqual(content.toString());
@@ -25,7 +25,7 @@ describe('JSON Data Build Time Plugin', () => {
   });
 
   it('should replace all @buildtime: stache.jsonData bindings.', () => {
-    const content = new Buffer.from(`
+    const content = new Buffer(`
     <stache pageTitle="{{ @buildtime:stache.jsonData.mock_data.title}}">
       <div> {{ @buildtime:stache.jsonData.mock_data.one }} </div>
     </stache>`);
@@ -39,7 +39,7 @@ describe('JSON Data Build Time Plugin', () => {
   });
 
   it('should not replace any non @buildtime: stache.jsonData bindings.', () => {
-    const content = new Buffer.from(`{{ @buildtime:stache.jsonData.mock_data.one}} {{ stache.jsonData.mock_data.one }}`);
+    const content = new Buffer(`{{ @buildtime:stache.jsonData.mock_data.one}} {{ stache.jsonData.mock_data.one }}`);
     let result = plugin.preload(content, 'foo.html');
     expect(result.toString()).toEqual('One {{ stache.jsonData.mock_data.one }}');
   });

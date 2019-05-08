@@ -85,7 +85,7 @@ const npmInstall = () => {
 };
 
 const notify = () => {
-  logger.info('stache-update has successfully updated your dependencies.');
+  logger.info('stache-update has successfully updated your dependences.');
 }
 
 module.exports = () => {

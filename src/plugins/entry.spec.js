@@ -16,10 +16,14 @@ describe('Entry Plugin', () => {
   };
 
   beforeEach(() => {
+    mock('./config', mockPlugin);
+    mock('./http', mockPlugin),
     mock('./include', mockPlugin);
     mock('./json-data-element-attributes', mockPlugin);
     mock('./json-data-build-time', mockPlugin);
     mock('./markdown', mockPlugin);
+    mock('./code-block', mockPlugin);
+    mock('@blackbaud/skyux-builder-plugin-code-block', mockPlugin);
     mock('./code', mockPlugin);
     mock('./json-data', mockPlugin);
     mock('./route-metadata', mockPlugin);
@@ -37,7 +41,7 @@ describe('Entry Plugin', () => {
 
   it('should pass the content through all plugins', () => {
     const plugin = new StacheEntryPlugin();
-    const content = new Buffer.from('Content');
+    const content = new Buffer('Content');
     const resourcePath = 'foo.html';
     const skyPagesConfig = {};
 
@@ -52,86 +56,95 @@ describe('Entry Plugin', () => {
     mock.stopAll();
     let callOrder = [];
 
+    mock('./config', {
+      preload() {
+        callOrder.push(1);
+      }
+    });
+
     mock('./json-data', {
       preload() {
-        callOrder.push('json-data');
+        callOrder.push(10);
       }
     });
 
     mock('./json-data-element-attributes', {
       preload() {
-        callOrder.push('json-data-element-attributes');
+        callOrder.push(4);
       }
     });
 
     mock('./http', {
       preload() {
-        callOrder.push('http');
+        callOrder.push(2);
       }
     }),
 
     mock('./json-data-build-time', {
       preload() {
-        callOrder.push('json-data-build-time');
+        callOrder.push(5);
       }
     });
 
     mock('./route-metadata', {
       preload() {
-        callOrder.push('route-metadata');
+        callOrder.push(11);
       }
     });
 
     mock('./include', {
       preload() {
-        callOrder.push('include');
+        callOrder.push(3);
       }
     });
 
     mock('./markdown', {
       preload() {
-        callOrder.push('markdown');
+        callOrder.push(6);
+      }
+    });
+
+    mock('./code-block', {
+      preload() {
+        callOrder.push(7);
+      }
+    });
+
+    mock('@blackbaud/skyux-builder-plugin-code-block', {
+      preload() {
+        callOrder.push(8);
       }
     });
 
     mock('./code', {
       preload() {
-        callOrder.push('code');
+        callOrder.push(9);
       }
     });
 
     mock('./template-reference-variable', {
       preload() {
-        callOrder.push('template-reference-variable');
+        callOrder.push(12);
       }
     });
 
     const plugin = new StacheEntryPlugin();
-    const content = new Buffer.from('Content');
+    const content = new Buffer('Content');
 
     plugin.preload(content, 'foo.html', {});
 
-    expect(callOrder).toEqual([
-      'include',
-      'json-data-element-attributes',
-      'json-data-build-time',
-      'markdown',
-      'code',
-      'json-data',
-      'route-metadata',
-      'template-reference-variable'
-    ]);
+    expect(callOrder).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
   });
 
   it('should throw an error if an error is thrown from a plugin', () => {
-    mock.stop('./code');
-    mock('./code', {
+    mock.stop('./config');
+    mock('./config', {
       preload() {
         throw new shared.StachePluginError('invalid plugin');
       }
     });
 
-    const content = new Buffer.from('');
+    const content = new Buffer('');
     const plugin = new StacheEntryPlugin();
 
     try {
