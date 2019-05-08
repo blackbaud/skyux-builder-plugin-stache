@@ -27,7 +27,7 @@ describe('Shared methods and properties', () => {
   });
 
   it('should add the providers array to the @ngModule.', () => {
-    const content = new Buffer.from(`
+    const content = new Buffer(`
       @NgModule({
         imports: [
           StacheModule
@@ -50,7 +50,7 @@ describe('Shared methods and properties', () => {
   });
 
   it('should add the providers array only if one does not exist in any format', () => {
-    const content1 = new Buffer.from(`
+    const content1 = new Buffer(`
       @NgModule({
         providers: [],
         imports: [],
@@ -58,7 +58,7 @@ describe('Shared methods and properties', () => {
       })
     `);
 
-    const content2 = new Buffer.from(`
+    const content2 = new Buffer(`
       @NgModule({
         providers:[        ],
         imports: [],
@@ -66,7 +66,7 @@ describe('Shared methods and properties', () => {
       })
     `);
 
-    const content3 = new Buffer.from(`
+    const content3 = new Buffer(`
       @NgModule({
         providers          : [ ],
         imports: [],
@@ -74,7 +74,7 @@ describe('Shared methods and properties', () => {
       })
     `);
 
-    const content4 = new Buffer.from(`
+    const content4 = new Buffer(`
       @NgModule({
         providers          :
           [ ],
@@ -83,7 +83,7 @@ describe('Shared methods and properties', () => {
       })
     `);
 
-    const content5 = new Buffer.from(`
+    const content5 = new Buffer(`
       @NgModule({
         imports: [],
         exports: []
@@ -114,7 +114,7 @@ describe('Shared methods and properties', () => {
   });
 
   it('should add a provider string to the providers array in file\'s contents', () => {
-    const content = new Buffer.from('providers: []');
+    const content = new Buffer('providers: []');
     const result = shared.addToProviders(content, 'SOME_PROVIDERS');
     expect(result).toContain('SOME_PROVIDERS');
   });

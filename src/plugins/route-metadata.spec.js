@@ -36,13 +36,13 @@ describe('Route Metadata Plugin', () => {
     spyOn(fs, 'readFileSync').and.returnValue(
       `<stache pageTitle="FAQ"></stache>`
     );
-    const content = new Buffer.from('');
+    const content = new Buffer('');
     const result = plugin.preload(content, 'app-extras.module.ts', config);
     expect(result.toString()).toContain('STACHE_ROUTE_METADATA_PROVIDERS');
   });
 
   it('should not change the content of other files', () => {
-    const content = new Buffer.from('');
+    const content = new Buffer('');
 
     let result = plugin.preload(content, 'foo.html', config);
     expect(result.toString()).toEqual(content.toString());
@@ -55,7 +55,7 @@ describe('Route Metadata Plugin', () => {
   });
 
   it('should abort if no routes exist in the config', () => {
-    const content = new Buffer.from('');
+    const content = new Buffer('');
     let result = plugin.preload(content, 'app-extras.module.ts', {
       runtime: { routes: [] }
     });
@@ -69,7 +69,7 @@ describe('Route Metadata Plugin', () => {
 
   it('should abort if no html files found', () => {
     spyOn(glob, 'sync').and.returnValue([]);
-    const content = new Buffer.from('');
+    const content = new Buffer('');
     const result = plugin.preload(content, 'app-extras.module.ts', config);
     expect(result.toString()).toEqual(content.toString());
   });
@@ -77,7 +77,7 @@ describe('Route Metadata Plugin', () => {
   it('should abort if the html file does not include <stache> tags', () => {
     spyOn(glob, 'sync').and.returnValue(['src/app/learn/index.html']);
     spyOn(fs, 'readFileSync').and.returnValue(`<p></p>`);
-    const content = new Buffer.from('');
+    const content = new Buffer('');
     const result = plugin.preload(content, 'app-extras.module.ts', config);
     expect(result.toString()).toEqual(content.toString());
   });
@@ -85,7 +85,7 @@ describe('Route Metadata Plugin', () => {
   it('should ignore html files that do not include `navTitle`,`pageTitle`, or `navOrder` on the <stache> tag', () => {
     spyOn(glob, 'sync').and.returnValue(['src/app/learn/index.html']);
     spyOn(fs, 'readFileSync').and.returnValue(`<stache></stache>`);
-    const content = new Buffer.from('');
+    const content = new Buffer('');
     const result = plugin.preload(content, 'app-extras.module.ts', config);
     expect(result.toString()).toEqual(content.toString());
   });
@@ -95,7 +95,7 @@ describe('Route Metadata Plugin', () => {
     spyOn(fs, 'readFileSync').and.returnValue(
       `<stache pageTitle="{{ stache.jsonData.global.title }}"></stache>`
     );
-    const content = new Buffer.from('<stache pageTitle="{{ stache.jsonData.global.title }}"></stache>');
+    const content = new Buffer('<stache pageTitle="{{ stache.jsonData.global.title }}"></stache>');
     const result = plugin.preload(content, 'app-extras.module.ts', config);
     expect(result.toString()).toContain('"name":"Title"');
   });
@@ -105,7 +105,7 @@ describe('Route Metadata Plugin', () => {
     spyOn(fs, 'readFileSync').and.returnValue(
       `<stache pageTitle="FAQ" navTitle="Preferred"></stache>`
     );
-    const content = new Buffer.from('');
+    const content = new Buffer('');
     const result = plugin.preload(content, 'app-extras.module.ts', config);
     expect(result.toString()).toContain('"name"');
   });
@@ -115,7 +115,7 @@ describe('Route Metadata Plugin', () => {
     spyOn(fs, 'readFileSync').and.returnValue(
       `<stache navOrder="8675309"></stache>`
     );
-    const content = new Buffer.from('');
+    const content = new Buffer('');
     const result = plugin.preload(content, 'app-extras.module.ts', config);
     expect(result.toString()).not.toContain('"name":"Preferred"');
     expect(result.toString()).toContain('"order":"8675309"');
@@ -126,7 +126,7 @@ describe('Route Metadata Plugin', () => {
     spyOn(fs, 'readFileSync').and.returnValue(
       `<stache pageTitle="FAQ" showInNav="false"></stache>`
     );
-    const content = new Buffer.from('');
+    const content = new Buffer('');
     const result = plugin.preload(content, 'app-extras.module.ts', config);
     expect(result.toString()).toContain('"showInNav"');
   });
@@ -136,7 +136,7 @@ describe('Route Metadata Plugin', () => {
     spyOn(fs, 'readFileSync').and.returnValue(
       `<stache navOrder="8675309"></stache>`
     );
-    const content = new Buffer.from('');
+    const content = new Buffer('');
     const result = plugin.preload(content, 'app-extras.module.ts', config);
     expect(result.toString()).toContain('"order":"8675309"');
   })
@@ -145,7 +145,7 @@ describe('Route Metadata Plugin', () => {
     spyOn(glob, 'sync').and.returnValue(['invalid.html']);
     spyOn(fs, 'readFileSync').and.throwError('Invalid file.');
 
-    const content = new Buffer.from('');
+    const content = new Buffer('');
 
     try {
       plugin.preload(content, 'app-extras.module.ts', config);
