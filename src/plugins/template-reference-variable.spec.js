@@ -16,7 +16,7 @@ describe('Template Reference Variable Plugin', () => {
     const content = new Buffer('<stache></stache>');
     const path = 'foo.html';
     const result = plugin.preload(content, path);
-    expect(result.toString()).toEqual('<stache #stache=""></stache>');
+    expect(result.toString()).toEqual('<stache #stache></stache>');
   });
 
   it('should not add the attribute if no stache tag exists', () => {
