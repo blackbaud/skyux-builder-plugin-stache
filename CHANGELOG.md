@@ -1,3 +1,11 @@
+# 2.0.0-rc.0 (2019-05-08)
+
+- Initial release candidate.
+- Added support for `@skyux-sdk/builder`. [#52](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/52)
+- Dropped support for `@blackbaud/skyux-builder`. [#52](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/52)
+- Removed internal `code-block` plugin in favor of `@blackbaud/skyux-builder-plugin-code-block`.
+- Removed `http` plugin.
+
 # 1.8.0 (2018-12-17)
 
 - Added the new [skyux code block plugin](https://github.com/blackbaud/skyux-builder-plugin-code-block) as a dependency. [#48](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/48)
