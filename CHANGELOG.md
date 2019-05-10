@@ -1,3 +1,7 @@
+# 2.0.0-rc.1 (2019-05-10)
+
+- Updated module path resolver to point to `@blackbaud/skyux-lib-stache` instead of `@blackbaud/stache`. [#53](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/53)
+
 # 2.0.0-rc.0 (2019-05-08)
 
 - Initial release candidate.
