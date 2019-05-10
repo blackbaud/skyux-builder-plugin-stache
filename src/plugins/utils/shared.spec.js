@@ -122,9 +122,9 @@ describe('Shared methods and properties', () => {
   it('should return a resolved module path depending on its location', () => {
     let config = { skyux: { name: 'not-stache' }};
     let result = shared.getModulePath('/src/app/index.html', config);
-    expect(result).toBe('@blackbaud/stache');
+    expect(result).toBe('@blackbaud/skyux-lib-stache');
 
-    config = { skyux: { name: 'stache2' }};
+    config = { skyux: { name: 'skyux-lib-stache' }};
     result = shared.getModulePath('/src/app/index.html', config);
     expect(result).toBe('./public');
 

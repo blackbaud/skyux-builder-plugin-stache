@@ -41,8 +41,8 @@ const cheerioConfig = {
 };
 
 const getModulePath = (resourcePath, skyPagesConfig) => {
-  let modulePath = '@blackbaud/stache'
-  if (skyPagesConfig.skyux.name === 'stache2') {
+  let modulePath = '@blackbaud/skyux-lib-stache'
+  if (skyPagesConfig.skyux.name === 'skyux-lib-stache') {
     modulePath = './public';
   }
 
