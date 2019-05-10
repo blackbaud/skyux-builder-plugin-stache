@@ -62,7 +62,7 @@ describe('Stache Update Command', () => {
     });
     mock.reRequire('./update-dependencies')()
       .then(() => {
-        expect(logger.info).toHaveBeenCalledWith('stache-update has successfully updated your dependences.');
+        expect(logger.info).toHaveBeenCalledWith('stache-update has successfully updated your dependencies.');
         done();
       });
   });

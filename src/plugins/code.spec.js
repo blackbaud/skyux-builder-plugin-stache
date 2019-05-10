@@ -6,21 +6,21 @@ describe('Code Plugin', () => {
   });
 
   it('should not alter the content if the resourcePath is not an html file.', () => {
-    const content = new Buffer('let foo = "bar";');
+    const content = new Buffer.from('let foo = "bar";');
     const path = 'foo.js';
     const result = plugin.preload(content, path);
     expect(result.toString()).toEqual(content.toString());
   });
 
   it('should alter the content if the html file does not include any <stache-code> tags.', () => {
-    const content = new Buffer('<p></p>');
+    const content = new Buffer.from('<p></p>');
     const path = 'foo.html';
     const result = plugin.preload(content, path);
     expect(result.toString()).toEqual(content.toString());
   });
 
   it('should convert the inner HTML of all <stache-code> to HTML entities if the "escapeCharacters" flag is true.', () => {
-    const content = new Buffer(`
+    const content = new Buffer.from(`
       <stache-code escapeCharacters="true">
         <p>My content</p>
         {{ myVar }}
@@ -34,7 +34,7 @@ describe('Code Plugin', () => {
   });
 
   it('should not convert the inner HTML of all <stache-code> to HTML entities if "escapeCharacters" attribute is not true', () => {
-    const content = new Buffer(`
+    const content = new Buffer.from(`
       <stache-code>
         <p>My content</p>
         {{ myVar }}
