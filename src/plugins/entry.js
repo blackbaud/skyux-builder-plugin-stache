@@ -10,7 +10,6 @@ function StacheEntryPlugin() {
         require('./json-data-element-attributes'),
         require('./json-data-build-time'),
         require('./markdown'),
-        require('./code'),
         require('./json-data'),
         require('./route-metadata'),
         require('./template-reference-variable')
