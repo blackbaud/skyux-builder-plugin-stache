@@ -1,3 +1,7 @@
+# 2.0.0-rc.3 (2019-05-14)
+
+- Fixed internal `markdown` plugin to use `sky-code` component instead of `stache-code` component.
+
 # 2.0.0-rc.2 (2019-05-14)
 
 - Removed internal `code` plugin in favor of `@blackbaud/skyux-builder-plugin-code-block`. [#54](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/54)
