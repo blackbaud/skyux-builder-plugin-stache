@@ -20,7 +20,6 @@ describe('Entry Plugin', () => {
     mock('./json-data-element-attributes', mockPlugin);
     mock('./json-data-build-time', mockPlugin);
     mock('./markdown', mockPlugin);
-    mock('./code', mockPlugin);
     mock('./json-data', mockPlugin);
     mock('./route-metadata', mockPlugin);
     mock('./template-reference-variable', mockPlugin);
@@ -94,12 +93,6 @@ describe('Entry Plugin', () => {
       }
     });
 
-    mock('./code', {
-      preload() {
-        callOrder.push('code');
-      }
-    });
-
     mock('./template-reference-variable', {
       preload() {
         callOrder.push('template-reference-variable');
@@ -116,7 +109,6 @@ describe('Entry Plugin', () => {
       'json-data-element-attributes',
       'json-data-build-time',
       'markdown',
-      'code',
       'json-data',
       'route-metadata',
       'template-reference-variable'
@@ -124,8 +116,8 @@ describe('Entry Plugin', () => {
   });
 
   it('should throw an error if an error is thrown from a plugin', () => {
-    mock.stop('./code');
-    mock('./code', {
+    mock.stop('./include');
+    mock('./include', {
       preload() {
         throw new shared.StachePluginError('invalid plugin');
       }
