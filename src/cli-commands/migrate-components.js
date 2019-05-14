@@ -4,15 +4,53 @@ const logger = require('@blackbaud/skyux-logger');
 const rootPath = process.cwd();
 
 const migrateComponents = () => {
-  const srcPath = path.join(rootPath, 'src');
-  return fs.readdirSync(srcPath);
+  return new Promise((resolve, reject) => {
+    const srcPath = path.join(rootPath, 'src');
+    let files;
+
+    try {
+      files = getNestedFiles(srcPath);
+    }
+    catch (error) {
+      logger.error(`[Error] reading dir at: ${srcPath}: ${error}`);
+      reject();
+    }
+    return resolve(files);
+  });
+}
+
+const getNestedFiles = (dir, filePaths) => {
+  let files = fs.readdirSync(dir);
+  filePaths = filePaths || [];
+  files.forEach(file => {
+    if (fs.statSync(path.join(dir, file)).isDirectory()) {
+      filePaths = getNestedFiles(path.join(dir, file), filePaths);
+    } else {
+      if (eligableForMigration(file)) {
+        filePaths.push(path.join(dir, file));
+      }
+    }
+  });
+  return filePaths;
+};
+
+function eligableForMigration(file) {
+  // include .ts, .js, .html files
+  // exclude .json
+  const shouldReturn = ((file
+    .indexOf('.js') > -1
+      || file.indexOf('.ts') > -1
+      || file.indexOf('.html') > -1)
+        && file.indexOf('.json') === -1);
+
+  return shouldReturn;
 }
 
 const getFileContents = (files) => {
   return new Promise((resolve, reject) => {
     files.forEach((file) => {
       try {
-        const content = fs.readFileSync(file);
+        const content = fs.readFileSync(file, 'utf8');
 
         logger.info(`updating file ${file}`);
 
