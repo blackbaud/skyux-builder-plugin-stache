@@ -1,3 +1,7 @@
+# 2.0.0-rc.2 (2019-05-14)
+
+- Removed internal `code` plugin in favor of `@blackbaud/skyux-builder-plugin-code-block`. [#54](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/54)
+
 # 2.0.0-rc.1 (2019-05-10)
 
 - Updated module path resolver to point to `@blackbaud/skyux-lib-stache` instead of `@blackbaud/stache`. [#53](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/53)
