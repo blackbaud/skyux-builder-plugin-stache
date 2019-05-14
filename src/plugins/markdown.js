@@ -29,7 +29,7 @@ ${code}
     return parsedHeading;
   };
 
-  renderer.codespan = (text) => `<stache-code>${text}</stache-code>`;
+  renderer.codespan = (text) => `<sky-code>${text}</sky-code>`;
 
   return renderer;
 }

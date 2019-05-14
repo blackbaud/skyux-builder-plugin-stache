@@ -122,6 +122,6 @@ JS-code
 </sky-code-block>
 `);
 
-    expect(result).toContain(`<p>This is an <stache-code>inline</stache-code> code example.</p>`);
+    expect(result).toContain(`<p>This is an <sky-code>inline</sky-code> code example.</p>`);
   });
 });
