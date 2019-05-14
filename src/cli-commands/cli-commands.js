@@ -3,6 +3,9 @@ const runCommand = (command) => {
     case 'stache-update':
       require('./update-dependencies')();
     break;
+    case 'stache-migrate':
+      require('./migrate-components')();
+    break;
     default:
     return false;
   }
