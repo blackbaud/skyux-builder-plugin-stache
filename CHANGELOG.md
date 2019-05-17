@@ -8,7 +8,6 @@
 - Dropped support for `@blackbaud/skyux-builder`.
 - Dropped support for `@blackbaud/stache`.
 - Dropped support for `stache-code-block` and `stache-code` components.
-- Removed `http` plugin.
 
 # 2.0.0-rc.3 (2019-05-14)
 
