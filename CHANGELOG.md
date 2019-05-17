@@ -1,3 +1,15 @@
+# 2.0.0 (2019-05-17)
+
+- Added support for `@skyux-sdk/builder@^3`.
+- Added support for `@blackbaud/skyux-lib-stache@^3`.
+
+### Breaking changes
+
+- Dropped support for `@blackbaud/skyux-builder`.
+- Dropped support for `@blackbaud/stache`.
+- Dropped support for `stache-code-block` and `stache-code` components.
+- Removed `http` plugin.
+
 # 2.0.0-rc.3 (2019-05-14)
 
 - Fixed internal `markdown` plugin to use `sky-code` component instead of `stache-code` component.
