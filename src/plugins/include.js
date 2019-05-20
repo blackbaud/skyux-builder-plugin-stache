@@ -15,10 +15,9 @@ const replace = (content) => {
 
   $includes.each((i, elem) => {
     const $elem = $(elem);
-    const notInCodeBlock = $elem.parents('stache-code-block').length < 1;
     const notInSkyCodeBlock = $elem.parents('sky-code-block').length < 1;
 
-    if (notInCodeBlock && notInSkyCodeBlock) {
+    if (notInSkyCodeBlock) {
       const fileName = jsonDataUtil.parseAngularBindings($elem.attr('fileName'));
       const filePath = path.join(root, fileName);
       // replace the fileName attribute with parsed fileName

@@ -1,3 +1,34 @@
+# 2.0.0 (2019-05-17)
+
+- Added support for `@skyux-sdk/builder@^3`.
+- Added support for `@blackbaud/skyux-lib-stache@^3`.
+
+### Breaking changes
+
+- Dropped support for `@blackbaud/skyux-builder`.
+- Dropped support for `@blackbaud/stache`.
+- Dropped support for `stache-code-block` and `stache-code` components.
+
+# 2.0.0-rc.3 (2019-05-14)
+
+- Fixed internal `markdown` plugin to use `sky-code` component instead of `stache-code` component.
+
+# 2.0.0-rc.2 (2019-05-14)
+
+- Removed internal `code` plugin in favor of `@blackbaud/skyux-builder-plugin-code-block`. [#54](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/54)
+
+# 2.0.0-rc.1 (2019-05-10)
+
+- Updated module path resolver to point to `@blackbaud/skyux-lib-stache` instead of `@blackbaud/stache`. [#53](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/53)
+
+# 2.0.0-rc.0 (2019-05-08)
+
+- Initial release candidate.
+- Added support for `@skyux-sdk/builder`. [#52](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/52)
+- Dropped support for `@blackbaud/skyux-builder`. [#52](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/52)
+- Removed internal `code-block` plugin in favor of `@blackbaud/skyux-builder-plugin-code-block`.
+- Removed `http` plugin.
+
 # 1.8.0 (2018-12-17)
 
 - Added the new [skyux code block plugin](https://github.com/blackbaud/skyux-builder-plugin-code-block) as a dependency. [#48](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/48)

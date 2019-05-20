@@ -15,7 +15,7 @@ describe('JSON Data Element Attribute Plugin', () => {
   });
 
   it('should not change the content of non HTML files', () => {
-    const content = new Buffer('{{ @buildtime:stache.jsonData.mock_data.one }}');
+    const content = new Buffer.from('{{ @buildtime:stache.jsonData.mock_data.one }}');
 
     let result = plugin.preload(content, 'foo.js');
     expect(result.toString()).toEqual(content.toString());
@@ -25,25 +25,19 @@ describe('JSON Data Element Attribute Plugin', () => {
   });
 
   it('It should replace the pageTitle attribute on the stache tag if it contains a stache data value', () => {
-    const content = new Buffer('<stache pageTitle="{{ stache.jsonData.mock_data.title }}"></stache>');
+    const content = new Buffer.from('<stache pageTitle="{{ stache.jsonData.mock_data.title }}"></stache>');
     const result = plugin.preload(content, 'foo.html');
     expect(result.toString()).toEqual('<stache pageTitle="Test Title"></stache>');
   });
 
   it('It should replace the navTitle attribute on the stache tag if it contains a stache data value', () => {
-    const content = new Buffer('<stache navTitle="{{ stache.jsonData.mock_data.title }}"></stache>');
+    const content = new Buffer.from('<stache navTitle="{{ stache.jsonData.mock_data.title }}"></stache>');
     const result = plugin.preload(content, 'foo.html');
     expect(result.toString()).toEqual('<stache navTitle="Test Title"></stache>');
   });
 
   it('It should not replace any non specified attributes', () => {
-    const content = new Buffer('<stache-code-block languageType="{{ stache.jsonData.mock_data.one }}"></stache-code-block>');
-    const result = plugin.preload(content, 'foo.html');
-    expect(result.toString()).toEqual(content.toString());
-  });
-
-  it('It should not replace any non specified attributes', () => {
-    const content = new Buffer('<sky-code-block languageType="{{ stache.jsonData.mock_data.one }}"></sky-code-block>');
+    const content = new Buffer.from('<sky-code-block languageType="{{ stache.jsonData.mock_data.one }}"></sky-code-block>');
     const result = plugin.preload(content, 'foo.html');
     expect(result.toString()).toEqual(content.toString());
   });
