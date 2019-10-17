@@ -1,3 +1,7 @@
+# 2.0.1 (2019-10-17)
+
+- Upgraded package dependencies to address vulnerability warnings. [#57](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/57), [#58](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/58), [#59](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/59), [#60](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/60)
+
 # 2.0.0 (2019-05-17)
 
 - Added support for `@skyux-sdk/builder@^3`.
