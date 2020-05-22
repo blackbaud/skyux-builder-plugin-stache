@@ -1,3 +1,7 @@
+# 2.0.2 (2020-05-22)
+
+- Upgraded dependencies to address vulnerability warnings. [#63](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/63)
+
 # 2.0.1 (2019-10-17)
 
 - Upgraded package dependencies to address vulnerability warnings. [#57](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/57), [#58](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/58), [#59](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/59), [#60](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/60)
