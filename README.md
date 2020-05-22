@@ -23,10 +23,6 @@ Open **skyuxconfig.json** and add the following:
 }
 ```
 
-## Found an issue?
-
-Please log all issues related to Stache (and its plugins) at [blackbaud/stache2](https://github.com/blackbaud/stache2/issues).
-
 ## A Note About Plugin Order
 
 1. `config` runs first to set up any config necessary that could affect later options.   At least that's the theory behind that one going first it seems to make sense.
