@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/blackbaud/skyux-builder-plugin-stache#readme",
   "dependencies": {
-    "@blackbaud/skyux-logger": "1.1.1",
+    "@blackbaud/skyux-logger": "1.1.2",
     "cheerio": "0.22.0",
     "cross-spawn": "6.0.5",
     "fs-extra": "7.0.1",
@@ -35,7 +35,7 @@
     "eslint": "5.16.0",
     "jasmine-spec-reporter": "4.2.1",
     "jasmine": "3.4.0",
-    "mkdirp": "0.5.1",
+    "mkdirp": "1.0.4",
     "mock-require": "3.0.3",
     "nyc": "14.1.1"
   }
