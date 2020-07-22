@@ -1,3 +1,7 @@
+# 2.0.3 (2020-05-22)
+
+- Updated the public import path when used in the `skyux-lib-stache` SPA. [#67](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/67)
+
 # 2.0.2 (2020-05-22)
 
 - Upgraded dependencies to address vulnerability warnings. [#63](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/63)
