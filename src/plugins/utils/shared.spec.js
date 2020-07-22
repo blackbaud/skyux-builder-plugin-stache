@@ -126,11 +126,11 @@ describe('Shared methods and properties', () => {
 
     config = { skyux: { name: 'skyux-lib-stache' }};
     result = shared.getModulePath('/src/app/index.html', config);
-    expect(result).toBe('./public');
+    expect(result).toBe('./public/public_api');
 
     // Windows:
     result = shared.getModulePath(String.raw`\stache2\src\app\index.html`, config);
-    expect(result).toBe('./public');
+    expect(result).toBe('./public/public_api');
   });
 
   it('should resolve a directory for Stache assets folder', () => {
