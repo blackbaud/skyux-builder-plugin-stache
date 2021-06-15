@@ -4,34 +4,29 @@
 
 const fs = require('fs-extra');
 const path = require('path');
-const mkdirp = require('mkdirp');
 const rimraf = require('rimraf');
 
 const rootPath = path.join(__dirname, '..');
 const distPath = path.join(rootPath, 'dist');
 
 function createDist() {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     rimraf(distPath, {}, () => {
-      mkdirp(path.join(distPath, 'src'), (err) => {
-        if (err) {
-          reject(err);
-          return;
-        }
+      fs.ensureDirSync(path.join(distPath, 'src'));
 
-        fs.copySync(
-          path.join(rootPath, 'src'),
-          path.join(distPath, 'src'),
-          {
-            filter: (src) => {
-              const isSpecFile = (src.match(/\.spec\.js$/));
-              const isHelpersDir = (src.match(/helpers/));
-              return (!isSpecFile && !isHelpersDir);
-            }
+      fs.copySync(
+        path.join(rootPath, 'src'),
+        path.join(distPath, 'src'),
+        {
+          filter: (src) => {
+            const isSpecFile = (src.match(/\.spec\.js$/));
+            const isHelpersDir = (src.match(/helpers/));
+            return (!isSpecFile && !isHelpersDir);
           }
-        );
-        resolve();
-      });
+        }
+      );
+
+      resolve();
     });
   });
 }

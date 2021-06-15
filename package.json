@@ -35,7 +35,6 @@
     "eslint": "5.16.0",
     "jasmine-spec-reporter": "4.2.1",
     "jasmine": "3.4.0",
-    "mkdirp": "1.0.4",
     "mock-require": "3.0.3",
     "nyc": "14.1.1"
   }
