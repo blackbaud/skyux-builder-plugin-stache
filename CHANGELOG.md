@@ -1,3 +1,7 @@
+# 2.0.4 (2021-06-15)
+
+- Added support for `marked@2.0.7`. [#72](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/72)
+
 # 2.0.3 (2020-05-22)
 
 - Updated the public import path when used in the `skyux-lib-stache` SPA. [#67](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/67)
