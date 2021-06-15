@@ -1,4 +1,4 @@
-# 2.0.4 (2021-06-14)
+# 2.0.4 (2021-06-15)
 
 - Added support for `marked@2.0.7`. [#72](https://github.com/blackbaud/skyux-builder-plugin-stache/pull/72)
 
